@@ -3,7 +3,7 @@ rm(list = ls(all.names = TRUE)) # clears everything
 graphics.off() # close all open graphics
 
 # set working directory
-# setwd(file.path("C:", "Users", "steven", "OneDrive", "WorkSpaces", "R", "opro"))
+# setwd(file.path("C:", "Users", "steven", "OneDrive", "WorkSpaces", "R", "test"))
 
 # import utility functions & mute RStudio diagnostics
 # !diagnostics suppress=allocate_trials, aoi_fambodyobj, aoi_famface, aoi_preflook, aoi_screen, get_experiment_duration, get_fixation_famBodyObj_LT, get_fixation_famFace_LT, get_fixation_preflook_LT, get_fixation_screen_LT, get_objects, get_preflook_positions, get_StartEnd_list, is_sequence
