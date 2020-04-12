@@ -3,3 +3,7 @@ This repo provides some bootstrapping and generic helper functions for common ey
 
 ## Functions
 
+## ToDo
+- merge AOI functions into one
+- merge get_fixation functions into one
+- use tidyverse?
