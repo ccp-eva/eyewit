@@ -1,4 +1,4 @@
-get_fixation_preflook_LT <- function(df, trial_startend) {
+get_fixation_preflook_LT <- function(df, trial_startend, markercut = TRUE) {
 
   GazeEventDurations_left <- c() # left object
   GazeEventDurations_right <- c() # right object
@@ -41,14 +41,56 @@ get_fixation_preflook_LT <- function(df, trial_startend) {
     for (i in min_FixationIndex:max_FixationIndex) {
       AOIs_in_current_FixationIndex <- df$AOIPrefLook[which(df$FixationIndex == i)]
 
-      # stop processing if"left" and "right" is in the current chunk
+      # stop processing if "left" and "right" is in the current chunk
       if ("left" %in% AOIs_in_current_FixationIndex && "right" %in% AOIs_in_current_FixationIndex) {
-        warning(paste("In current fixation index:", i, "are left AND right AOIs! Skipping this index!", sep = " "))
+        stop(paste("In current fixation index:", i, "are left AND right AOIs! Skipping this index!", sep = " "))
         next
       }
 
       # check if "left" is in current pair, if so, add it
       if ("left" %in% AOIs_in_current_FixationIndex) {
+
+        # check if the first fixation index started before the current_start_pos and if markercut is TRUE
+        if (i == min_FixationIndex && which(df$FixationIndex == i)[1] < current_start_pos && markercut) {
+          # get start and end milliseconds
+          start_ms <- df$RecordingTimestamp[current_start_pos]
+          end_ms <-  df$RecordingTimestamp[which(df$FixationIndex == i)][length(which(df$FixationIndex == i))]
+
+          # set the difference of start_ms and end_ms to the current GazeEventDuration
+          current_GazeEventDuration <- end_ms - start_ms
+          # Add it to the total
+          current_trial_total_GazeEventDurations_left <- current_trial_total_GazeEventDurations_left + current_GazeEventDuration
+
+          # set first_look left if flag is not set
+          if (!found_first_look) {
+            first_look <- "left"
+            found_first_look <- TRUE
+          }
+
+          # skip to the next fixation index
+          next
+        }
+
+        # check if the last fixation index continues after the current_end_pos and if markercut is TRUE
+        if (i == max_FixationIndex && which(df$FixationIndex == i)[length(which(df$FixationIndex == i))] > current_end_pos && markercut) {
+          # get start and end milliseconds
+          start_ms <- df$RecordingTimestamp[which(df$FixationIndex == i)][1]
+          end_ms <-  df$RecordingTimestamp[current_end_pos]
+
+          # set the difference of start_ms and end_ms to the current GazeEventDuration
+          current_GazeEventDuration <- end_ms - start_ms
+          # Add it to the total
+          current_trial_total_GazeEventDurations_left <- current_trial_total_GazeEventDurations_left + current_GazeEventDuration
+
+          # set first_look left if flag is not set
+          if (!found_first_look) {
+            first_look <- "left"
+            found_first_look <- TRUE
+          }
+
+          # skip to the next fixation index
+          next
+        }
 
         # Grab the current GazeEventDuration chunk and select the first value
         current_GazeEventDuration <- df$GazeEventDuration[which(df$FixationIndex == i)][1]
@@ -65,6 +107,49 @@ get_fixation_preflook_LT <- function(df, trial_startend) {
 
       # same for right
       if ("right" %in% AOIs_in_current_FixationIndex) {
+
+        # check if the first fixation index started before the current_start_pos and if markercut is TRUE
+        if (i == min_FixationIndex && which(df$FixationIndex == i)[1] < current_start_pos && markercut) {
+          # get start and end milliseconds
+          start_ms <- df$RecordingTimestamp[current_start_pos]
+          end_ms <-  df$RecordingTimestamp[which(df$FixationIndex == i)][length(which(df$FixationIndex == i))]
+
+          # set the difference of start_ms and end_ms to the current GazeEventDuration
+          current_GazeEventDuration <- end_ms - start_ms
+          # Add it to the total
+          current_trial_total_GazeEventDurations_right <- current_trial_total_GazeEventDurations_right + current_GazeEventDuration
+
+          # set first_look left if flag is not set
+          if (!found_first_look) {
+            first_look <- "right"
+            found_first_look <- TRUE
+          }
+
+          # skip to the next fixation index
+          next
+        }
+
+        # check if the last fixation index continues after the current_end_pos and if markercut is TRUE
+        if (i == max_FixationIndex && which(df$FixationIndex == i)[length(which(df$FixationIndex == i))] > current_end_pos && markercut) {
+          # get start and end milliseconds
+          start_ms <- df$RecordingTimestamp[which(df$FixationIndex == i)][1]
+          end_ms <-  df$RecordingTimestamp[current_end_pos]
+
+          # set the difference of start_ms and end_ms to the current GazeEventDuration
+          current_GazeEventDuration <- end_ms - start_ms
+          # Add it to the total
+          current_trial_total_GazeEventDurations_right <- current_trial_total_GazeEventDurations_right + current_GazeEventDuration
+
+          # set first_look left if flag is not set
+          if (!found_first_look) {
+            first_look <- "right"
+            found_first_look <- TRUE
+          }
+
+          # skip to the next fixation index
+          next
+        }
+
         current_GazeEventDuration <- df$GazeEventDuration[which(df$FixationIndex == i)][1]
         current_trial_total_GazeEventDurations_right <- current_trial_total_GazeEventDurations_right + current_GazeEventDuration
 
