@@ -7,3 +7,4 @@ This repo provides some bootstrapping and generic helper functions for common ey
 - merge AOI functions into one
 - merge get_fixation functions into one
 - use tidyverse?
+- write tests
