@@ -70,7 +70,7 @@ for (i in 1:length(flist)) {
   total_trials <- max(df2_trial$Trial, na.rm = TRUE)
 
   # track vector of all inter names (important for dfX_base performance)
-  inter_vectors <- as.character(unique(df2_trial$StudioEventData[familiarization_startend]))
+  inter_vectors <- as.character(unique(df2_trial$StudioEventData[familiarization_startend$start]))
 
   # track valid trials
   # todo

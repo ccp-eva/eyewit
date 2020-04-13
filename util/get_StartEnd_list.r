@@ -11,7 +11,7 @@
 #' @examples
 #' get_StartEnd_list(coi_df, ".*Familiar.*", "MovieStart", "MovieEnd")
 get_StartEnd_list <- function(df, regex_pattern, StudioEvent_start, StudioEvent_end) {
-browser()
+
   # check if rownames are sequential, if not stop execution
   if (!is_sequence(rownames(df))) {
     stop("The dataframe is not in sequence. Do not remove any rows.")
