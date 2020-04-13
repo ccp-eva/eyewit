@@ -6,7 +6,7 @@ graphics.off() # close all open graphics
 # setwd(file.path("C:", "Users", "steven", "OneDrive", "WorkSpaces", "R", "test"))
 
 # import utility functions & mute RStudio diagnostics
-# !diagnostics suppress=allocate_trials, aoi_fambodyobj, aoi_famface, aoi_preflook, aoi_screen, get_experiment_duration, get_fixation_famBodyObj_LT, get_fixation_famFace_LT, get_fixation_preflook_LT, get_fixation_screen_LT, get_objects, get_preflook_positions, get_StartEnd_list, is_sequence
+# !diagnostics suppress=allocate_trials, aoi_fambodyobj, aoi_famface, aoi_preflook, aoi_screen, get_AOIs, get_experiment_duration, get_fixation_famBodyObj_LT, get_fixation_famFace_LT, get_fixation_preflook_LT, get_fixation_screen_LT, get_objects, get_preflook_positions, get_StartEnd_list, is_sequence
 sapply(list.files(c("util"), pattern = "*.r$", full.names = TRUE, ignore.case = TRUE),source,.GlobalEnv)
 
 
@@ -78,6 +78,36 @@ for (i in 1:length(flist)) {
 
   # AOI Columns
   df3_aoi <- df2_trial
+
+  # Testing new unified AOI function
+  # Create AOI object:
+  AOIs_fam_phase_Body_Object <- list(
+    column_name = "FamPhase_Actor_Object",
+    aoi1 = list(
+      aoi_name = "left",
+      x_topright = 79,
+      y_topright = 159,
+      x_bottomright = 759,
+      y_bottomright = 1089
+    ),
+    aoi2 = list(
+      aoi_name = "center",
+      x_topright = 844,
+      y_topright = 794,
+      x_bottomright = 1204,
+      y_bottomright = 1154
+    ),
+    aoi3 = list(
+      aoi_name = "right",
+      x_topright = 1305,
+      y_topright = 159,
+      x_bottomright = 1985,
+      y_bottomright = 1089
+    )
+  )
+
+  # New function:
+  df3_aoi <- get_AOIs(df3_aoi, AOIs, familiarization_startend)
 
   # Familiarization Actor left, Object center, Actor right
   df3_aoi <- aoi_fambodyobj(df3_aoi, familiarization_startend)
