@@ -83,31 +83,35 @@ for (i in 1:length(flist)) {
   # Create AOI object:
   AOIs_fam_phase_Body_Object <- list(
     column_name = "FamPhase_Actor_Object",
-    aoi1 = list(
-      aoi_name = "left",
-      x_topright = 79,
-      y_topright = 159,
-      x_bottomright = 759,
-      y_bottomright = 1089
-    ),
-    aoi2 = list(
-      aoi_name = "center",
-      x_topright = 844,
-      y_topright = 794,
-      x_bottomright = 1204,
-      y_bottomright = 1154
-    ),
-    aoi3 = list(
-      aoi_name = "right",
-      x_topright = 1305,
-      y_topright = 159,
-      x_bottomright = 1985,
-      y_bottomright = 1089
+    no_evaluation_label = "NO EVAL",
+    missing_coordinate_label = NA,
+    aoilist = list(
+      my_first_aoi = list(
+        aoi_hit_name = "left",
+        x_topright = 79,
+        y_topright = 159,
+        x_bottomright = 759,
+        y_bottomright = 1089
+      ),
+      my_other_aoi = list(
+        aoi_hit_name = "center",
+        x_topright = 844,
+        y_topright = 794,
+        x_bottomright = 1204,
+        y_bottomright = 1154
+      ),
+      aoi3 = list(
+        aoi_hit_name = "right",
+        x_topright = 1305,
+        y_topright = 159,
+        x_bottomright = 1985,
+        y_bottomright = 1089
+      )
     )
   )
 
   # New function:
-  df3_aoi <- get_AOIs(df3_aoi, AOIs, familiarization_startend)
+  df3_aoi <- get_AOIs(df = df3_aoi, aoi_collection = AOIs_fam_phase_Body_Object, scope = familiarization_startend)
 
   # Familiarization Actor left, Object center, Actor right
   df3_aoi <- aoi_fambodyobj(df3_aoi, familiarization_startend)

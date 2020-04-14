@@ -1,65 +1,78 @@
-get_AOIs <- function(df, aoi_body, rowname_pairs) {
-
+get_AOIs <- function(df, aoi_collection, scope = 0) {
+browser()
   # check if rownames are sequential, if not stop execution
-  if (!is_sequence(rownames(df))) {
-    stop("The df is not in sequence. Do not remove any rows.")
+  if (!is_sequence(rownames(df))) stop("The df is not in sequence. Do not remove any rows.")
+
+  # destructure aoi_body
+  column_name <- aoi_collection$column_name
+  no_evaluation_label <- aoi_collection$no_evaluation_label
+  missing_coordinate_label <- aoi_collection$missing_coordinate_label
+
+
+  # create a new AOI Column and fill it with no_evaluation_label
+  df[, column_name] <- no_evaluation_label
+  # put it to first position
+  df <- df[, c(which(colnames(df) == column_name), which(colnames(df) != column_name))]
+
+  # If scope is not explicitly set, overwrite scope boundary to include all rows
+  if (length(scope) == 0) {
+    scope$start <- 1
+    scope$end <- nrow(df)
   }
 
-  # stop execution if they are unequal
-  if (length(rowname_pairs) %% 2 != 0) {
-    stop("Your index pairs (rowname pairs) are odd :( ... They need to be even!")
+  # cont vectorized version of aoi checker
+  for (i in seq_along(scope$start)) {
+    print(scope$start[i])
+    print(scope$end[i])
+
+    for (aoi in aoi_collection$aoilist) {
+      print(aoi)
+    }
+
   }
 
-  # create a new AOI Column and fill it with "NO EVAL" as the default
-  df <- cbind(AOIFamBodyObj = "NO EVAL", df, stringsAsFactors = FALSE)
 
 
-  # Define AOIs
-  # We only define the coordinate pair for the top left and bottom right position ...
-  # ... this creates a rectangular surface...
-  # ... We store this in a matrix, where x1,y1 is the coordinate pair for the top left position and ...
-  # ... where x2,y2 is the bottom right position of the rectangualr surface aoi
-  # ... matrix(c(x1,y1,x2,y2)
-  aoi_left <- matrix(c(79, 159, 759, 1089), nrow = 2, ncol = 2)
-  aoi_center <- matrix(c(844, 794, 1204, 1154), nrow = 2, ncol = 2)
-  aoi_right <- matrix(c(1305, 159, 1985, 1089), nrow = 2, ncol = 2)
+
+
 
 
   # AOI CHECKER
   # checks if a pair of given coordinates belong to any AOI rectangle, and returns the AOI as string ...
   # basically it checks for each x if its between x1 and x2, that is: |x1 <= x >= x2| same for each y
-  aoi_checker <- function(x, y) {
+  aoi_checker <- function(aoi_body, x_vector, y_vector) {
 
-    # check if either x or y is NA (or both) if so return NA
-    if (is.na(x) || is.na(y)) {
-      return(NA)
-    }
-
-    # check for aoi_left, that is check if x y is in the surface of aoi_left
-    if (x >= aoi_left[1, 1] && y >= aoi_left[2, 1] && x <= aoi_left[1, 2] && y <= aoi_left[2, 2])
-      return("left")  # if x and(!) y was found within the boundaries return "aoi_left"
-
-    # Check for aoi_center
-    if (x >= aoi_center[1, 1] && y >= aoi_center[2, 1] && x <= aoi_center[1, 2] && y <= aoi_center[2, 2])
-      return("center")
-
-    # Check for aoi_right
-    if (x >= aoi_right[1, 1] && y >= aoi_right[2, 1] && x <= aoi_right[1, 2] && y <= aoi_right[2, 2])
-      return("right")
-
-    # if there is no match at all, the subject did not look in any of the given AOIs, thus return false
-    return(FALSE)
+    # if else, because if is not vectorized
+    ifelse(
+      # check for NA, if so return missing coordinate label
+      is.na(x_vector) | is.na(y_vector), return(missing_coordinate_label),
+      ifelse(
+        # check if the current cell is already occupied with a value other than FALSE
+        # ifelse(df$column_name)
+        # check for if coordinates within boundaries and return the aoi_hit_name
+        x_vector >= aoi_body$aoilist$my_first_aoi$x_topright &
+        y_vector >= aoi_body$aoilist$my_first_aoi$y_topright &
+        x_vector <= aoi_body$aoilist$my_first_aoi$x_bottomright &
+        y_vector <= aoi_body$aoilist$my_first_aoi$y_bottomright,
+        return(aoi_body$aoilist$my_first_aoi$aoi_hit_name),
+        # else return FALSE
+        FALSE # IDEA::: WRAP this in a for loop and use next HERE TO CHECK THE NEXT AOI RANGE, IF THE LAST AOI RANGE WAS HIT RETURN FALSE
+      )
+    )
   }
 
-  while (length(rowname_pairs) > 0) {
-    current_row_start_pos <- rowname_pairs[1]
-    current_row_end_pos <- rowname_pairs[2]
+  # response <- mapply(aoi_checker,x_vector,y_vector)
+
+
+  while (length(scope) > 0) {
+    current_row_start_pos <- scope[1]
+    current_row_end_pos <- scope[2]
     for (i in current_row_start_pos:current_row_end_pos) {
-      df$AOIFamBodyObj[i] <- aoi_checker(df$GazePointX..ADCSpx.[i], df$GazePointY..ADCSpx.[i])
+      df[i, column_name] <- aoi_checker(df$GazePointX..ADCSpx.[i], df$GazePointY..ADCSpx.[i])
     }
 
     # remove current rowname pair
-    rowname_pairs <- rowname_pairs[!rowname_pairs %in% c(current_row_start_pos, current_row_end_pos)]
+    scope <- scope[!scope %in% c(current_row_start_pos, current_row_end_pos)]
 
   }
 
