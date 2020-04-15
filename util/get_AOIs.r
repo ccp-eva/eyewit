@@ -1,4 +1,4 @@
-get_AOIs <- function(df, aoi_collection, scope = 0) {
+get_AOIs <- function(df, aoi_collection, scope = 0, ) {
 browser()
   # check if rownames are sequential, if not stop execution
   if (!is_sequence(rownames(df))) stop("The df is not in sequence. Do not remove any rows.")
@@ -7,6 +7,12 @@ browser()
   column_name <- aoi_collection$column_name
   no_evaluation_label <- aoi_collection$no_evaluation_label
   missing_coordinate_label <- aoi_collection$missing_coordinate_label
+
+
+  # get coordinate columns of df
+  x_coords <- "GazePointX..ADCSpx."
+  y_coords <- "GazePointY..ADCSpx."
+
 
 
   # create a new AOI Column and fill it with no_evaluation_label
@@ -30,10 +36,6 @@ browser()
     }
 
   }
-
-
-
-
 
 
 
