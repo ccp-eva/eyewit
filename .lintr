@@ -1,0 +1,6 @@
+## https://github.com/jimhester/lintr
+
+linters: with_defaults(
+  line_length_linter(120),
+  commented_code_linter = NULL,
+  trailing_blank_lines_linter = NULL)
