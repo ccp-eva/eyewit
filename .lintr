@@ -3,4 +3,7 @@
 linters: with_defaults(
   line_length_linter(120),
   commented_code_linter = NULL,
-  trailing_blank_lines_linter = NULL)
+  trailing_blank_lines_linter = NULL,
+  seq_linter = NULL,
+  cyclocomp_linter(35),
+  object_name_linter(c("snake_case", "camelCase")))
