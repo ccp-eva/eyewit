@@ -178,7 +178,7 @@ for (i in 1:length(flist)) {
   # AOI column for Preferential Looking Phase for objects (left & right)
   df3_aoi <- getAOIs(df3_aoi, aoi_preflook, preflook_startend)
   # AOI column for Familiarization Phase for screen (TRUE/FALSE)
-  df3_aoi <- getAOIs(df3_aoi, aoi_preflook, preflook_startend)
+  df3_aoi <- getAOIs(df3_aoi, aoi_screen, familiarization_startend)
 
 
   ####################################################################################################
