@@ -1,4 +1,4 @@
-get_experiment_duration <- function(df, first_StudioEventData_name, timeformat = "m") {
+getExperimentDuration <- function(df, first_StudioEventData_name, timeformat = "m") {
 
   if (!"RecordingTimestamp" %in% colnames(df) &&
       !"StudioEventData" %in% colnames(df) &&

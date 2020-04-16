@@ -10,12 +10,10 @@
 #' @return Returns a named list of start and stop positions for a given regexp.
 #' @examples
 #' get_StartEnd_list(coi_df, ".*Familiar.*", "MovieStart", "MovieEnd")
-get_StartEnd_list <- function(df, regex_pattern, StudioEvent_start, StudioEvent_end) {
+getStartEndPositions <- function(df, regex_pattern, StudioEvent_start, StudioEvent_end) {
 
-  # check if rownames are sequential, if not stop execution
-  if (!is_sequence(rownames(df))) {
-    stop("The dataframe is not in sequence. Do not remove any rows.")
-  }
+  # check if rownames are equal to a sequence of corresponding rownumbers
+  if (!isTRUE((all.equal(as.numeric(rownames(df)), 1:nrow(df))))) stop("The df is not in sequence. Do not remove any rows.")
 
 
   MovieStart_Indexes <-

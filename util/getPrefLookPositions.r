@@ -1,4 +1,4 @@
-get_preflook_positions <- function(preflook_string_vector, familiar_object_vector) {
+getPrefLookPositions <- function(preflook_string_vector, familiar_object_vector) {
 
   preflook_string_vector_length <- length(preflook_string_vector)
   familiar_object_vector_length <- length(familiar_object_vector)

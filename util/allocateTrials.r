@@ -1,9 +1,7 @@
-allocate_trials <- function(df, index_pairs, fill_StudioEventData = TRUE) {
+allocateTrials <- function(df, index_pairs, fill_StudioEventData = TRUE) {
 
-  # check if rownames are sequential, if not stop execution
-  if (!is_sequence(rownames(df))) {
-    stop("The df is not in sequence. Do not remove any rows.")
-  }
+  # check if rownames are equal to a sequence of corresponding rownumbers
+  if (!isTRUE((all.equal(as.numeric(rownames(df)), 1:nrow(df))))) stop("The df is not in sequence. Do not remove any rows.")
 
   # Check if Trial column exists, if not create it
   if (!"Trial" %in% colnames(df)) {

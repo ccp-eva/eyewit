@@ -6,7 +6,7 @@ graphics.off() # close all open graphics
 # setwd(file.path("C:", "Users", "steven", "WorkSpaces", "R", "test"))
 
 # import utility functions & mute RStudio diagnostics
-# !diagnostics suppress=allocate_trials, aoi_fambodyobj, aoi_famface, aoi_preflook, aoi_screen, getAOIs, get_experiment_duration, get_fixation_famBodyObj_LT, get_fixation_famFace_LT, get_fixation_preflook_LT, get_fixation_screen_LT, get_objects, get_preflook_positions, get_StartEnd_list, is_sequence
+# !diagnostics suppress=allocateTrials, aoi_fambodyobj, aoi_famface, aoi_preflook, aoi_screen, getAOIs, getExperimentDuration, get_fixation_famBodyObj_LT, get_fixation_famFace_LT, get_fixation_preflook_LT, get_fixation_screen_LT, getObjects, getPrefLookPositions, getStartEndPositions
 sapply(list.files(c("util"), pattern = "*.r$", full.names = TRUE, ignore.case = TRUE),source,.GlobalEnv)
 
 
@@ -20,29 +20,27 @@ flist <- list.files(recs_dir)
 # Define AOI collections
 # ========================================
 
-# TODO CHECK COLUMN NAMES WITH THE OLD AOI FUNCTIONS and check screen boolean
-
-aoi_fam_actor_object <- list(
-  column_name = "FamPhase_Actor_Object",
+aoi_fam_body_object <- list(
+  column_name = "AOIFamBodyObj",
   no_evaluation_label = "NO EVAL",
   missing_coordinate_label = NA,
   aoilist = list(
     aoi1 = list(
-      aoi_hit_name = "left",
+      hit_name = "left",
       x_topright = 79,
       y_topright = 159,
       x_bottomright = 759,
       y_bottomright = 1089
     ),
     aoi2 = list(
-      aoi_hit_name = "center",
+      hit_name = "center",
       x_topright = 844,
       y_topright = 794,
       x_bottomright = 1204,
       y_bottomright = 1154
     ),
     aoi3 = list(
-      aoi_hit_name = "right",
+      hit_name = "right",
       x_topright = 1305,
       y_topright = 159,
       x_bottomright = 1985,
@@ -52,19 +50,19 @@ aoi_fam_actor_object <- list(
 )
 
 aoi_fam_face <- list(
-  column_name = "FamPhase_Face",
+  column_name = "AOIFamFace",
   no_evaluation_label = "NO EVAL",
   missing_coordinate_label = NA,
   aoilist = list(
     aoi1 = list(
-      aoi_hit_name = "left",
+      hit_name = "left",
       x_topright = 177,
       y_topright = 177,
       x_bottomright = 727,
       y_bottomright = 627
     ),
     aoi2 = list(
-      aoi_hit_name = "right",
+      hit_name = "right",
       x_topright = 1330,
       y_topright = 177,
       x_bottomright = 1880,
@@ -74,19 +72,19 @@ aoi_fam_face <- list(
 )
 
 aoi_preflook <- list(
-  column_name = "Preferential_Looking",
+  column_name = "AOIPrefLook",
   no_evaluation_label = "NO EVAL",
   missing_coordinate_label = NA,
   aoilist = list(
     aoi1 = list(
-      aoi_hit_name = "left",
+      hit_name = "left",
       x_topright = 350,
       y_topright = 396,
       x_bottomright = 710,
       y_bottomright = 756
     ),
     aoi2 = list(
-      aoi_hit_name = "right",
+      hit_name = "right",
       x_topright = 1338,
       y_topright = 396,
       x_bottomright = 1698,
@@ -96,12 +94,12 @@ aoi_preflook <- list(
 )
 
 aoi_screen <- list(
-  column_name = "Screen",
+  column_name = "AOIScreen",
   no_evaluation_label = "NO EVAL",
   missing_coordinate_label = NA,
   aoilist = list(
     aoi1 = list(
-      aoi_hit_name = TRUE,
+      hit_name = TRUE,
       x_topright = 0,
       y_topright = 0,
       x_bottomright = 2048,
@@ -135,7 +133,7 @@ for (i in 1:length(flist)) {
   df1_coi <- df0_raw[, coi]
 
   # get experiment duration in hh:mm:ss
-  exp_duration <- get_experiment_duration(df1_coi, "ATTENTION_Familiarization.wmv")
+  exp_duration <- getExperimentDuration(df1_coi, "ATTENTION_Familiarization.wmv")
 
   # Define inter trial naming patterns (regex)
   inter_trial_chunk_patterns = c(
@@ -146,18 +144,18 @@ for (i in 1:length(flist)) {
   )
 
   # get start and end index pairs for inter_trial chunks
-  familiarization_attention_startend <- get_StartEnd_list(df1_coi, inter_trial_chunk_patterns[1], "MovieStart", "MovieEnd")
-  familiarization_startend <- get_StartEnd_list(df1_coi, inter_trial_chunk_patterns[2], "MovieStart", "MovieEnd")
-  preflook_attention_startend <- get_StartEnd_list(df1_coi, inter_trial_chunk_patterns[3], "MovieStart", "MovieEnd")
-  preflook_startend <- get_StartEnd_list(df1_coi, inter_trial_chunk_patterns[4], "MovieStart", "MovieEnd")
+  familiarization_attention_startend <- getStartEndPositions(df1_coi, inter_trial_chunk_patterns[1], "MovieStart", "MovieEnd")
+  familiarization_startend <- getStartEndPositions(df1_coi, inter_trial_chunk_patterns[2], "MovieStart", "MovieEnd")
+  preflook_attention_startend <- getStartEndPositions(df1_coi, inter_trial_chunk_patterns[3], "MovieStart", "MovieEnd")
+  preflook_startend <- getStartEndPositions(df1_coi, inter_trial_chunk_patterns[4], "MovieStart", "MovieEnd")
 
 
   # Allocate Trials and Fillup StudioEventData Label
   df2_trial <- df1_coi
-  df2_trial <- allocate_trials(df2_trial, familiarization_attention_startend) # keep this enabled to track valid trials
-  df2_trial <- allocate_trials(df2_trial, familiarization_startend)
-  df2_trial <- allocate_trials(df2_trial, preflook_attention_startend) # keep this enabled to track valid trials
-  df2_trial <- allocate_trials(df2_trial, preflook_startend)
+  df2_trial <- allocateTrials(df2_trial, familiarization_attention_startend) # keep this enabled to track valid trials
+  df2_trial <- allocateTrials(df2_trial, familiarization_startend)
+  df2_trial <- allocateTrials(df2_trial, preflook_attention_startend) # keep this enabled to track valid trials
+  df2_trial <- allocateTrials(df2_trial, preflook_startend)
 
 
   # track the number of max trials
@@ -173,24 +171,14 @@ for (i in 1:length(flist)) {
   # AOI Columns
   df3_aoi <- df2_trial
 
-
-
-  # New function:
-  df3_aoi <- get_AOIs(df3_aoi, AOIs_fam_phase_Body_Object, familiarization_startend)
-
-  # Familiarization Actor left, Object center, Actor right
-  df3_aoi <- aoi_fambodyobj(df3_aoi, familiarization_startend)
-
-  # Familiarization Face left, Face right
-  df3_aoi <- aoi_famface(df3_aoi, familiarization_startend)
-
-  # Preferential Looking Object left, Object right
-  df3_aoi <- aoi_preflook(df3_aoi, preflook_startend)
-
-  # Screen Check (Participant looks on screen TRUE/False) during Familiarization and PrefLook phase
-  df3_aoi <- aoi_screen(df3_aoi, c(familiarization_startend, preflook_startend))
-
-
+  # AOI column for Familiarization Phase for Body & Object (left, right, center)
+  df3_aoi <- getAOIs(df3_aoi, aoi_fam_body_object, familiarization_startend)
+  # AOI column for Familiarization Phase for faces (left & right)
+  df3_aoi <- getAOIs(df3_aoi, aoi_fam_face, familiarization_startend)
+  # AOI column for Preferential Looking Phase for objects (left & right)
+  df3_aoi <- getAOIs(df3_aoi, aoi_preflook, preflook_startend)
+  # AOI column for Familiarization Phase for screen (TRUE/FALSE)
+  df3_aoi <- getAOIs(df3_aoi, aoi_preflook, preflook_startend)
 
 
   ####################################################################################################

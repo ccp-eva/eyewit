@@ -1,4 +1,4 @@
-get_CS <- function(df) {
+getCS <- function(df) {
   # check if there are multiple coordinate systems in df, specifically MCS and ADCS
   is_ADCS <- TRUE %in% grepl("GazePointX.*ADCS", names(df))
   is_MCS <- TRUE %in% grepl("GazePointX.*MCS", names(df))
