@@ -1,7 +1,7 @@
 getAOIs <- function(df, aoi_collection, scope = FALSE, return_df = TRUE, coordinate_system = "ADCS") {
 
   # check if rownames are equal to a sequence of corresponding rownumbers
-  if (!isTRUE((all.equal(as.numeric(rownames(df)), 1:nrow(df))))) stop("The df is not in sequence. Do not remove any rows.")
+  if (!isTRUE((all.equal(as.numeric(rownames(df)), 1:nrow(df))))) stop("The df is not in sequence. Do not remove rows!")
 
   # destructure aoi_collection
   column_name <- aoi_collection$column_name
