@@ -249,10 +249,10 @@ for (i in 1:length(flist)) {
   # -------------------------------------------------------------------------------------------
   # Preferential Looking Phase
   # -------------------------------------------------------------------------------------------
-  dfX_base$PrefLook_Object_Fam <- get_objects(df3_aoi, familiarization_startend)$familiar
-  dfX_base$PrefLook_Object_Fam_Pos <- get_preflook_positions(as.vector(unique(df3_aoi$StudioEventData[preflook_startend])), get_objects(df3_aoi, familiarization_startend)$familiar)$fam_pos
-  dfX_base$PrefLook_Object_Nov <- get_objects(df3_aoi, familiarization_startend)$novel
-  dfX_base$PrefLook_Object_Nov_Pos <- get_preflook_positions(as.vector(unique(df3_aoi$StudioEventData[preflook_startend])), get_objects(df3_aoi, familiarization_startend)$familiar)$nov_pos
+  dfX_base$PrefLook_Object_Fam <- getObjects(df3_aoi, familiarization_startend)$familiar
+  dfX_base$PrefLook_Object_Fam_Pos <- getPrefLookPositions(as.vector(unique(df3_aoi$StudioEventData[preflook_startend$start])), getObjects(df3_aoi, familiarization_startend)$familiar)$fam_pos
+  dfX_base$PrefLook_Object_Nov <- getObjects(df3_aoi, familiarization_startend)$novel
+  dfX_base$PrefLook_Object_Nov_Pos <- getPrefLookPositions(as.vector(unique(df3_aoi$StudioEventData[preflook_startend$start])), getObjects(df3_aoi, familiarization_startend)$familiar)$nov_pos
   dfX_base$PrefLook_LT_Object_Left <- get_fixation_preflook_LT(df3_aoi, preflook_startend)$left
   dfX_base$PrefLook_LT_Object_Right <- get_fixation_preflook_LT(df3_aoi, preflook_startend)$right
   dfX_base$PrefLook_LT_Total <- dfX_base$PrefLook_LT_Object_Left + dfX_base$PrefLook_LT_Object_Right

@@ -5,7 +5,7 @@ get_fixation_famFace_LT <- function(df, trial_startend, starttime = 0, endtime =
 
     # overwrite trial_startend to match the time windows
     # Extract only the start position of each trial
-    legacy_start_indexes <- trial_startend[seq(1, length(trial_startend), 2)]
+    legacy_start_indexes <- trial_startend$start
 
     # Add the starttime argument to every start position of the recording timestamp to get the actual start window
     starting_times <- df$RecordingTimestamp[legacy_start_indexes] + starttime
@@ -29,7 +29,7 @@ get_fixation_famFace_LT <- function(df, trial_startend, starttime = 0, endtime =
     )
 
     # merge/sort new star and end indexes and overwrite the trial_startend argument
-    trial_startend <- sort(c(start_indexes, end_indexes))
+    trial_startend <- list(start = start_indexes, end = end_indexes)
 
   }
 
@@ -39,11 +39,11 @@ get_fixation_famFace_LT <- function(df, trial_startend, starttime = 0, endtime =
   FirstLook_list <- c()
 
 
-  while (length(trial_startend) > 0) {
+  while (length(trial_startend$start) > 0) {
 
     # get the current trial pair
-    current_start_pos <- trial_startend[1]
-    current_end_pos <- trial_startend[2]
+    current_start_pos <- trial_startend$start[1]
+    current_end_pos <- trial_startend$end[1]
 
     # get all FixationIndexes in a trial
     inter_trial_FixationIndexes <- df$FixationIndex[current_start_pos:current_end_pos]
@@ -55,7 +55,8 @@ get_fixation_famFace_LT <- function(df, trial_startend, starttime = 0, endtime =
       GazeEventDurations_right <- c(GazeEventDurations_right, 0)
       FirstLook_list <- c(FirstLook_list, NA)
       # remove current not working index
-      trial_startend <- trial_startend[!trial_startend %in% c(current_start_pos, current_end_pos)]
+      trial_startend$start <- trial_startend$start[!trial_startend$start %in% c(current_start_pos)]
+      trial_startend$end <- trial_startend$end[!trial_startend$end %in% c(current_end_pos)]
       # go to next trial
       next
     }
@@ -207,7 +208,8 @@ get_fixation_famFace_LT <- function(df, trial_startend, starttime = 0, endtime =
     FirstLook_list <- c(FirstLook_list, first_look)
 
     # remove current pair, so it continues with the next pair/trial in the while loop
-    trial_startend <- trial_startend[!trial_startend %in% c(current_start_pos, current_end_pos)]
+    trial_startend$start <- trial_startend$start[!trial_startend$start %in% c(current_start_pos)]
+    trial_startend$end <- trial_startend$end[!trial_startend$end %in% c(current_end_pos)]
 
   }
 

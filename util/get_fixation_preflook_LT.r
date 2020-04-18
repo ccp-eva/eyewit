@@ -5,11 +5,11 @@ get_fixation_preflook_LT <- function(df, trial_startend, markercut = TRUE) {
   FirstLook_list <- c()
 
 
-  while (length(trial_startend) > 0) {
+  while (length(trial_startend$start) > 0) {
 
     # get the current trial pair
-    current_start_pos <- trial_startend[1]
-    current_end_pos <- trial_startend[2]
+    current_start_pos <- trial_startend$start[1]
+    current_end_pos <- trial_startend$end[1]
 
     # get all FixationIndexes in a trial
     inter_trial_FixationIndexes <- df$FixationIndex[current_start_pos:current_end_pos]
@@ -21,7 +21,8 @@ get_fixation_preflook_LT <- function(df, trial_startend, markercut = TRUE) {
       GazeEventDurations_right <- c(GazeEventDurations_right, 0)
       FirstLook_list <- c(FirstLook_list, NA)
       # remove current not working index
-      trial_startend <- trial_startend[!trial_startend %in% c(current_start_pos, current_end_pos)]
+      trial_startend$start <- trial_startend$start[!trial_startend$start %in% c(current_start_pos)]
+      trial_startend$end <- trial_startend$end[!trial_startend$end %in% c(current_end_pos)]
       # go to next trial
       next
     }
@@ -173,7 +174,8 @@ get_fixation_preflook_LT <- function(df, trial_startend, markercut = TRUE) {
     FirstLook_list <- c(FirstLook_list, first_look)
 
     # remove current pair, so it continues with the next pair/trial in the while loop
-    trial_startend <- trial_startend[!trial_startend %in% c(current_start_pos, current_end_pos)]
+    trial_startend$start <- trial_startend$start[!trial_startend$start %in% c(current_start_pos)]
+    trial_startend$end <- trial_startend$end[!trial_startend$end %in% c(current_end_pos)]
 
   }
 

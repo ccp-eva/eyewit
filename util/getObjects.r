@@ -1,7 +1,7 @@
 getObjects <- function(df, fam_index_pairs) {
 
   # familar objects
-  string_list <- as.vector(unique(df$StudioEventData[fam_index_pairs]))
+  string_list <- as.vector(unique(df$StudioEventData[fam_index_pairs$start]))
 
   # function to extract the sequence "Obj_xxx" untile a period "." appears
   slice_object_string <- function(string) {
