@@ -1,4 +1,3 @@
-rm(list = ls(all.names = TRUE)) # clears everything
 getLooks <- function(
     df, aoi_collection, scope, intra_scope_window = c(0, 0), intra_scope_cut = TRUE,
     count_na_fixations = FALSE, stop_if_multiple_hit_names_in_single_fixation = TRUE) {
@@ -102,12 +101,18 @@ getLooks <- function(
       hit_names_in_FixationIndex <- df[[column_name]][which(df$FixationIndex == i)]
 
       # check if multiple hit names are in current fixation index
-      if (stop_if_multiple_hit_names_in_single_fixation && length(hit_names) > 1) {
+      if (stop_if_multiple_hit_names_in_single_fixation) { # maybe useful to add a length constrain as well:  && length(hit_names) > 1
         # compare current hit_names_in_FixationIndex against hit_names
         hit_names_logical <- hit_names %in% hit_names_in_FixationIndex
         # hit_names_logical should only contain TRUE once (https://stackoverflow.com/a/2191824/2258480)
         if (sum(hit_names_logical, na.rm = TRUE) > 1) { # best way to count TRUE values
-          stop(paste("The current pair", i, "contains multiple AOI hit names!", sep = " "))
+          stop(paste("The current Fixation Index:", i, "contains multiple AOI hit names!", sep = " "))
+        }
+        # check for single hitname AOIs if the contain the hit_name AND FALSE
+        if (length(hit_names) == 1 &&
+            hit_names %in% hit_names_in_FixationIndex &&
+            FALSE %in% hit_names_in_FixationIndex) {
+          stop(paste("The current Fixation Index:", i, "contains", hit_names, "and FALSE!", sep = " "))
         }
       }
 
@@ -189,26 +194,24 @@ getLooks <- function(
       first_looks <- c(first_looks, first_look)
     }
 
-
   }
 
-  return(
-    list(
-      looking_times = looking_times,
-      first_looks = first_looks
+  # END Function
+  # Returns
+
+  # if there is only one hit_name it does not need to be in a nested list
+  if (length(hit_names) == 1) {
+    looking_times <- unlist(looking_times[[1]])
+  }
+
+  if (use_first_looks) {
+    return(
+      list(
+        looking_times = looking_times,
+        first_looks = first_looks
+      )
     )
-  )
+  }
+
+  return(list(looking_times = looking_times))
 }
-
-
-
-
-
-
-
-df <- readRDS("rds_df")
-aoi_collection <- readRDS("rds_aoi_collection")
-scope <- readRDS("rds_scope")
-intra_scope_window <- c(2000, 3000)
-
-response <- getLooks(df, aoi_collection, scope, intra_scope_window)
