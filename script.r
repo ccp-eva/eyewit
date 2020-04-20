@@ -7,8 +7,7 @@ graphics.off() # close all open graphics
 
 # import utility functions & mute RStudio diagnostics
 # !diagnostics suppress=allocateTrials, aoi_fambodyobj, aoi_famface, aoi_preflook, aoi_screen, getAOIs, getExperimentDuration, get_fixation_famBodyObj_LT, get_fixation_famFace_LT, get_fixation_preflook_LT, get_fixation_screen_LT, getObjects, getPrefLookPositions, getStartEndPositions
-sapply(list.files(c("util"), pattern = "*.r$", full.names = TRUE, ignore.case = TRUE),source,.GlobalEnv)
-
+sapply(list.files(c("util"), pattern = "*.r$", full.names = TRUE, ignore.case = TRUE), source, .GlobalEnv)
 
 # Set directories
 recs_dir <- "./recs/"
