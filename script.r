@@ -6,8 +6,12 @@ graphics.off() # close all open graphics
 # setwd(file.path("C:", "Users", "steven", "WorkSpaces", "R", "test"))
 
 # import utility functions & mute RStudio diagnostics
-# !diagnostics suppress=allocateTrials, aoi_fambodyobj, aoi_famface, aoi_preflook, aoi_screen, getAOIs, getExperimentDuration, get_fixation_famBodyObj_LT, get_fixation_famFace_LT, get_fixation_preflook_LT, get_fixation_screen_LT, getObjects, getPrefLookPositions, getLooks, getStartEndPositions
+# !diagnostics suppress=allocateTrials, getAOIs, getCS, getExperimentDuration, getLooks, getObjects, getPrefLookPositions, getStartEndPositions
 sapply(list.files(c("util"), pattern = "*.r$", full.names = TRUE, ignore.case = TRUE), source, .GlobalEnv)
+
+# import user interface
+# !diagnostics suppress=coi, inter_trial_chunk_patterns, aoi_fam_body_object, aoi_fam_face, aoi_preflook, aoi_screen
+source("interface.r")
 
 # Set directories
 recs_dir <- "./recs/"
@@ -15,132 +19,18 @@ recs_dir <- "./recs/"
 # reads all files in recs folder
 flist <- list.files(recs_dir)
 
-# ========================================
-# Define AOI collections
-# ========================================
 
-aoi_fam_body_object <- list(
-  column_name = "AOIFamBodyObj",
-  no_evaluation_label = "NO EVAL",
-  missing_coordinate_label = NA,
-  aoilist = list(
-    aoi1 = list(
-      hit_name = "left",
-      x_topright = 79,
-      y_topright = 159,
-      x_bottomright = 759,
-      y_bottomright = 1089
-    ),
-    aoi2 = list(
-      hit_name = "center",
-      x_topright = 844,
-      y_topright = 794,
-      x_bottomright = 1204,
-      y_bottomright = 1154
-    ),
-    aoi3 = list(
-      hit_name = "right",
-      x_topright = 1305,
-      y_topright = 159,
-      x_bottomright = 1985,
-      y_bottomright = 1089
-    )
-  )
-)
-
-aoi_fam_face <- list(
-  column_name = "AOIFamFace",
-  no_evaluation_label = "NO EVAL",
-  missing_coordinate_label = NA,
-  aoilist = list(
-    aoi1 = list(
-      hit_name = "left",
-      x_topright = 177,
-      y_topright = 177,
-      x_bottomright = 727,
-      y_bottomright = 627
-    ),
-    aoi2 = list(
-      hit_name = "right",
-      x_topright = 1330,
-      y_topright = 177,
-      x_bottomright = 1880,
-      y_bottomright = 627
-    )
-  )
-)
-
-aoi_preflook <- list(
-  column_name = "AOIPrefLook",
-  no_evaluation_label = "NO EVAL",
-  missing_coordinate_label = NA,
-  aoilist = list(
-    aoi1 = list(
-      hit_name = "left",
-      x_topright = 350,
-      y_topright = 396,
-      x_bottomright = 710,
-      y_bottomright = 756
-    ),
-    aoi2 = list(
-      hit_name = "right",
-      x_topright = 1338,
-      y_topright = 396,
-      x_bottomright = 1698,
-      y_bottomright = 756
-    )
-  )
-)
-
-aoi_screen <- list(
-  column_name = "AOIScreen",
-  no_evaluation_label = "NO EVAL",
-  missing_coordinate_label = NA,
-  aoilist = list(
-    aoi1 = list(
-      hit_name = TRUE,
-      x_topright = 0,
-      y_topright = 0,
-      x_bottomright = 2048,
-      y_bottomright = 1152
-    )
-  )
-)
-
+# Loop over all subjects
 for (i in 1:length(flist)) {
 
   # read tsv files
   df0_raw <- read.table(file = file.path(recs_dir, flist[i]), sep = "\t", header = TRUE)
-
-
-  # columns of interest
-  coi <-
-    c(
-      "RecordingTimestamp",
-      "LocalTimeStamp",
-      "StudioEventIndex",
-      "StudioEvent",
-      "StudioEventData",
-      "FixationIndex",
-      "GazeEventType",
-      "GazeEventDuration",
-      "GazePointX..ADCSpx.",
-      "GazePointY..ADCSpx."
-    )
 
   # create COI df
   df1_coi <- df0_raw[, coi]
 
   # get experiment duration in hh:mm:ss
   exp_duration <- getExperimentDuration(df1_coi, "ATTENTION_Familiarization.wmv")
-
-  # Define inter trial naming patterns (regex)
-  inter_trial_chunk_patterns = c(
-    ".*Familiar.*",  # Something with *Familiar*
-    ".*_Inter.*",    # Something with *_Inter*, compare: 24_Inter_A-Con2_NSOC_LOB_D2a-ObjectX_a-Obj_12_a.wmv
-    ".*Preflook.*",  # Something with *Preflook*
-    ".*LEFT.*"       # Something with *LEFT*, compare: 9a_ObjectY_b-Obj_16_b-LEFT-ObjectY_a-Obj_16_a-RIGHT.wmv
-  )
 
   # get start and end index pairs for inter_trial chunks
   familiarization_attention_startend <- getStartEndPositions(df1_coi, inter_trial_chunk_patterns[1], "MovieStart", "MovieEnd")
