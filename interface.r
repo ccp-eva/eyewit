@@ -1,3 +1,6 @@
+# Set subject raw data directory
+recs_dir <- "./recs/"
+
 # ==================================================
 # Define AOI collections
 # ==================================================
@@ -102,7 +105,6 @@ inter_trial_chunk_patterns = c(
   ".*LEFT.*"       # Something with *LEFT*, compare: 9a_ObjectY_b-Obj_16_b-LEFT-ObjectY_a-Obj_16_a-RIGHT.wmv
 )
 
-
 # ==================================================
 # Columns of Interests
 # ==================================================
@@ -120,3 +122,5 @@ coi <-
     "GazePointX..ADCSpx.",
     "GazePointY..ADCSpx."
   )
+
+

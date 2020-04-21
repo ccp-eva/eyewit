@@ -10,11 +10,8 @@ graphics.off() # close all open graphics
 sapply(list.files(c("util"), pattern = "*.r$", full.names = TRUE, ignore.case = TRUE), source, .GlobalEnv)
 
 # import user interface
-# !diagnostics suppress=coi, inter_trial_chunk_patterns, aoi_fam_body_object, aoi_fam_face, aoi_preflook, aoi_screen
+# !diagnostics suppress=coi, recs_dir, inter_trial_chunk_patterns, aoi_fam_body_object, aoi_fam_face, aoi_preflook, aoi_screen
 source("interface.r")
-
-# Set directories
-recs_dir <- "./recs/"
 
 # reads all files in recs folder
 flist <- list.files(recs_dir)
@@ -26,8 +23,9 @@ for (i in 1:length(flist)) {
   # read tsv files
   df0_raw <- read.table(file = file.path(recs_dir, flist[i]), sep = "\t", header = TRUE)
 
-  # create COI df
+  # create COI df (todo: this df is not necessary)
   df1_coi <- df0_raw[, coi]
+
 
   # get start and end index pairs for inter_trial chunks
   familiarization_attention_startend <- getStartEndPositions(df1_coi, inter_trial_chunk_patterns[1], "MovieStart", "MovieEnd")
@@ -36,7 +34,8 @@ for (i in 1:length(flist)) {
   preflook_startend <- getStartEndPositions(df1_coi, inter_trial_chunk_patterns[4], "MovieStart", "MovieEnd")
 
 
-  # Allocate Trials and Fillup StudioEventData Label
+
+  # Allocate Trials and Fillup StudioEventData Label (todo: this df is not necessary)
   df2_trial <- df1_coi
   df2_trial <- allocateTrials(df2_trial, familiarization_attention_startend) # keep this enabled to track valid trials
   df2_trial <- allocateTrials(df2_trial, familiarization_startend)
@@ -44,7 +43,7 @@ for (i in 1:length(flist)) {
   df2_trial <- allocateTrials(df2_trial, preflook_startend)
 
 
-  # track the number of max trials
+  # track the number of max trials (todo use start end positions to determien trial length, also create a function that checks trial length consistency over all startend positions)
   total_trials <- max(df2_trial$Trial, na.rm = TRUE)
 
   # track vector of all inter names (important for dfX_base performance)
