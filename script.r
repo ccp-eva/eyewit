@@ -6,7 +6,7 @@ graphics.off() # close all open graphics
 # setwd(file.path("C:", "Users", "steven", "WorkSpaces", "R", "test"))
 
 # import utility functions & mute RStudio diagnostics
-# !diagnostics suppress=allocateTrials, getAOIs, getCS, getExperimentDuration, getLooks, getObjects, getPrefLookPositions, getStartEndPositions
+# !diagnostics suppress=allocateTrials, getAOIs, getCS, getLooks, getObjects, getPrefLookPositions, getStartEndPositions
 sapply(list.files(c("util"), pattern = "*.r$", full.names = TRUE, ignore.case = TRUE), source, .GlobalEnv)
 
 # import user interface
@@ -28,9 +28,6 @@ for (i in 1:length(flist)) {
 
   # create COI df
   df1_coi <- df0_raw[, coi]
-
-  # get experiment duration in hh:mm:ss
-  exp_duration <- getExperimentDuration(df1_coi, "ATTENTION_Familiarization.wmv")
 
   # get start and end index pairs for inter_trial chunks
   familiarization_attention_startend <- getStartEndPositions(df1_coi, inter_trial_chunk_patterns[1], "MovieStart", "MovieEnd")
