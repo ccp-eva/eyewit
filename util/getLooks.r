@@ -1,6 +1,4 @@
-getLooks <- function(
-    df, aoi_collection, scope, intra_scope_window = c(0, 0), intra_scope_cut = TRUE,
-    stop_if_multiple_hit_names_in_single_fixation = TRUE) {
+getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), intra_scope_cut = TRUE) {
 
   # check if rownames are equal to a sequence of corresponding rownumbers
   if (!isTRUE((all.equal(as.numeric(rownames(df)), 1:nrow(df))))) stop("The df is not in sequence. Do not remove rows!")
@@ -56,6 +54,9 @@ getLooks <- function(
     first_looks <- c()
   }
 
+  # log fixation indexes that contain multiple hit_names
+  bad_fixation_indexes = c()
+
 
   # loop over scope/trials
   for (seq in seq_along(scope$start)) {
@@ -102,20 +103,13 @@ getLooks <- function(
       # get all hit names within current fixation index
       hit_names_in_FixationIndex <- df[[column_name]][which(df$FixationIndex == i)]
 
-      # check if multiple hit names are in current fixation index
-      if (stop_if_multiple_hit_names_in_single_fixation) { # maybe useful to add a length constrain as well:  && length(hit_names) > 1
-        # compare current hit_names_in_FixationIndex against hit_names
-        hit_names_logical <- hit_names %in% hit_names_in_FixationIndex
-        # hit_names_logical should only contain TRUE once (https://stackoverflow.com/a/2191824/2258480)
-        if (sum(hit_names_logical, na.rm = TRUE) > 1) { # best way to count TRUE values
-          stop(paste("The current Fixation Index:", i, "contains multiple AOI hit names!", sep = " "))
-        }
-        # check for single hitname AOIs if the contain the hit_name AND FALSE
-        if (length(hit_names) == 1 &&
-            hit_names %in% hit_names_in_FixationIndex &&
-            FALSE %in% hit_names_in_FixationIndex) {
-          stop(paste("The current Fixation Index:", i, "contains", hit_names, "and FALSE!", sep = " "))
-        }
+      # check if multiple hit names are in current fixation index (implicitly applies to hit_names w/ lenght > 1 only)
+      # see reference for the check below: (https://stackoverflow.com/a/2191824/2258480)
+      if (sum(hit_names %in% hit_names_in_FixationIndex, na.rm = TRUE) > 1) {
+        # log this index
+        bad_fixation_indexes <- c(bad_fixation_indexes, i)
+        # go to next index
+        next
       }
 
 
@@ -210,7 +204,8 @@ getLooks <- function(
     return(
       list(
         looking_times = looking_times,
-        first_looks = first_looks
+        first_looks = first_looks,
+        bad_fixation_indexes = bad_fixation_indexes
       )
     )
   }
