@@ -1,6 +1,6 @@
 getLooks <- function(
     df, aoi_collection, scope, intra_scope_window = c(0, 0), intra_scope_cut = TRUE,
-    count_na_fixations = FALSE, stop_if_multiple_hit_names_in_single_fixation = TRUE) {
+    stop_if_multiple_hit_names_in_single_fixation = TRUE) {
 
   # check if rownames are equal to a sequence of corresponding rownumbers
   if (!isTRUE((all.equal(as.numeric(rownames(df)), 1:nrow(df))))) stop("The df is not in sequence. Do not remove rows!")
@@ -52,7 +52,9 @@ getLooks <- function(
   use_first_looks <- ifelse(length(hit_names) == 1, FALSE, TRUE)
 
   # storage container for first_looks
-  first_looks <- c()
+  if (use_first_looks) {
+    first_looks <- c()
+  }
 
 
   # loop over scope/trials
