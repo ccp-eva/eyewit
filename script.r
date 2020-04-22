@@ -6,11 +6,11 @@ graphics.off() # close all open graphics
 # setwd(file.path("C:", "Users", "steven", "WorkSpaces", "R", "test"))
 
 # import utility functions & mute RStudio diagnostics
-# !diagnostics suppress=allocateTrials, getAOIs, getCS, getLooks, getObjects, getPrefLookPositions, getStartEndPositions
+# !diagnostics suppress=allocateTrials, destructureString, getAOIs, getCS, getLooks, getObjects, getPrefLookPositions, getStartEndPositions
 sapply(list.files(c("util"), pattern = "*.r$", full.names = TRUE, ignore.case = TRUE), source, .GlobalEnv)
 
 # import user interface
-# !diagnostics suppress=coi, recs_dir, inter_trial_chunk_patterns, aoi_fam_body_object, aoi_fam_face, aoi_preflook, aoi_screen
+# !diagnostics suppress=coi, recs_dir, lut_filename, inter_trial_chunk_patterns, aoi_fam_body_object, aoi_fam_face, aoi_preflook, aoi_screen
 source("interface.r")
 
 # reads all files in recs folder
@@ -76,9 +76,9 @@ for (i in 2:2) {
   # ==================================================================================================
   # NAME INFORMATIONS
   # --------------------------------------------------------------------------------------------------
-  dfX_base$ID <- unlist(strsplit(current_subject, split = "_"))[2]
-  dfX_base$Sex <- unlist(strsplit(current_subject, split = "_"))[3]
-  dfX_base$Age_Days <- unlist(strsplit(current_subject, split = "_"))[4]
+  dfX_base$ID <- destructureString(current_subject, lut_filename)$ID
+  dfX_base$Sex <- destructureString(current_subject, lut_filename)$Sex
+  dfX_base$Age_Days <- destructureString(current_subject, lut_filename)$Age_Days
   dfX_base$Trial <- 1:total_trials
   dfX_base$Condition <- unlist(lapply(strsplit(inter_vectors, split = "_"), `[[`, 4))
   dfX_base$Con_Object <- unlist(lapply(strsplit(inter_vectors, split = "_"), `[[`, 6))

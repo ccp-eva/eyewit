@@ -109,24 +109,13 @@ inter_trial_chunk_patterns = c(
 # Define Name Look-Up Information / Mappings
 # ==================================================
 
-"OPROThird_01_W_9_Alva_Rec15_24.txt"
-lut_subject <- list(
-  delimiter = "_",
-  exp_name = 1,
-  subj_id = 2,
-  sex = 3,
-  age = 4,
-  name = 5
-)
+#         "OPROThird_01_W_9_Alva_Rec15_24.txt"
+# e.g.:       |1|    |2|3|4||5|   |6|   |7|
+lut_filename <- c("exp_name", "ID", "Sex", "Age_Days", "name", "session", "tail")
+
 
 # "24_Inter_A_Con2_NSOC_LOB_D2a_ObjectX_a_Obj_12_a.wmv"
-lut_familiar <- list(
-  delimiter = "_",
-  trial = 1,
-  phase = 2,
-  phaseFolder = 3,
-  condition = 4
-)
+lut_fam_phase <- c("trial", "folder", "letter", "condition", "condition_value", "abc", "obj", "obj_letter")
 
 
 # ==================================================
