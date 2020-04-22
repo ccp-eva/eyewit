@@ -210,5 +210,5 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
     )
   }
 
-  return(list(looking_times = looking_times))
+  return(list(looking_times = looking_times, bad_fixation_indexes = bad_fixation_indexes))
 }
