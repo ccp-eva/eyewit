@@ -1,4 +1,4 @@
-getAOIs <- function(df, aoi_collection, scope = FALSE, return_df = TRUE, coordinate_system = "ADCS") {
+getAOIs <- function(df, aoi_collection, scope = c(0, 0), return_df = TRUE, coordinate_system = "ADCS") {
 
   # check if rownames are equal to a sequence of corresponding rownumbers
   if (!isTRUE((all.equal(as.numeric(rownames(df)), 1:nrow(df))))) stop("The df is not in sequence. Do not remove rows!")
@@ -11,10 +11,24 @@ getAOIs <- function(df, aoi_collection, scope = FALSE, return_df = TRUE, coordin
   # get df length
   df_row_count <- nrow(df)
 
-
   # If scope is not explicitly set, overwrite scope boundary to include all rows
-  if (length(scope) == 1) {
+  if (missing(scope)) {
     scope <- list(start = 1, end = df_row_count)
+  }
+
+  # If scope was set, check if the user entered multiple ranges using c(scope1, scope2, etc.)
+  if (!missing(scope) && length(scope) > 2) {
+    # merge the multiple scope$start elements and sort them
+    all_starts <- sort(unlist(scope[names(scope) == 'start'], use.names = FALSE))
+    all_ends <- sort(unlist(scope[names(scope) == 'end'], use.names = FALSE))
+    # overwrite input scope
+    scope$start <- all_starts
+    scope$end <- all_ends
+  }
+
+  # check if length is matching
+  if (length(scope$start) != length(scope$end)) {
+    stop("Your input scope is not equal")
   }
 
   # todo check if there are multiple coordinate systems
