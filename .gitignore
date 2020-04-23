@@ -1,3 +1,8 @@
+# exclude subject files
+recs/
+
+
+# The following part comes from gitignore.io
 # Created by https://www.gitignore.io/api/r,linux,macos,windows
 # Edit at https://www.gitignore.io/?templates=r,linux,macos,windows
 
