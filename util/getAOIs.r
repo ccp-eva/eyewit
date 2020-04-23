@@ -61,7 +61,7 @@ getAOIs <- function(df, aoi_collection, scope = c(0, 0), return_df = TRUE, coord
         }
 
         # check the hit area
-        if (row_x_value >= aoi$x_topright    && row_y_value >= aoi$y_topright &&
+        if (row_x_value >= aoi$x_topleft    && row_y_value >= aoi$y_topleft &&
             row_x_value <= aoi$x_bottomright && row_y_value <= aoi$y_bottomright) {
           aoi_vector[current_row] <- aoi$hit_name
           break

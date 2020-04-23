@@ -12,22 +12,22 @@ aoi_fam_body_object <- list(
   aoilist = list(
     aoi1 = list(
       hit_name = "left",
-      x_topright = 79,
-      y_topright = 159,
+      x_topleft = 79,
+      y_topleft = 159,
       x_bottomright = 759,
       y_bottomright = 1089
     ),
     aoi2 = list(
       hit_name = "center",
-      x_topright = 844,
-      y_topright = 794,
+      x_topleft = 844,
+      y_topleft = 794,
       x_bottomright = 1204,
       y_bottomright = 1154
     ),
     aoi3 = list(
       hit_name = "right",
-      x_topright = 1305,
-      y_topright = 159,
+      x_topleft = 1305,
+      y_topleft = 159,
       x_bottomright = 1985,
       y_bottomright = 1089
     )
@@ -41,15 +41,15 @@ aoi_fam_face <- list(
   aoilist = list(
     aoi1 = list(
       hit_name = "left",
-      x_topright = 177,
-      y_topright = 177,
+      x_topleft = 177,
+      y_topleft = 177,
       x_bottomright = 727,
       y_bottomright = 627
     ),
     aoi2 = list(
       hit_name = "right",
-      x_topright = 1330,
-      y_topright = 177,
+      x_topleft = 1330,
+      y_topleft = 177,
       x_bottomright = 1880,
       y_bottomright = 627
     )
@@ -63,15 +63,15 @@ aoi_preflook <- list(
   aoilist = list(
     aoi1 = list(
       hit_name = "left",
-      x_topright = 350,
-      y_topright = 396,
+      x_topleft = 350,
+      y_topleft = 396,
       x_bottomright = 710,
       y_bottomright = 756
     ),
     aoi2 = list(
       hit_name = "right",
-      x_topright = 1338,
-      y_topright = 396,
+      x_topleft = 1338,
+      y_topleft = 396,
       x_bottomright = 1698,
       y_bottomright = 756
     )
@@ -85,8 +85,8 @@ aoi_screen <- list(
   aoilist = list(
     aoi1 = list(
       hit_name = TRUE,
-      x_topright = 0,
-      y_topright = 0,
+      x_topleft = 0,
+      y_topleft = 0,
       x_bottomright = 2048,
       y_bottomright = 1152
     )
