@@ -10,7 +10,7 @@ graphics.off() # close all open graphics
 sapply(list.files(c("util"), pattern = "*.r$", full.names = TRUE, ignore.case = TRUE), source, .GlobalEnv)
 
 # import user interface
-# !diagnostics suppress=coi, recs_dir, lut_filename, inter_trial_chunk_patterns, aoi_fam_body_object, aoi_fam_face, aoi_preflook, aoi_screen
+# !diagnostics suppress=coi, recs_dir, lut_filename, lut_fam_phase, inter_trial_chunk_patterns, aoi_fam_body_object, aoi_fam_face, aoi_preflook, aoi_screen
 source("interface.r")
 
 # reads all files in recs folder
@@ -18,7 +18,7 @@ flist <- list.files(recs_dir)
 
 
 # Loop over all subjects
-for (i in 2:2) {
+for (i in 1:length(flist)) {
 
   current_subject <- flist[i]
 
@@ -76,14 +76,14 @@ for (i in 2:2) {
   # ==================================================================================================
   # NAME INFORMATIONS
   # --------------------------------------------------------------------------------------------------
-  dfX_base$ID <- destructureString(current_subject, lut_filename)$ID
-  dfX_base$Sex <- destructureString(current_subject, lut_filename)$Sex
-  dfX_base$Age_Days <- destructureString(current_subject, lut_filename)$Age_Days
+  dfX_base$ID <- destructureString(lut_filename, current_subject)$ID
+  dfX_base$Sex <- destructureString(lut_filename, current_subject)$Sex
+  dfX_base$Age_Days <- destructureString(lut_filename, current_subject)$Age_Days
   dfX_base$Trial <- 1:total_trials
-  dfX_base$Condition <- unlist(lapply(strsplit(inter_vectors, split = "_"), `[[`, 4))
-  dfX_base$Con_Object <- unlist(lapply(strsplit(inter_vectors, split = "_"), `[[`, 6))
-  dfX_base$Con_SocInt <- unlist(lapply(strsplit(inter_vectors, split = "_"), `[[`, 5))
-  dfX_base$Dyad <- unlist(lapply(strsplit(inter_vectors, split = "_"), `[[`, 7))
+  dfX_base$Condition <- destructureString(lut_fam_phase, inter_vectors)$Condition
+  dfX_base$Con_Object <- destructureString(lut_fam_phase, inter_vectors)$Con_Object
+  dfX_base$Con_SocInt <- destructureString(lut_fam_phase, inter_vectors)$Con_SocInt
+  dfX_base$Dyad <- destructureString(lut_fam_phase, inter_vectors)$Dyad
   # --------------------------------------------------------------------------------------------------
   # Familiarization Phase
   # --------------------------------------------------------------------------------------------------

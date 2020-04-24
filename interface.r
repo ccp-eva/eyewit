@@ -115,7 +115,7 @@ lut_filename <- c("exp_name", "ID", "Sex", "Age_Days", "name", "session", "tail"
 
 
 # "24_Inter_A_Con2_NSOC_LOB_D2a_ObjectX_a_Obj_12_a.wmv"
-lut_fam_phase <- c("trial", "folder", "letter", "condition", "condition_value", "abc", "obj", "obj_letter")
+lut_fam_phase <- c("Trial", "Folder", "Letter", "Condition", "Con_SocInt", "Con_Object", "Dyad", "B", "C", "D", "E", "F")
 
 
 # ==================================================
