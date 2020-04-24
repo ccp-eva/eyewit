@@ -130,7 +130,6 @@ coi <-
     "StudioEvent",
     "StudioEventData",
     "FixationIndex",
-    "GazeEventType",
     "GazeEventDuration",
     "GazePointX..ADCSpx.",
     "GazePointY..ADCSpx."
