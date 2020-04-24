@@ -119,10 +119,11 @@ lut_fam_phase <- c("Trial", "Folder", "Letter", "Condition", "Con_SocInt", "Con_
 
 
 # ==================================================
-# Columns of Interests
+# Mandatory Columns (Do not remove columns here,
+# unless you know what you are doing)
 # ==================================================
 
-coi <-
+mc <-
   c(
     "RecordingTimestamp",
     "LocalTimeStamp",
@@ -135,4 +136,10 @@ coi <-
     "GazePointY..ADCSpx."
   )
 
+# ==================================================
+# Columns of Interests (Add as many as you want)
+# ==================================================
+
+coi <-
+  c("GazeEventType")
 
