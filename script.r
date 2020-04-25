@@ -6,7 +6,7 @@ graphics.off() # close all open graphics
 # setwd(file.path("C:", "Users", "steven", "WorkSpaces", "R", "test"))
 
 # import utility functions & mute RStudio diagnostics
-# !diagnostics suppress=allocateTrials, destructureString, getAOIs, getCS, getLooks, getObjects, getPrefLookPositions, getStartEndPositions
+# !diagnostics suppress=allocateTrials, destructureString, getAOIs, getCS, getLooks, getObjects, getPrefLookPositions, getStartEndPositions, preflight
 sapply(list.files(c("util"), pattern = "*.r$", full.names = TRUE, ignore.case = TRUE), source, .GlobalEnv)
 
 # import user interface
@@ -24,6 +24,9 @@ for (i in 1:length(flist)) {
 
   # read tsv files
   df0_raw <- read.table(file = file.path(recs_dir, current_subject), sep = "\t", header = TRUE)
+
+  # run preflight diagnostics of the raw data file
+  preflight_status <- preflight(df0_raw, mc)
 
   # create a lean df including mandatory and columns of interest (todo: this df is not necessary)
   df1_mccoi <- df0_raw[, c(mc, coi)]
