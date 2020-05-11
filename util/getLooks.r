@@ -1,8 +1,5 @@
 getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), intra_scope_cut = TRUE) {
 
-  # check if rownames are equal to a sequence of corresponding rownumbers
-  if (!isTRUE((all.equal(as.numeric(rownames(df)), 1:nrow(df))))) stop("The df is not in sequence. Do not remove rows!")
-
 
   # check if intra_scope_window was passed as an argument, if so ...
   # ... use time ranges defined by intra_scope_window to overwrite scope
