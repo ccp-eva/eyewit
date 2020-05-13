@@ -1,5 +1,10 @@
 allocateTrials <- function(df, index_pairs, fill_StudioEventData = TRUE) {
 
+  # Check if Trial column exists, if not create it
+  if (!"Trial" %in% colnames(df)) {
+    df <- cbind(Trial = NA, df)
+  }
+
   trial_counter <- 1
 
   for (i in seq_along(index_pairs$start)) {
