@@ -111,7 +111,7 @@ inter_trial_chunk_patterns = c(
 
 #         "OPROThird_01_W_9_Alva_Rec15_24.txt"
 # e.g.:       |1|    |2|3|4||5|   |6|   |7|
-lut_filename <- c("exp_name", "ID", "Sex", "Age_Days", "name", "session", "tail")
+lut_filename <- c("exp_name", "ID", "Sex", "Age_Days", "session", "tail")
 
 
 # "24_Inter_A_Con2_NSOC_LOB_D2a_ObjectX_a_Obj_12_a.wmv"
