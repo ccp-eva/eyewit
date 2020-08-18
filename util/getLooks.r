@@ -1,6 +1,5 @@
 getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), intra_scope_cut = TRUE) {
 
-
   # check if intra_scope_window was passed as an argument, if so ...
   # ... use time ranges defined by intra_scope_window to overwrite scope
   if (!missing(intra_scope_window)) {
@@ -34,7 +33,7 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
   # destructure aoi_collection
   column_name <- aoi_collection$column_name
   # store all hit_names
-  hit_names = c()
+  hit_names <- c()
   for (aoi in aoi_collection$aoilist) {
     hit_names <- c(hit_names, aoi$hit_name)
   }
@@ -46,6 +45,12 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
   # create a storage container for all looking frequencies (i.e., counting the number of looks within an AOI)
   looking_frequencies <- setNames(vector("list", length(hit_names)), hit_names)
 
+  # create a storage container for gaze shifts (use it with getLooks$OriginHitname$TargetHitname)
+  # https://stackoverflow.com/a/63451891/2258480
+  hit_names_unknown <- c(hit_names, "unknown")
+  gaze_shifts <- setNames(lapply(hit_names_unknown, function(x) setNames(rep(list(numeric()), length(hit_names_unknown) - 1L), setdiff(hit_names_unknown, x))), hit_names_unknown)
+
+
   # flag if first looks should be used (if there is only one hitname FLs aren’t  necessary)
   use_first_looks <- ifelse(length(hit_names) == 1, FALSE, TRUE)
 
@@ -55,9 +60,12 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
   }
 
   # log fixation indexes that contain multiple hit_names
-  bad_fixation_indexes = c()
+  bad_fixation_indexes <- c()
 
-  # loop over scope/trials
+
+  ######################################
+  #### loop over scope / all trials ####
+  ######################################
   for (seq in seq_along(scope$start)) {
     current_start <- scope$start[seq]
     current_end <- scope$end[seq]
@@ -69,12 +77,18 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
     # Filter out all NAs within the current trial and check if there are still...
     # ... valid fixations left. If not, skip current trial/scope
     if (length(na.omit(inter_trial_FixationIndexes)) == 0) {
-      # Append 0 to looking_times, looking_frequencies, and NA to FirstLook in the current trial and skip to next
+      # Append 0 to looking_times, looking_frequencies, gaze_shifts, and NA to FirstLook in the current trial and skip to next
       for (hn in hit_names) {
-        looking_times[[hn]] = c(looking_times[[hn]], 0)
+        looking_times[[hn]] <- c(looking_times[[hn]], 0)
       }
       for (hn in hit_names) {
-        looking_frequencies[[hn]] = c(looking_frequencies[[hn]], 0)
+        looking_frequencies[[hn]] <- c(looking_frequencies[[hn]], 0)
+      }
+      for (hn_origin in hit_names) {
+        hn_origin_reduced <- hit_names[hit_names != hn_origin]
+        for (hn_target in hn_origin_reduced) {
+          gaze_shifts[[hn_origin]][[hn_target]] <- c(gaze_shifts[[hn_origin]][[hn_target]], 0)
+        }
       }
       if (use_first_looks) {
         first_looks <- c(first_looks, NA)
@@ -83,38 +97,53 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
       next
     }
 
+
     # RESET/INIT STORAGE CONTAINERS PER TRIAL
     # init storage containers for all fixation indexes for hit_names in the current trial
     current_trial_total_duration <- setNames(vector("list", length(hit_names)), hit_names)
     for (hn in hit_names) {
       # set to current trial duration to 0
-      current_trial_total_duration[[hn]] = 0
+      current_trial_total_duration[[hn]] <- 0
     }
 
     # init storage containers for looking frequencies
     current_trial_total_looks <- setNames(vector("list", length(hit_names)), hit_names)
     for (hn in hit_names) {
       # set to current trial duration to 0
-      current_trial_total_looks[[hn]] = 0
+      current_trial_total_looks[[hn]] <- 0
     }
-    last_hit_name = ""
+
+
+    # init storage containers for gaze shifts
+    current_trial_gaze_shifts <- setNames(lapply(hit_names_unknown, function(x) setNames(rep(list(numeric()), length(hit_names_unknown) - 1L), setdiff(hit_names_unknown, x))), hit_names_unknown)
+    for (hn_origin in hit_names_unknown) {
+      hn_origin_reduced <- hit_names_unknown[hit_names_unknown != hn_origin]
+      for (hn_target in hn_origin_reduced) {
+        current_trial_gaze_shifts[[hn_origin]][[hn_target]] <- 0
+      }
+    }
+
+    # init storage for the last_hit_name of the fixation index
+    last_hit_name <- ""
+
 
     # set first look flag and state
     found_first_look <- FALSE
     first_look <- ""
 
 
-    # get first and last FixationIndex (remove NAs)
+    # get first and last FixationIndex (remove NAs), which define the boundaries of a single trial
     min_FixationIndex <- min(inter_trial_FixationIndexes, na.rm = TRUE)
     max_FixationIndex <- max(inter_trial_FixationIndexes, na.rm = TRUE)
 
-    # operate WITHIN the current fixation pair (i.e., within current trial)
+
+    # operate WITHIN the current fixation pair (i.e., within a trial)
     for (i in min_FixationIndex:max_FixationIndex) {
 
       # get all hit names within current fixation index
       hit_names_in_FixationIndex <- df[[column_name]][which(df$FixationIndex == i)]
 
-      # check if multiple hit names are in current fixation index (implicitly applies to hit_names w/ lenght > 1 only)
+      # check if multiple hit names are in current fixation index (implicitly applies to hit_names w/ length > 1 only)
       # see reference for the check below: (https://stackoverflow.com/a/2191824/2258480)
       if (sum(hit_names %in% hit_names_in_FixationIndex, na.rm = TRUE) > 1) {
         # log this index
@@ -123,7 +152,7 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
         next
       }
 
-      # ----- Looking frequency -----
+      # ----- Looking frequency (Looks) & Gaze Shifts -----
       # Check if there is a defined hit_name within all the hit_names of the current fixation index
       if (TRUE %in% (hit_names %in% hit_names_in_FixationIndex)) {
         # get the current hit_name within the current fixation index
@@ -131,22 +160,37 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
         # Looking frequency will disregard repeated looks within the same fixation index
         if (last_hit_name != hn_in_current_FI) {
           current_trial_total_looks[[hn_in_current_FI]] <- current_trial_total_looks[[hn_in_current_FI]] + 1
+
+          # Gaze Shifts
+          # TODO Looks going to unknown are not implemented!!
+          if (last_hit_name == FALSE) {
+            current_trial_gaze_shifts$unknown[[hn_in_current_FI]] <- current_trial_gaze_shifts$unknown[[hn_in_current_FI]] + 1
+          } else {
+            current_trial_gaze_shifts[[last_hit_name]][[hn_in_current_FI]] <- current_trial_gaze_shifts[[last_hit_name]][[hn_in_current_FI]] + 1
+          }
         }
+
         # update the last_hit_name with the current one
         last_hit_name <- hn_in_current_FI
-      }
+
+        # check for FALSE within the fixation (i.e., subject was not looking at active AOIs), and track it
+      } else if (FALSE %in% hit_names_in_FixationIndex) {
+        # update the last_hit_name with FALSE as there was subject were not looking at active AOIs
+        last_hit_name <- FALSE
+      } else {stop("Something is wrong with the last_hit_name, ask Steven. Why is this case possible, Maleen?")}
+
 
       # iterate over hit names
       for (hn in hit_names) {
 
         # check if current hit_name (hn) is within hit_names_in_FixationIndex, if not check the next hn
-        if (hn %in% hit_names_in_FixationIndex ) {
+        if (hn %in% hit_names_in_FixationIndex) {
 
           # check if the first fixation index started before the current_start and if intra_scope_cut is TRUE
           if (i == min_FixationIndex && which(df$FixationIndex == i)[1] < current_start && intra_scope_cut) {
             # get start and end milliseconds
             start_ms <- df$RecordingTimestamp[current_start]
-            end_ms <-  df$RecordingTimestamp[which(df$FixationIndex == i)][length(which(df$FixationIndex == i))]
+            end_ms <- df$RecordingTimestamp[which(df$FixationIndex == i)][length(which(df$FixationIndex == i))]
 
             # set the difference of start_ms and end_ms to the current GazeEventDuration
             current_GazeEventDuration <- end_ms - start_ms
@@ -167,7 +211,7 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
           if (i == max_FixationIndex && which(df$FixationIndex == i)[length(which(df$FixationIndex == i))] > current_end && intra_scope_cut) {
             # get start and end milliseconds
             start_ms <- df$RecordingTimestamp[which(df$FixationIndex == i)][1]
-            end_ms <-  df$RecordingTimestamp[current_end]
+            end_ms <- df$RecordingTimestamp[current_end]
 
             # set the difference of start_ms and end_ms to the current GazeEventDuration
             current_GazeEventDuration <- end_ms - start_ms
@@ -206,18 +250,26 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
       looking_times[[hn]] <- c(looking_times[[hn]], current_trial_total_duration[[hn]])
       looking_frequencies[[hn]] <- c(looking_frequencies[[hn]], current_trial_total_looks[[hn]])
     }
+    # Append gaze shifts
+    for (hn_origin in hit_names_unknown) {
+      hn_origin_reduced <- hit_names_unknown[hit_names_unknown != hn_origin]
+      for (hn_target in hn_origin_reduced) {
+        gaze_shifts[[hn_origin]][[hn_target]] <- c(gaze_shifts[[hn_origin]][[hn_target]], current_trial_gaze_shifts[[hn_origin]][[hn_target]])
+      }
+    }
+
     # Append first look to list
     # check if first_look was there
     if (first_look == "" && use_first_looks) {
-      first_look = NA
+      first_look <- NA
     }
     if (use_first_looks) {
       first_looks <- c(first_looks, first_look)
     }
-
   }
 
-  # END Function
+  # End of loop over entire scope / all trials
+
   # Returns
 
   # if there is only one hit_name it does not need to be in a nested list
@@ -231,7 +283,8 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
         looking_times = looking_times,
         first_looks = first_looks,
         bad_fixation_indexes = bad_fixation_indexes,
-        looking_frequencies = looking_frequencies
+        looking_frequencies = looking_frequencies,
+        gaze_shifts = gaze_shifts
       )
     )
   }
