@@ -12,24 +12,24 @@ aoi_fam_body_object <- list(
   aoilist = list(
     aoi1 = list(
       hit_name = "left",
-      x_topleft = 79,
-      y_topleft = 159,
-      x_bottomright = 759,
-      y_bottomright = 1089
+      x_topleft = 0,
+      y_topleft = 133,
+      x_bottomright = 680,
+      y_bottomright = 1033
     ),
     aoi2 = list(
       hit_name = "center",
-      x_topleft = 844,
-      y_topleft = 794,
-      x_bottomright = 1204,
-      y_bottomright = 1154
+      x_topleft = 790,
+      y_topleft = 751,
+      x_bottomright = 1130,
+      y_bottomright = 1091
     ),
     aoi3 = list(
       hit_name = "right",
-      x_topleft = 1305,
-      y_topleft = 159,
-      x_bottomright = 1985,
-      y_bottomright = 1089
+      x_topleft = 1240,
+      y_topleft = 133,
+      x_bottomright = 1920,
+      y_bottomright = 1043
     )
   )
 )
@@ -41,17 +41,46 @@ aoi_fam_face <- list(
   aoilist = list(
     aoi1 = list(
       hit_name = "left",
-      x_topleft = 177,
-      y_topleft = 177,
-      x_bottomright = 727,
-      y_bottomright = 627
+      x_topleft = 66,
+      y_topleft = 133,
+      x_bottomright = 636,
+      y_bottomright = 563
     ),
     aoi2 = list(
       hit_name = "right",
-      x_topleft = 1330,
-      y_topleft = 177,
-      x_bottomright = 1880,
-      y_bottomright = 627
+      x_topleft = 1284,
+      y_topleft = 133,
+      x_bottomright = 1854,
+      y_bottomright = 563
+    )
+  )
+)
+
+aoi_fam_face_object <- list(
+  column_name = "AOIFamFaceObject",
+  no_evaluation_label = "NO EVAL",
+  missing_coordinate_label = NA,
+  aoilist = list(
+    aoi1 = list(
+      hit_name = "left",
+      x_topleft = 66,
+      y_topleft = 133,
+      x_bottomright = 636,
+      y_bottomright = 563
+    ),
+    aoi2 = list(
+      hit_name = "center",
+      x_topleft = 790,
+      y_topleft = 751,
+      x_bottomright = 1130,
+      y_bottomright = 1091
+    ),
+    aoi3 = list(
+      hit_name = "right",
+      x_topleft = 1284,
+      y_topleft = 133,
+      x_bottomright = 1854,
+      y_bottomright = 563
     )
   )
 )
@@ -63,17 +92,17 @@ aoi_preflook <- list(
   aoilist = list(
     aoi1 = list(
       hit_name = "left",
-      x_topleft = 350,
-      y_topleft = 396,
-      x_bottomright = 710,
-      y_bottomright = 756
+      x_topleft = 296,
+      y_topleft = 370,
+      x_bottomright = 636,
+      y_bottomright = 710
     ),
     aoi2 = list(
       hit_name = "right",
-      x_topleft = 1338,
-      y_topleft = 396,
-      x_bottomright = 1698,
-      y_bottomright = 756
+      x_topleft = 1284,
+      y_topleft = 370,
+      x_bottomright = 1624,
+      y_bottomright = 710
     )
   )
 )
@@ -87,8 +116,8 @@ aoi_screen <- list(
       hit_name = TRUE,
       x_topleft = 0,
       y_topleft = 0,
-      x_bottomright = 2048,
-      y_bottomright = 1152
+      x_bottomright = 1920,
+      y_bottomright = 1080
     )
   )
 )
@@ -109,9 +138,9 @@ inter_trial_chunk_patterns = c(
 # Define Name Look-Up Information / Mappings
 # ==================================================
 
-#         "OPROThird_01_W_9_Alva_Rec15_24.txt"
+#         "OPROThird_10_M_11_Rec16_24.txt"
 # e.g.:       |1|    |2|3|4||5|   |6|   |7|
-lut_filename <- c("exp_name", "ID", "Sex", "Age_Days", "session", "tail")
+lut_filename <- c("exp_name", "ID", "Sex", "Age_Days", "Rec", "Experiment")
 
 
 # "24_Inter_A_Con2_NSOC_LOB_D2a_ObjectX_a_Obj_12_a.wmv"
