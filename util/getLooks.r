@@ -177,7 +177,7 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
       } else if (FALSE %in% hit_names_in_FixationIndex) {
         # update the last_hit_name with FALSE as there was subject were not looking at active AOIs
         last_hit_name <- FALSE
-      } # else {stop("Something is wrong with the last_hit_name, ask Steven. Why is this case possible, Maleen?")}
+      } # else {stop("Something is wrong with the last_hit_name, ask Steven. Why is this case possible, Maleen? TEST")}
 
 
       # iterate over hit names
