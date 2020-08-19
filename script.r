@@ -150,7 +150,7 @@ for (i in 1:length(flist)) {
   # -------------------------------------------------------------------------------------------
   # Gaze Shifts
   # -------------------------------------------------------------------------------------------
-  #
+  # Get Gaze Shift from Face/Object AOI within the familiarization phase (from 4000ms to 9000ms) of actor left to center object
   dfX_base$ObjectOriginSocialLeft <- getLooks(df3_aoi, aoi_fam_face_object, familiarization_startend, c(4000, 9000))$gaze_shifts$left$center
 
   # -------------------------------------------------------------------------------------------

@@ -157,15 +157,18 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
       if (TRUE %in% (hit_names %in% hit_names_in_FixationIndex)) {
         # get the current hit_name within the current fixation index
         hn_in_current_FI <- hit_names[hit_names %in% hit_names_in_FixationIndex]
-        # Looking frequency will disregard repeated looks within the same fixation index
-        if (last_hit_name != hn_in_current_FI) {
+        # Looking frequency will disregard repeated looks within the same fixation index or if last hit_name has never been set (i.e., ""), which happens when i = 1
+        if ((last_hit_name != "") && (last_hit_name != hn_in_current_FI)) {
           current_trial_total_looks[[hn_in_current_FI]] <- current_trial_total_looks[[hn_in_current_FI]] + 1
 
           # Gaze Shifts
-          # TODO Looks going to unknown are not implemented!!
+          # False case: Origin was not in any defined AOI, but somehwere else (i.e., last hit name = FALSE), then
+          #             we set the origin to "unknown"
           if (last_hit_name == FALSE) {
             current_trial_gaze_shifts$unknown[[hn_in_current_FI]] <- current_trial_gaze_shifts$unknown[[hn_in_current_FI]] + 1
-          } else {
+          }
+          # Normal case: Origin was in a different AOI
+          else {
             current_trial_gaze_shifts[[last_hit_name]][[hn_in_current_FI]] <- current_trial_gaze_shifts[[last_hit_name]][[hn_in_current_FI]] + 1
           }
         }
@@ -177,7 +180,7 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
       } else if (FALSE %in% hit_names_in_FixationIndex) {
         # update the last_hit_name with FALSE as there was subject were not looking at active AOIs
         last_hit_name <- FALSE
-      } # else {stop("Something is wrong with the last_hit_name, ask Steven. Why is this case possible, Maleen? TEST")}
+      }
 
 
       # iterate over hit names
