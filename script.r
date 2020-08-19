@@ -65,6 +65,8 @@ for (i in 1:length(flist)) {
   df3_aoi <- getAOIs(df3_aoi, aoi_fam_body_object, familiarization_startend)
   # AOI column for Familiarization Phase for faces (left & right)
   df3_aoi <- getAOIs(df3_aoi, aoi_fam_face, familiarization_startend)
+  # AOI column for Familiarization Phase for Face & Object (left, right, center)
+  df3_aoi <- getAOIs(df3_aoi, aoi_fam_face_object, familiarization_startend)
   # AOI column for Preferential Looking Phase for objects (left & right)
   df3_aoi <- getAOIs(df3_aoi, aoi_preflook, preflook_startend)
   # AOI column for Familiarization Phase & Preferential Looking Phase for screen (TRUE/FALSE)
@@ -144,6 +146,12 @@ for (i in 1:length(flist)) {
   dfX_base$InterPhase_Checker_Soc <- ifelse(dfX_base$InterPhase_LT_Soc_Begin == 0, FALSE, TRUE) # & dfX_base$InterPhase_LT_Soc_End == 0
   dfX_base$InterPhase_Checker_Gazing <- ifelse(dfX_base$InterPhase_LT_Gazing == 0, FALSE, TRUE)
   dfX_base$InterPhase_Checker_valid <-  ifelse(dfX_base$InterPhase_Checker_Soc == TRUE & dfX_base$InterPhase_Checker_Gazing == TRUE, 1, 0)
+
+  # -------------------------------------------------------------------------------------------
+  # Gaze Shifts
+  # -------------------------------------------------------------------------------------------
+  #
+  dfX_base$ObjectOriginSocialLeft <- getLooks(df3_aoi, aoi_fam_face_object, familiarization_startend, c(4000, 9000))$gaze_shifts$left$center
 
   # -------------------------------------------------------------------------------------------
   # Preferential Looking Phase
