@@ -1,4 +1,4 @@
-getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), intra_scope_cut = TRUE) {
+get_looks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), intra_scope_cut = TRUE) {
 
   # check if intra_scope_window was passed as an argument, if so ...
   # ... use time ranges defined by intra_scope_window to overwrite scope
@@ -45,7 +45,7 @@ getLooks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), in
   # create a storage container for all looking frequencies (i.e., counting the number of looks within an AOI)
   looking_frequencies <- setNames(vector("list", length(hit_names)), hit_names)
 
-  # create a storage container for gaze shifts (use it with getLooks$OriginHitname$TargetHitname)
+  # create a storage container for gaze shifts (use it with get_looks$OriginHitname$TargetHitname)
   # https://stackoverflow.com/a/63451891/2258480
   hit_names_unknown <- c(hit_names, "unknown")
   gaze_shifts <- setNames(lapply(hit_names_unknown, function(x) setNames(rep(list(numeric()), length(hit_names_unknown) - 1L), setdiff(hit_names_unknown, x))), hit_names_unknown)

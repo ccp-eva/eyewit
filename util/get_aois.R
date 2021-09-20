@@ -1,4 +1,4 @@
-getAOIs <- function(df, aoi_collection, scope = c(0, 0), return_df = TRUE, coordinate_system = "ADCS") {
+get_aois <- function(df, aoi_collection, scope = c(0, 0), return_df = TRUE, coordinate_system = "ADCS") {
 
   # destructure aoi_collection
   column_name <- aoi_collection$column_name

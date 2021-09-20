@@ -1,4 +1,4 @@
-getCS <- function(df) {
+get_coord_system <- function(df) {
 
   # rather use this to check?
   # if("d" %in% colnames(dat))

@@ -1,4 +1,4 @@
-getObjects <- function(df, fam_index_pairs) {
+get_objects <- function(df, fam_index_pairs) {
 
   # familar objects
   string_list <- as.vector(unique(df$StudioEventData[fam_index_pairs$start]))

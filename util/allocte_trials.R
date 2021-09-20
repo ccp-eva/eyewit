@@ -1,4 +1,4 @@
-allocateTrials <- function(df, index_pairs, fill_StudioEventData = TRUE) {
+allocate_trials <- function(df, index_pairs, fill_StudioEventData = TRUE) {
 
   # Check if Trial column exists, if not create it
   if (!"Trial" %in% colnames(df)) {

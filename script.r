@@ -5,13 +5,11 @@ graphics.off() # close all open graphics
 # set working directory
 # setwd(file.path("C:", "Users", "steven", "WorkSpaces", "R", "test"))
 
-# import utility functions & mute RStudio diagnostics
-# !diagnostics suppress=allocateTrials, destructureString, getAOIs, getCS, getLooks, getObjects, getPrefLookPositions, getStartEndPositions, preflight
-sapply(list.files(c("util"), pattern = "*.r$", full.names = TRUE, ignore.case = TRUE), source, .GlobalEnv)
+# import utility functions
+sapply(list.files(c("util"), pattern = "*.R$", full.names = TRUE, ignore.case = TRUE), source, .GlobalEnv)
 
 # import user interface
-# !diagnostics suppress=mc, coi, recs_dir, lut_filename, lut_fam_phase, inter_trial_chunk_patterns, aoi_fam_body_object, aoi_fam_face, aoi_preflook, aoi_screen
-source("interface.r")
+source("interface.R")
 
 # reads all files in recs folder
 flist <- list.files(recs_dir)
@@ -33,19 +31,19 @@ for (i in 1:length(flist)) {
 
 
   # get start and end index pairs for inter_trial chunks
-  familiarization_attention_startend <- getStartEndPositions(df1_mccoi, inter_trial_chunk_patterns[1], "MovieStart", "MovieEnd")
-  familiarization_startend <- getStartEndPositions(df1_mccoi, inter_trial_chunk_patterns[2], "MovieStart", "MovieEnd")
-  preflook_attention_startend <- getStartEndPositions(df1_mccoi, inter_trial_chunk_patterns[3], "MovieStart", "MovieEnd")
-  preflook_startend <- getStartEndPositions(df1_mccoi, inter_trial_chunk_patterns[4], "MovieStart", "MovieEnd")
+  familiarization_attention_startend <- get_start_end_pos(df1_mccoi, inter_trial_chunk_patterns[1], "MovieStart", "MovieEnd")
+  familiarization_startend <- get_start_end_pos(df1_mccoi, inter_trial_chunk_patterns[2], "MovieStart", "MovieEnd")
+  preflook_attention_startend <- get_start_end_pos(df1_mccoi, inter_trial_chunk_patterns[3], "MovieStart", "MovieEnd")
+  preflook_startend <- get_start_end_pos(df1_mccoi, inter_trial_chunk_patterns[4], "MovieStart", "MovieEnd")
 
 
 
   # Allocate Trials and Fillup StudioEventData Label (todo: this df is not necessary)
   df2_trial <- df1_mccoi
-  df2_trial <- allocateTrials(df2_trial, familiarization_attention_startend) # keep this enabled to track valid trials
-  df2_trial <- allocateTrials(df2_trial, familiarization_startend)
-  df2_trial <- allocateTrials(df2_trial, preflook_attention_startend) # keep this enabled to track valid trials
-  df2_trial <- allocateTrials(df2_trial, preflook_startend)
+  df2_trial <- allocate_trials(df2_trial, familiarization_attention_startend) # keep this enabled to track valid trials
+  df2_trial <- allocate_trials(df2_trial, familiarization_startend)
+  df2_trial <- allocate_trials(df2_trial, preflook_attention_startend) # keep this enabled to track valid trials
+  df2_trial <- allocate_trials(df2_trial, preflook_startend)
 
 
   # track the number of max trials (todo use start end positions to determien trial length, also create a function that checks trial length consistency over all startend positions)
@@ -62,15 +60,15 @@ for (i in 1:length(flist)) {
   df3_aoi <- df2_trial
 
   # AOI column for Familiarization Phase for Body & Object (left, right, center)
-  df3_aoi <- getAOIs(df3_aoi, aoi_fam_body_object, familiarization_startend)
+  df3_aoi <- get_aois(df3_aoi, aoi_fam_body_object, familiarization_startend)
   # AOI column for Familiarization Phase for faces (left & right)
-  df3_aoi <- getAOIs(df3_aoi, aoi_fam_face, familiarization_startend)
+  df3_aoi <- get_aois(df3_aoi, aoi_fam_face, familiarization_startend)
   # AOI column for Familiarization Phase for Face & Object (left, right, center)
-  df3_aoi <- getAOIs(df3_aoi, aoi_fam_face_object, familiarization_startend)
+  df3_aoi <- get_aois(df3_aoi, aoi_fam_face_object, familiarization_startend)
   # AOI column for Preferential Looking Phase for objects (left & right)
-  df3_aoi <- getAOIs(df3_aoi, aoi_preflook, preflook_startend)
+  df3_aoi <- get_aois(df3_aoi, aoi_preflook, preflook_startend)
   # AOI column for Familiarization Phase & Preferential Looking Phase for screen (TRUE/FALSE)
-  df3_aoi <- getAOIs(df3_aoi, aoi_screen, c(familiarization_startend, preflook_startend))
+  df3_aoi <- get_aois(df3_aoi, aoi_screen, c(familiarization_startend, preflook_startend))
 
 
   ####################################################################################################
@@ -81,65 +79,65 @@ for (i in 1:length(flist)) {
   # ==================================================================================================
   # NAME INFORMATIONS
   # --------------------------------------------------------------------------------------------------
-  dfX_base$ID <- destructureString(lut_filename, current_subject)$ID
-  dfX_base$Sex <- destructureString(lut_filename, current_subject)$Sex
-  dfX_base$Age_Days <- destructureString(lut_filename, current_subject)$Age_Days
+  dfX_base$ID <- value_parser_by_key(lut_filename, current_subject)$ID
+  dfX_base$Sex <- value_parser_by_key(lut_filename, current_subject)$Sex
+  dfX_base$Age_Days <- value_parser_by_key(lut_filename, current_subject)$Age_Days
   dfX_base$Trial <- 1:total_trials
-  dfX_base$Condition <- destructureString(lut_fam_phase, inter_vectors)$Condition
-  dfX_base$Con_Object <- destructureString(lut_fam_phase, inter_vectors)$Con_Object
-  dfX_base$Con_SocInt <- destructureString(lut_fam_phase, inter_vectors)$Con_SocInt
-  dfX_base$Dyad <- destructureString(lut_fam_phase, inter_vectors)$Dyad
+  dfX_base$Condition <- value_parser_by_key(lut_fam_phase, inter_vectors)$Condition
+  dfX_base$Con_Object <- value_parser_by_key(lut_fam_phase, inter_vectors)$Con_Object
+  dfX_base$Con_SocInt <- value_parser_by_key(lut_fam_phase, inter_vectors)$Con_SocInt
+  dfX_base$Dyad <- value_parser_by_key(lut_fam_phase, inter_vectors)$Dyad
   # --------------------------------------------------------------------------------------------------
   # Familiarization Phase
   # --------------------------------------------------------------------------------------------------
   # OVERALL SCREEN (no specific AOI): Looking times over total duration of the video
-  dfX_base$Overall_LT_ScreenFam <- getLooks(df3_aoi, aoi_screen, familiarization_startend)$looking_times
-  dfX_base$Overall_LT_ScreenPrefLook <- getLooks(df3_aoi, aoi_screen, preflook_startend)$looking_times
+  dfX_base$Overall_LT_ScreenFam <- get_looks(df3_aoi, aoi_screen, familiarization_startend)$looking_times
+  dfX_base$Overall_LT_ScreenPrefLook <- get_looks(df3_aoi, aoi_screen, preflook_startend)$looking_times
   dfX_base$Inter_PropOverall_LT_Screen <- ifelse(dfX_base$Overall_LT_ScreenFam <= 11000, dfX_base$Overall_LT_ScreenFam/11000, dfX_base$Overall_LT_ScreenFam/max(dfX_base$Overall_LT_ScreenFam))
   # OVERALL SCREEN (no specific AOI): Looking times only in INTEARCTION PHASES (in the beginning and ending of the video sequence)
-  dfX_base$InterPhase_LT_Soc_Begin <- getLooks(df3_aoi, aoi_screen, familiarization_startend, c(2000, 3000))$looking_times
-  dfX_base$InterPhase_LT_Soc_End <- getLooks(df3_aoi, aoi_screen, familiarization_startend, c(10000, 11000))$looking_times
+  dfX_base$InterPhase_LT_Soc_Begin <- get_looks(df3_aoi, aoi_screen, familiarization_startend, c(2000, 3000))$looking_times
+  dfX_base$InterPhase_LT_Soc_End <- get_looks(df3_aoi, aoi_screen, familiarization_startend, c(10000, 11000))$looking_times
   dfX_base$InterPhase_LT_Soc_Total <- dfX_base$InterPhase_LT_Soc_Begin + dfX_base$InterPhase_LT_Soc_End
   # OVERALL SCREEN (no specific AOI): Looking times only in GAZING PHASE
-  dfX_base$InterPhase_LT_Gazing <- getLooks(df3_aoi, aoi_screen, familiarization_startend, c(4000, 9000))$looking_times
+  dfX_base$InterPhase_LT_Gazing <- get_looks(df3_aoi, aoi_screen, familiarization_startend, c(4000, 9000))$looking_times
 
   # AOIs: Looking times over TOTAL duration of the video
-  dfX_base$Inter_LT_ActorLeft <- getLooks(df3_aoi, aoi_fam_body_object, familiarization_startend)$looking_times$left
-  dfX_base$Inter_LT_ActorRight <- getLooks(df3_aoi, aoi_fam_body_object, familiarization_startend)$looking_times$right
+  dfX_base$Inter_LT_ActorLeft <- get_looks(df3_aoi, aoi_fam_body_object, familiarization_startend)$looking_times$left
+  dfX_base$Inter_LT_ActorRight <- get_looks(df3_aoi, aoi_fam_body_object, familiarization_startend)$looking_times$right
   dfX_base$Inter_LT_ActorsTotal <- dfX_base$Inter_LT_ActorLeft + dfX_base$Inter_LT_ActorRight
   dfX_base$Inter_LT_Actors_PROP <- dfX_base$Inter_LT_ActorsTotal / dfX_base$Overall_LT_ScreenFam
-  dfX_base$Inter_LT_FaceLeft <- getLooks(df3_aoi, aoi_fam_face, familiarization_startend)$looking_times$left
-  dfX_base$Inter_LT_FaceRight <- getLooks(df3_aoi, aoi_fam_face, familiarization_startend)$looking_times$right
+  dfX_base$Inter_LT_FaceLeft <- get_looks(df3_aoi, aoi_fam_face, familiarization_startend)$looking_times$left
+  dfX_base$Inter_LT_FaceRight <- get_looks(df3_aoi, aoi_fam_face, familiarization_startend)$looking_times$right
   dfX_base$Inter_LT_FacesTotal <- dfX_base$Inter_LT_FaceLeft + dfX_base$Inter_LT_FaceRight
   dfX_base$Inter_LT_Faces_PROP <- dfX_base$Inter_LT_FacesTotal / dfX_base$Overall_LT_ScreenFam
-  dfX_base$Inter_LT_Object <- getLooks(df3_aoi, aoi_fam_body_object, familiarization_startend)$looking_times$center
+  dfX_base$Inter_LT_Object <- get_looks(df3_aoi, aoi_fam_body_object, familiarization_startend)$looking_times$center
   dfX_base$Inter_LT_FacesObject_PROP <- dfX_base$Inter_LT_FacesTotal / (dfX_base$Inter_LT_FacesTotal + dfX_base$Inter_LT_Object)
   dfX_base$Inter_LT_Object_PROP <- dfX_base$Inter_LT_Object / dfX_base$Overall_LT_ScreenFam
   # AOIs: Looking times in INTERACTION PHASES
-  dfX_base$InterPhase_LT_FaceLeft_Soc_Begin <- getLooks(df3_aoi, aoi_fam_face, familiarization_startend, c(2000, 3000))$looking_times$left
-  dfX_base$InterPhase_LT_FaceRight_Soc_Begin <- getLooks(df3_aoi, aoi_fam_face, familiarization_startend, c(2000, 3000))$looking_times$right
+  dfX_base$InterPhase_LT_FaceLeft_Soc_Begin <- get_looks(df3_aoi, aoi_fam_face, familiarization_startend, c(2000, 3000))$looking_times$left
+  dfX_base$InterPhase_LT_FaceRight_Soc_Begin <- get_looks(df3_aoi, aoi_fam_face, familiarization_startend, c(2000, 3000))$looking_times$right
   dfX_base$InterPhase_LT_FaceTotal_Soc_Begin <- dfX_base$InterPhase_LT_FaceLeft_Soc_Begin + dfX_base$InterPhase_LT_FaceRight_Soc_Begin
   dfX_base$InterPhase_LT_FaceTotal_Soc_Begin_PROP <- dfX_base$InterPhase_LT_FaceTotal_Soc_Begin / dfX_base$InterPhase_LT_Soc_Begin
-  dfX_base$InterPhase_LT_FaceLeft_Soc_End <- getLooks(df3_aoi, aoi_fam_face, familiarization_startend, c(10000, 11000))$looking_times$left
-  dfX_base$InterPhase_LT_FaceRight_Soc_End <- getLooks(df3_aoi, aoi_fam_face, familiarization_startend, c(10000, 11000))$looking_times$right
+  dfX_base$InterPhase_LT_FaceLeft_Soc_End <- get_looks(df3_aoi, aoi_fam_face, familiarization_startend, c(10000, 11000))$looking_times$left
+  dfX_base$InterPhase_LT_FaceRight_Soc_End <- get_looks(df3_aoi, aoi_fam_face, familiarization_startend, c(10000, 11000))$looking_times$right
   dfX_base$InterPhase_LT_FaceTotal_Soc_End <- dfX_base$InterPhase_LT_FaceRight_Soc_End + dfX_base$InterPhase_LT_FaceLeft_Soc_End
   dfX_base$InterPhase_LT_FaceTotal_Soc_End_PROP <- dfX_base$InterPhase_LT_FaceTotal_Soc_End / dfX_base$InterPhase_LT_Soc_End
   dfX_base$InterPhase_LT_FaceLeft_Soc_Total <- dfX_base$InterPhase_LT_FaceLeft_Soc_Begin + dfX_base$InterPhase_LT_FaceLeft_Soc_End
   dfX_base$InterPhase_LT_FaceRight_Soc_Total <- dfX_base$InterPhase_LT_FaceRight_Soc_Begin + dfX_base$InterPhase_LT_FaceRight_Soc_End
   dfX_base$InterPhase_LT_FaceTotal_Soc_Total <- dfX_base$InterPhase_LT_FaceTotal_Soc_Begin + dfX_base$InterPhase_LT_FaceTotal_Soc_End
   dfX_base$InterPhase_LT_FaceTotal_Soc_Total_PROP <- dfX_base$InterPhase_LT_FaceTotal_Soc_Total / dfX_base$InterPhase_LT_Soc_Total
-  dfX_base$InterPhase_LT_Object_Soc_Begin <- getLooks(df3_aoi, aoi_fam_body_object, familiarization_startend, c(2000, 3000))$looking_times$center
+  dfX_base$InterPhase_LT_Object_Soc_Begin <- get_looks(df3_aoi, aoi_fam_body_object, familiarization_startend, c(2000, 3000))$looking_times$center
   dfX_base$InterPhase_LT_Object_Soc_Begin_PROP <- dfX_base$InterPhase_LT_Object_Soc_Begin / dfX_base$InterPhase_LT_Soc_Total
-  dfX_base$InterPhase_LT_Object_Soc_End <- getLooks(df3_aoi, aoi_fam_body_object, familiarization_startend, c(10000, 11000))$looking_times$center
+  dfX_base$InterPhase_LT_Object_Soc_End <- get_looks(df3_aoi, aoi_fam_body_object, familiarization_startend, c(10000, 11000))$looking_times$center
   dfX_base$InterPhase_LT_Object_Soc_End_PROP <- dfX_base$InterPhase_LT_Object_Soc_End / dfX_base$InterPhase_LT_Soc_Total
   dfX_base$InterPhase_LT_Object_Soc_Total <- dfX_base$InterPhase_LT_Object_Soc_Begin + dfX_base$InterPhase_LT_Object_Soc_End
   dfX_base$InterPhase_LT_Object_Soc_Total_PROP <- dfX_base$InterPhase_LT_Object_Soc_Total / dfX_base$InterPhase_LT_Soc_Total
   # AOIs: Looking times in GAZING PHASE
-  dfX_base$InterPhase_LT_FaceLeft_Gazing <- getLooks(df3_aoi, aoi_fam_face, familiarization_startend, c(4000, 9000))$looking_times$left
-  dfX_base$InterPhase_LT_FaceRight_Gazing <- getLooks(df3_aoi, aoi_fam_face, familiarization_startend, c(4000, 9000))$looking_times$right
+  dfX_base$InterPhase_LT_FaceLeft_Gazing <- get_looks(df3_aoi, aoi_fam_face, familiarization_startend, c(4000, 9000))$looking_times$left
+  dfX_base$InterPhase_LT_FaceRight_Gazing <- get_looks(df3_aoi, aoi_fam_face, familiarization_startend, c(4000, 9000))$looking_times$right
   dfX_base$InterPhase_LT_FaceTotal_Gazing <- dfX_base$InterPhase_LT_FaceLeft_Gazing + dfX_base$InterPhase_LT_FaceRight_Gazing
   dfX_base$InterPhase_LT_FaceTotal_Gazing_PROP <- dfX_base$InterPhase_LT_FaceTotal_Gazing / dfX_base$InterPhase_LT_Gazing
-  dfX_base$InterPhase_LT_Object_Gazing <- getLooks(df3_aoi, aoi_fam_body_object, familiarization_startend, c(4000, 9000))$looking_times$center
+  dfX_base$InterPhase_LT_Object_Gazing <- get_looks(df3_aoi, aoi_fam_body_object, familiarization_startend, c(4000, 9000))$looking_times$center
   dfX_base$InterPhase_LT_Object_Gazing_PROP <- dfX_base$InterPhase_LT_Object_Gazing / dfX_base$InterPhase_LT_Gazing
 
   # Checker for trial inclusion
@@ -151,17 +149,17 @@ for (i in 1:length(flist)) {
   # Gaze Shifts
   # -------------------------------------------------------------------------------------------
   # Get Gaze Shift from Face/Object AOI within the familiarization phase (from 4000ms to 9000ms) of actor left to center object
-  dfX_base$ObjectOriginSocialLeft <- getLooks(df3_aoi, aoi_fam_face_object, familiarization_startend, c(4000, 9000))$gaze_shifts$left$center
+  dfX_base$ObjectOriginSocialLeft <- get_looks(df3_aoi, aoi_fam_face_object, familiarization_startend, c(4000, 9000))$gaze_shifts$left$center
 
   # -------------------------------------------------------------------------------------------
   # Preferential Looking Phase
   # -------------------------------------------------------------------------------------------
-  dfX_base$PrefLook_Object_Fam <- getObjects(df3_aoi, familiarization_startend)$familiar
-  dfX_base$PrefLook_Object_Fam_Pos <- getPrefLookPositions(as.vector(unique(df3_aoi$StudioEventData[preflook_startend$start])), getObjects(df3_aoi, familiarization_startend)$familiar)$fam_pos
-  dfX_base$PrefLook_Object_Nov <- getObjects(df3_aoi, familiarization_startend)$novel
-  dfX_base$PrefLook_Object_Nov_Pos <- getPrefLookPositions(as.vector(unique(df3_aoi$StudioEventData[preflook_startend$start])), getObjects(df3_aoi, familiarization_startend)$familiar)$nov_pos
-  dfX_base$PrefLook_LT_Object_Left <- getLooks(df3_aoi, aoi_preflook, preflook_startend)$looking_times$left
-  dfX_base$PrefLook_LT_Object_Right <- getLooks(df3_aoi, aoi_preflook, preflook_startend)$looking_times$right
+  dfX_base$PrefLook_Object_Fam <- get_objects(df3_aoi, familiarization_startend)$familiar
+  dfX_base$PrefLook_Object_Fam_Pos <- get_preflook_pos(as.vector(unique(df3_aoi$StudioEventData[preflook_startend$start])), get_objects(df3_aoi, familiarization_startend)$familiar)$fam_pos
+  dfX_base$PrefLook_Object_Nov <- get_objects(df3_aoi, familiarization_startend)$novel
+  dfX_base$PrefLook_Object_Nov_Pos <- get_preflook_pos(as.vector(unique(df3_aoi$StudioEventData[preflook_startend$start])), get_objects(df3_aoi, familiarization_startend)$familiar)$nov_pos
+  dfX_base$PrefLook_LT_Object_Left <- get_looks(df3_aoi, aoi_preflook, preflook_startend)$looking_times$left
+  dfX_base$PrefLook_LT_Object_Right <- get_looks(df3_aoi, aoi_preflook, preflook_startend)$looking_times$right
   dfX_base$PrefLook_LT_Total <- dfX_base$PrefLook_LT_Object_Left + dfX_base$PrefLook_LT_Object_Right
   dfX_base$PrefLook_LT_Object_Fam <-
     ifelse(dfX_base$PrefLook_Object_Fam_Pos == "right",
@@ -178,12 +176,11 @@ for (i in 1:length(flist)) {
   # -------------------------------------------------------------------------------------------
   # First Looks
   # -------------------------------------------------------------------------------------------
-  dfX_base$PrefLook_FL <- getLooks(df3_aoi, aoi_preflook, preflook_startend)$first_look
+  dfX_base$PrefLook_FL <- get_looks(df3_aoi, aoi_preflook, preflook_startend)$first_look
   dfX_base$PrefLook_FL_Meaning <-
     ifelse(dfX_base$PrefLook_FL == dfX_base$PrefLook_Object_Fam_Pos,
            "familiar",
            ifelse(dfX_base$PrefLook_FL == dfX_base$PrefLook_Object_Nov_Pos,
                   "novel", NA))
-
 }
 
