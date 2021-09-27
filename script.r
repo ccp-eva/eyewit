@@ -13,15 +13,15 @@ list.files("util", "*.R$", full.names = TRUE, ignore.case = TRUE) %>% sapply(sou
 # import user interface
 source("interface.R")
 
-# reads all files in recs folder
-participants <- list.files(recs_dir)
+# read raw data filenames
+participants <- list.files(raw_dir)
 
 
 # Loop over all participants
 for (subject in participants) {
 
   # read tsv files
-  df0_raw <- read.table(file = file.path(recs_dir, subject), sep = "\t", header = TRUE)
+  df0_raw <- read.table(file = file.path(raw_dir, subject), sep = "\t", header = TRUE)
 
   # run preflight diagnostics of the raw data file
   preflight_status <- preflight(df0_raw, mc)
