@@ -8,21 +8,20 @@ library(tidyverse)
 
 
 # import utility functions
-sapply(list.files(c("util"), pattern = "*.R$", full.names = TRUE, ignore.case = TRUE), source)
+list.files("util", "*.R$", full.names = TRUE, ignore.case = TRUE) %>% sapply(source)
 
 # import user interface
 source("interface.R")
 
 # reads all files in recs folder
-flist <- list.files(recs_dir)
+participants <- list.files(recs_dir)
 
 
-# Loop over all subjects
-for (i in 1:length(flist)) {
-  current_subject <- flist[i]
+# Loop over all participants
+for (subject in participants) {
 
   # read tsv files
-  df0_raw <- read.table(file = file.path(recs_dir, current_subject), sep = "\t", header = TRUE)
+  df0_raw <- read.table(file = file.path(recs_dir, subject), sep = "\t", header = TRUE)
 
   # run preflight diagnostics of the raw data file
   preflight_status <- preflight(df0_raw, mc)
@@ -383,9 +382,9 @@ for (i in 1:length(flist)) {
   dfX_base$PrefLook_LT_Object_Nov_PROP <-
     dfX_base$PrefLook_LT_Object_Nov / dfX_base$PrefLook_LT_Total
 
-  # -------------------------------------------------------------------------------------------
+  # ------------------------------------------------------------------------------------------------
   # First Looks
-  # -------------------------------------------------------------------------------------------
+  # ------------------------------------------------------------------------------------------------
   dfX_base$PrefLook_FL <- get_looks(df3_aoi, aoi_preflook, preflook_startend)$first_look
   dfX_base$PrefLook_FL_Meaning <-
     ifelse(dfX_base$PrefLook_FL == dfX_base$PrefLook_Object_Fam_Pos,
