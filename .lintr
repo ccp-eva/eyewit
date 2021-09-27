@@ -1,9 +1,10 @@
 ## https://github.com/jimhester/lintr
 
 linters: with_defaults(
-  line_length_linter(120),
+  line_length_linter(100),
   commented_code_linter = NULL,
   trailing_blank_lines_linter = NULL,
   seq_linter = NULL,
   cyclocomp_linter(35),
-  object_name_linter(c("snake_case", "camelCase")))
+  object_name_linter(c("snake_case")),
+  object_length_linter(40L))
