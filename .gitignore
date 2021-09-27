@@ -1,5 +1,5 @@
 # exclude subject files
-recs/
+raw/
 
 
 # The following part comes from gitignore.io

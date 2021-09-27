@@ -1,5 +1,5 @@
 # Set subject raw data directory
-recs_dir <- "./recs/"
+recs_dir <- "./raw/"
 
 # ==================================================
 # Define AOI collections
