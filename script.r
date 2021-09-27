@@ -2,8 +2,10 @@
 rm(list = ls(all.names = TRUE)) # clears everything
 graphics.off() # close all open graphics
 
-# set working directory
-# setwd(file.path("C:", "Users", "steven", "WorkSpaces", "R", "test"))
+
+if (!require(tidyverse)) install.packages(tidyerse)
+library(tidyverse)
+
 
 # import utility functions
 sapply(list.files(c("util"), pattern = "*.R$", full.names = TRUE, ignore.case = TRUE), source)
