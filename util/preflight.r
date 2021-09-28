@@ -1,5 +1,10 @@
-# tasks checks if all mandatory columns exist
 preflight <- function(df, cols) {
+
+
+  # remove spaces, brackets, periods in column names
+  names(df) <- gsub("\\s+", "", names(df))
+  names(df) <- gsub("\\(|\\)", "", names(df))
+  names(df) <- gsub("\\.", "", names(df))
 
   # check if a mandatory columns is missing
   if (FALSE %in% (cols %in% names(df))) {
@@ -8,9 +13,8 @@ preflight <- function(df, cols) {
 
   # check if rownames are equal to a sequence of corresponding rownumbers
   if (!isTRUE((all.equal(as.numeric(rownames(df)), 1:nrow(df))))) {
-    stop("The df is not in sequence. Do not remove any rows.")
+    stop("The df is not a incremental sequence. Do not remove any rows.")
   }
 
-
-  return("No Errors")
+  return(list(df = df, successful = TRUE))
 }

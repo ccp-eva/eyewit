@@ -30,8 +30,8 @@ get_aois <- function(df, aoi_collection, scope = c(0, 0), return_df = TRUE, coor
 
   # todo check if there are multiple coordinate systems
   # get coordinate columns of df
-  x_coords_column <- "GazePointX..ADCSpx."
-  y_coords_column <- "GazePointY..ADCSpx."
+  x_coords_column <- "GazePointXADCSpx"
+  y_coords_column <- "GazePointYADCSpx"
 
 
   # setup aoi vector to be filled with the given no evaluation label

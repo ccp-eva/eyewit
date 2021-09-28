@@ -155,14 +155,12 @@ lut_fam_phase <- c("Trial", "Folder", "Letter", "Condition", "Con_SocInt", "Con_
 mc <-
   c(
     "RecordingTimestamp",
-    "LocalTimeStamp",
-    "StudioEventIndex",
     "StudioEvent",
     "StudioEventData",
     "FixationIndex",
     "GazeEventDuration",
-    "GazePointX..ADCSpx.",
-    "GazePointY..ADCSpx."
+    "GazePointXADCSpx",
+    "GazePointYADCSpx"
   )
 
 # ==================================================
@@ -170,5 +168,9 @@ mc <-
 # ==================================================
 
 coi <-
-  c("GazeEventType")
+  c(
+    "GazeEventType",
+    "LocalTimeStamp",
+    "StudioEventIndex"
+  )
 
