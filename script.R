@@ -18,16 +18,17 @@ participants <- list.files(raw_dir)
 
 
 # Loop over all participants
-for (subject in participants) {
+for (subject in participants[1]) {
 
   # read tsv files
-  df0_raw <- read.table(file = file.path(raw_dir, subject), sep = "\t", header = TRUE)
+  # df <- read_tsv(file.path(raw_dir, subject))
+  df <- read.table(file = file.path(raw_dir, subject), sep = "\t", header = TRUE)
 
-  # run preflight diagnostics of the raw data file
-  preflight_status <- preflight(df0_raw, mc)
+  # run preflight & diagnostics
+  df <- preflight(df, mc)$df
 
   # create a lean df including mandatory and columns of interest (todo: this df is not necessary)
-  df1_mccoi <- df0_raw[, c(mc, coi)]
+  df1_mccoi <- df[, c(mc, coi)]
 
 
   # get start and end index pairs for inter_trial chunks
@@ -68,7 +69,7 @@ for (subject in participants) {
   df2_trial <- allocate_trials(df2_trial, preflook_startend)
 
 
-  # track the number of max trials (todo use start end positions to determien trial length,
+  # track the number of max trials (todo use start end positions to determine trial length,
   # ... also create a function that checks trial length consistency over all startend positions)
   total_trials <- max(df2_trial$Trial, na.rm = TRUE)
 
