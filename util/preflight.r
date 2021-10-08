@@ -16,5 +16,5 @@ preflight <- function(df, cols) {
     stop("The df is not a incremental sequence. Do not remove any rows.")
   }
 
-  return(list(df = df, successful = TRUE))
+  return(df)
 }
