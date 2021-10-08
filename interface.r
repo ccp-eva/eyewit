@@ -2,107 +2,99 @@
 raw_dir <- "./raw/"
 
 # ==================================================
-# Define AOI collections
+# Define AOI sets
 # ==================================================
 
-aoi_fam_body_object <- list(
-  column_name = "AOIFamBodyObj",
+aoiset_actionphase <- list(
+  column_name = "AOIActionPhaseBody",
   no_evaluation_label = "NO EVAL",
   missing_coordinate_label = NA,
   aoilist = list(
     aoi1 = list(
       hit_name = "left",
-      x_topleft = 0,
-      y_topleft = 133,
-      x_bottomright = 680,
-      y_bottomright = 1033
+      x_topleft = 60,
+      y_topleft = 290,
+      x_bottomright = 690,
+      y_bottomright = 1130
     ),
     aoi2 = list(
-      hit_name = "center",
-      x_topleft = 790,
-      y_topleft = 751,
-      x_bottomright = 1130,
-      y_bottomright = 1091
+      hit_name = "right",
+      x_topleft = 1225,
+      y_topleft = 290,
+      x_bottomright = 1855,
+      y_bottomright = 1130
     ),
     aoi3 = list(
-      hit_name = "right",
-      x_topleft = 1240,
-      y_topleft = 133,
-      x_bottomright = 1920,
-      y_bottomright = 1043
-    )
-  )
-)
-
-aoi_fam_face <- list(
-  column_name = "AOIFamFace",
-  no_evaluation_label = "NO EVAL",
-  missing_coordinate_label = NA,
-  aoilist = list(
-    aoi1 = list(
-      hit_name = "left",
-      x_topleft = 66,
-      y_topleft = 133,
-      x_bottomright = 636,
-      y_bottomright = 563
-    ),
-    aoi2 = list(
-      hit_name = "right",
-      x_topleft = 1284,
-      y_topleft = 133,
-      x_bottomright = 1854,
-      y_bottomright = 563
-    )
-  )
-)
-
-aoi_fam_face_object <- list(
-  column_name = "AOIFamFaceObject",
-  no_evaluation_label = "NO EVAL",
-  missing_coordinate_label = NA,
-  aoilist = list(
-    aoi1 = list(
-      hit_name = "left",
-      x_topleft = 66,
-      y_topleft = 133,
-      x_bottomright = 636,
-      y_bottomright = 563
-    ),
-    aoi2 = list(
-      hit_name = "center",
+      hit_name = "top",
       x_topleft = 790,
-      y_topleft = 751,
+      y_topleft = 10,
       x_bottomright = 1130,
-      y_bottomright = 1091
+      y_bottomright = 350
+    ),
+    aoi4 = list(
+      hit_name = "bottom",
+      x_topleft = 790,
+      y_topleft = 730,
+      x_bottomright = 1130,
+      y_bottomright = 1070
+    )
+  )
+)
+
+aoiset_actionphase <- list(
+  column_name = "AOIActionPhaseFace",
+  no_evaluation_label = "NO EVAL",
+  missing_coordinate_label = NA,
+  aoilist = list(
+    aoi1 = list(
+      hit_name = "left",
+      x_topleft = 170,
+      y_topleft = 290,
+      x_bottomright = 650,
+      y_bottomright = 770
+    ),
+    aoi2 = list(
+      hit_name = "right",
+      x_topleft = 1310,
+      y_topleft = 290,
+      x_bottomright = 1790,
+      y_bottomright = 770
     ),
     aoi3 = list(
-      hit_name = "right",
-      x_topleft = 1284,
-      y_topleft = 133,
-      x_bottomright = 1854,
-      y_bottomright = 563
+      hit_name = "top",
+      x_topleft = 790,
+      y_topleft = 10,
+      x_bottomright = 1130,
+      y_bottomright = 350
+    ),
+    aoi4 = list(
+      hit_name = "bottom",
+      x_topleft = 790,
+      y_topleft = 730,
+      x_bottomright = 1130,
+      y_bottomright = 1070
     )
   )
 )
 
-aoi_preflook <- list(
-  column_name = "AOIPrefLook",
+aoiset_outcomephase <- list(
+  column_name = "AOIOutcomePhase",
   no_evaluation_label = "NO EVAL",
   missing_coordinate_label = NA,
   aoilist = list(
     aoi1 = list(
-      hit_name = "left",
-      x_topleft = 296,
-      y_topleft = 370,
-      x_bottomright = 636,
-      y_bottomright = 710
+      hit_name = "top",
+      x_topleft = 790,
+      y_topleft = 10,
+      x_bottomright = 1130,
+      y_bottomright = 350
     ),
     aoi2 = list(
-      hit_name = "right",
-      x_topleft = 1284,
-      y_topleft = 370,
-      x_bottomright = 1624,
-      y_bottomright = 710
+      hit_name = "bottom",
+      x_topleft = 790,
+      y_topleft = 730,
+      x_bottomright = 1130,
+      y_bottomright = 1070
     )
   )
 )
@@ -114,10 +106,10 @@ aoi_screen <- list(
   aoilist = list(
     aoi1 = list(
       hit_name = TRUE,
-      x_topleft = 0,
-      y_topleft = 0,
-      x_bottomright = 1920,
-      y_bottomright = 1080
+      x_topleft = -40,
+      y_topleft = -40,
+      x_bottomright = 1960,
+      y_bottomright = 1120
     )
   )
 )
@@ -128,23 +120,31 @@ aoi_screen <- list(
 # ==================================================
 
 inter_trial_chunk_patterns = c(
-  ".*Familiar.*",  # Something with *Familiar*
-  ".*_Inter.*",    # Something with *_Inter*, compare: 24_Inter_A-Con2_NSOC_LOB_D2a-ObjectX_a-Obj_12_a.wmv
-  ".*Preflook.*",  # Something with *Preflook*
-  ".*LEFT.*"       # Something with *LEFT*, compare: 9a_ObjectY_b-Obj_16_b-LEFT-ObjectY_a-Obj_16_a-RIGHT.wmv
+  ".*THIRD_PRETEST.*",
+  ".*THIRD_TEST.*"
 )
 
 # ==================================================
 # Define Name Look-Up Information / Mappings
 # ==================================================
 
-#         "OPROThird_10_M_11_Rec16_24.txt"
-# e.g.:       |1|    |2|3|4||5|   |6|   |7|
-lut_filename <- c("exp_name", "ID", "Sex", "Age_Days", "Rec", "Experiment")
+# FILENAME OF THE RECORDING / RAW DATA
+#                "MEMOThird_01_M_293_Rec01_Exp3.tsv"
+lut_filename <- c("study_name", "id", "sex", "age_days", "rec", "experiment")
 
 
-# "24_Inter_A_Con2_NSOC_LOB_D2a_ObjectX_a_Obj_12_a.wmv"
-lut_fam_phase <- c("Trial", "Folder", "Letter", "Condition", "Con_SocInt", "Con_Object", "Dyad", "B", "C", "D", "E", "F")
+# FILENAME OF THE VIDEOS
+# 2_b_THIRD-PRETEST_D1_NCOM_NO_OBEN_OBJ-18
+lut_fam_phase <- c(
+  "running_trial",
+  "phase",
+  "test_phase",
+  "dyad",
+  "con_soc",
+  "con_object_change",
+  "object_position",
+  "object_id"
+)
 
 
 # ==================================================
