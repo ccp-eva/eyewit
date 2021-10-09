@@ -120,8 +120,10 @@ aoiset_screen <- list(
 # ==================================================
 
 inter_trial_chunk_patterns = c(
-  ".*THIRD-PRETEST.*",
-  ".*THIRD-TEST.*"
+  ".*a_THIRD-PRETEST.*",
+  ".*b_THIRD-PRETEST.*",
+  ".*a_THIRD-TEST.*",
+  ".*b_THIRD-TEST.*"
 )
 
 # ==================================================
