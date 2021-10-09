@@ -5,7 +5,7 @@ raw_dir <- "./raw/"
 # Define AOI sets
 # ==================================================
 
-aoiset_actionphase <- list(
+aoiset_actionphasebody <- list(
   column_name = "AOIActionPhaseBody",
   no_evaluation_label = "NO EVAL",
   missing_coordinate_label = NA,
@@ -41,7 +41,7 @@ aoiset_actionphase <- list(
   )
 )
 
-aoiset_actionphase <- list(
+aoiset_actionphaseface <- list(
   column_name = "AOIActionPhaseFace",
   no_evaluation_label = "NO EVAL",
   missing_coordinate_label = NA,
@@ -99,7 +99,7 @@ aoiset_outcomephase <- list(
   )
 )
 
-aoi_screen <- list(
+aoiset_screen <- list(
   column_name = "AOIScreen",
   no_evaluation_label = "NO EVAL",
   missing_coordinate_label = NA,
@@ -120,8 +120,8 @@ aoi_screen <- list(
 # ==================================================
 
 inter_trial_chunk_patterns = c(
-  ".*THIRD_PRETEST.*",
-  ".*THIRD_TEST.*"
+  ".*THIRD-PRETEST.*",
+  ".*THIRD-TEST.*"
 )
 
 # ==================================================
