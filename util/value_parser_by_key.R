@@ -38,4 +38,29 @@ value_parser_by_key <- function(keys, delimited_string, delimiter = "_", drop_nt
       drop_nth_delimiter <- drop_nth_delimiter - 1
     }
   }
+
+
+
+  response <- tryCatch(
+    expr = {
+      # message("Assign keys to delimited values in all list items")
+      # R is just sick: https://stackoverflow.com/a/61407360/2258480
+      setNames(asplit(do.call(rbind, strsplit(delimited_string, delimiter)), 2), keys)
+    },
+    error = function(e) {
+      message("error")
+      print(e)
+    },
+    warning = function(w) {
+      message("warning")
+      print(w)
+    }#, finally = {message("...")}
+  )
+
+  # check if key and value matchin length
+  if (length(keys) != length(response)) {
+    stop("Your key positions to not match with you value positions. Please check!")
+  }
+
+  return(response)
 }
