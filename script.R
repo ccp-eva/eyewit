@@ -33,24 +33,17 @@ for (subject in participants) {
   df <- df_raw[, c(mc, coi)]
 
   # get start and end index pairs for inter_trial chunks
-  startend_pretest <- get_start_end_pos(
-    df,
-    inter_trial_chunk_patterns[1],
-    "MovieStart",
-    "MovieEnd"
-  )
-  startend_test <- get_start_end_pos(
-    df,
-    inter_trial_chunk_patterns[2],
-    "MovieStart",
-    "MovieEnd"
-  )
+  startend_pretest_action <- get_start_end_pos(df, inter_trial_chunk_patterns[1])
+  startend_pretest_outcome <- get_start_end_pos(df, inter_trial_chunk_patterns[2])
+  startend_test_action <- get_start_end_pos(df, inter_trial_chunk_patterns[3])
+  startend_test_outcome <- get_start_end_pos(df, inter_trial_chunk_patterns[4])
 
 
 
   # Allocate Trials and Fillup StudioEventData Label
-  df <- allocate_trials(df, startend_pretest)
-  df <- allocate_trials(df, startend_test)
+  df <- allocate_trials(df, c(startend_pretest_action, startend_pretest_outcome), 2)
+  df <- allocate_trials(df, c(startend_test_action, startend_test_outcome), 2, reset_to_1 = TRUE)
+
 
 
   # track the number of max trials
