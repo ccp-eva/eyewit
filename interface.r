@@ -126,18 +126,19 @@ inter_trial_chunk_patterns = c(
   ".*b_THIRD-TEST.*"
 )
 
-# ==================================================
-# Define Name Look-Up Information / Mappings
-# ==================================================
+# ========================================================
+# Define Naming Schema (Keys, Look-Up Information/Mappings
+# ========================================================
 
 # FILENAME OF THE RECORDING / RAW DATA
 #                "MEMOThird_01_M_293_Rec01_Exp3.tsv"
-lut_filename <- c("study_name", "id", "sex", "age_days", "rec", "experiment")
+keys_filename <- c("study_name", "id", "sex", "age_days", "rec", "experiment")
 
 
 # FILENAME OF THE VIDEOS
 # 2_b_THIRD-PRETEST_D1_NCOM_NO_OBEN_OBJ-18
-lut_fam_phase <- c(
+# 10_a_THIRD-TEST_D1_COM_LOCATION_OBEN_OBJ-5.wmv
+keys_videoname <- c(
   "running_trial",
   "phase",
   "test_phase",
