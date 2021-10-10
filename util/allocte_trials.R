@@ -11,16 +11,8 @@ allocate_trials <- function(df, index_pairs, chunks_per_trial = 1, reset_to_1 = 
 
   if (!missing(chunks_per_trial) && length(index_pairs) > 2) {
     bucket <- list(
-      start =
-        index_pairs[names(index_pairs) == "start"] %>%
-          unlist() %>%
-          as.integer() %>%
-          sort(),
-      end =
-        index_pairs[names(index_pairs) == "end"] %>%
-          unlist() %>%
-          as.integer() %>%
-          sort()
+      start = merge_startend_chunks(index_pairs, "start"),
+      end = merge_startend_chunks(index_pairs, "end")
     )
 
     # clean index_pairs, since it contains multiple starts/ends
