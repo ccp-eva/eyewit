@@ -49,8 +49,9 @@ allocate_trials <- function(df, index_pairs, chunks_per_trial = 1, reset_to_1 = 
 
 
     # Fill up StudioEventData
-    if (fill_StudioEventData) df$StudioEventData[start_pos:end_pos] <- df$StudioEventDat[start_pos]
-
+    if (fill_StudioEventData) {
+      df$StudioEventData[start_pos:end_pos] <- df$StudioEventData[start_pos]
+    }
   }
 
   return(df)
