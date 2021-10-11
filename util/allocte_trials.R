@@ -2,7 +2,7 @@ allocate_trials <- function(df, index_pairs, chunks_per_trial = 1, reset_to_1 = 
 
   # Check if Trial column exists, if not create it
   if (!"Trial" %in% colnames(df)) {
-    df <- cbind(Trial = NA, df)
+    df <- add_column(df, Trial = NA, .before = 1)
   }
 
   if (length(index_pairs) > 2 && missing(chunks_per_trial)) {
