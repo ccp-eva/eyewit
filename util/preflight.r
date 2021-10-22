@@ -16,5 +16,7 @@ preflight <- function(df, cols) {
     stop("The df is not a incremental sequence. Do not remove any rows.")
   }
 
+  # check if aoi sets have no overlapping coordinates in a single set
+  # todo
   return(df)
 }
