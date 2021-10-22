@@ -8,7 +8,8 @@ raw_dir <- "./raw/"
 aoiset_actionphasebody <- list(
   column_name = "AOIActionPhaseBody",
   no_evaluation_label = "NO EVAL",
-  missing_coordinate_label = NA,
+  missing_coordinate_label = "noXY",
+  outside_aoi_label = "outside",
   aoilist = list(
     aoi1 = list(
       hit_name = "left",
@@ -44,7 +45,8 @@ aoiset_actionphasebody <- list(
 aoiset_actionphaseface <- list(
   column_name = "AOIActionPhaseFace",
   no_evaluation_label = "NO EVAL",
-  missing_coordinate_label = NA,
+  missing_coordinate_label = "noXY",
+  outside_aoi_label = "outside",
   aoilist = list(
     aoi1 = list(
       hit_name = "left",
@@ -80,7 +82,8 @@ aoiset_actionphaseface <- list(
 aoiset_outcomephase <- list(
   column_name = "AOIOutcomePhase",
   no_evaluation_label = "NO EVAL",
-  missing_coordinate_label = NA,
+  missing_coordinate_label = "noXY",
+  outside_aoi_label = "outside",
   aoilist = list(
     aoi1 = list(
       hit_name = "top",
@@ -102,7 +105,8 @@ aoiset_outcomephase <- list(
 aoiset_screen <- list(
   column_name = "AOIScreen",
   no_evaluation_label = "NO EVAL",
-  missing_coordinate_label = NA,
+  missing_coordinate_label = "noXY",
+  outside_aoi_label = "outside",
   aoilist = list(
     aoi1 = list(
       hit_name = TRUE,
