@@ -4,6 +4,7 @@ get_aois <- function(df, aoi_collection, scope = c(0, 0), return_df = TRUE, coor
   column_name <- aoi_collection$column_name
   no_evaluation_label <- aoi_collection$no_evaluation_label
   missing_coordinate_label <- aoi_collection$missing_coordinate_label
+  outside_aoi_label <- aoi_collection$outside_aoi_label
 
   # get df length
   df_row_count <- nrow(df)
@@ -65,7 +66,7 @@ get_aois <- function(df, aoi_collection, scope = c(0, 0), return_df = TRUE, coor
         }
 
         # Finally, if current row’s x and y is neither NA nor in hit range assign FALSE
-        aoi_vector[current_row] <- FALSE
+        aoi_vector[current_row] <- outside_aoi_label
       }
     }
   }
