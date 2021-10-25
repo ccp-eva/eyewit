@@ -1,7 +1,6 @@
 get_aois <- function(x, y, aoi_collection, scope = c(0, 0)) {
 
   # destructure aoi_collection
-  column_name <- aoi_collection$column_name
   no_evaluation_label <- aoi_collection$no_evaluation_label
   missing_coordinate_label <- aoi_collection$missing_coordinate_label
   outside_aoi_label <- aoi_collection$outside_aoi_label
@@ -69,5 +68,3 @@ get_aois <- function(x, y, aoi_collection, scope = c(0, 0)) {
 
   return(aoi_vector)
 }
-
-
