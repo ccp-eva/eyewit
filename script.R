@@ -86,13 +86,13 @@ for (subject in participants) {
   # ================================================================================================
   # NAME INFORMATIONS
   # ------------------------------------------------------------------------------------------------
-  df_subject$ID <- value_parser_by_key(keys_filename, subject)$id
+  df_subject$ID <- value_parser_by_key(interface$keys_filename, subject)$id
   df_subject$Trial <- 1:current_test_trials
   df_subject$TrialCon <- c(rep(1, 6), rep(2, 6))
-  df_subject$Sex <- value_parser_by_key(keys_filename, subject)$sex
-  df_subject$Age_Days <- value_parser_by_key(keys_filename, subject)$age_days
-  df_subject$Rec <- value_parser_by_key(keys_filename, subject)$rec
-  df_subject$Exp <- value_parser_by_key(keys_filename, subject, trim_right = 4)$experiment
+  df_subject$Sex <- value_parser_by_key(interface$keys_filename, subject)$sex
+  df_subject$Age_Days <- value_parser_by_key(interface$keys_filename, subject)$age_days
+  df_subject$Rec <- value_parser_by_key(interface$keys_filename, subject)$rec
+  df_subject$Exp <- value_parser_by_key(interface$keys_filename, subject, trim_right = 4)$experiment
 
 
   # ------------------------------------------------------------------------------------------------
