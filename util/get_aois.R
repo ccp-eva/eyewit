@@ -1,4 +1,4 @@
-get_aois <- function(df, aoi_collection, scope = c(0, 0), return_df = TRUE, coordinate_system = "ADCS") {
+get_aois <- function(x, y, aoi_collection, scope = c(0, 0)) {
 
   # destructure aoi_collection
   column_name <- aoi_collection$column_name
@@ -6,12 +6,14 @@ get_aois <- function(df, aoi_collection, scope = c(0, 0), return_df = TRUE, coor
   missing_coordinate_label <- aoi_collection$missing_coordinate_label
   outside_aoi_label <- aoi_collection$outside_aoi_label
 
-  # get df length
-  df_row_count <- nrow(df)
+  # check if x/y length is matching
+  if (length(x) != length(y)) {
+    stop("Your x/y have a differnt length!")
+  }
 
   # If scope is not explicitly set, overwrite scope boundary to include all rows
   if (missing(scope)) {
-    scope <- list(start = 1, end = df_row_count)
+    scope <- list(start = 1, end = length(x))
   }
 
   # If scope was set, check if the user entered multiple ranges using c(scope1, scope2, etc.)
@@ -29,14 +31,8 @@ get_aois <- function(df, aoi_collection, scope = c(0, 0), return_df = TRUE, coor
     stop("Your input scope is not equal")
   }
 
-  # todo check if there are multiple coordinate systems
-  # get coordinate columns of df
-  x_coords_column <- "GazePointXADCSpx"
-  y_coords_column <- "GazePointYADCSpx"
-
-
   # setup aoi vector to be filled with the given no evaluation label
-  aoi_vector <- rep(no_evaluation_label, times = df_row_count)
+  aoi_vector <- rep(no_evaluation_label, times = length(x))
 
 
   # loop over of all rows/scope ranges
@@ -49,18 +45,18 @@ get_aois <- function(df, aoi_collection, scope = c(0, 0), return_df = TRUE, coor
 
       # loop over the aoilist
       for (aoi in aoi_collection$aoilist) {
-        row_x_value <- df[current_row, x_coords_column]
-        row_y_value <- df[current_row, y_coords_column]
+        xi <- x[current_row]
+        yi <- y[current_row]
 
         # check if either x or y is NA (or both) if so return NA
-        if (is.na(row_x_value) || is.na(row_y_value)) {
+        if (is.na(xi) || is.na(yi)) {
           aoi_vector[current_row] <- missing_coordinate_label
           break
         }
 
         # check the hit area
-        if (row_x_value >= aoi$x_topleft    && row_y_value >= aoi$y_topleft &&
-            row_x_value <= aoi$x_bottomright && row_y_value <= aoi$y_bottomright) {
+        if (xi >= aoi$x_topleft     && yi >= aoi$y_topleft &&
+            xi <= aoi$x_bottomright && yi <= aoi$y_bottomright) {
           aoi_vector[current_row] <- aoi$hit_name
           break
         }
@@ -69,15 +65,6 @@ get_aois <- function(df, aoi_collection, scope = c(0, 0), return_df = TRUE, coor
         aoi_vector[current_row] <- outside_aoi_label
       }
     }
-  }
-
-
-  if (return_df) {
-    # insert aoi vector into input df
-    df[, column_name] <- aoi_vector
-    # put aoi column in first position
-    df <- df[, c(which(colnames(df) == column_name), which(colnames(df) != column_name))]
-    return(df)
   }
 
   return(aoi_vector)
