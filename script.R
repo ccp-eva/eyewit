@@ -1,18 +1,16 @@
 rm(list = ls(all.names = TRUE)) # Clear workspace
 graphics.off() # close all open graphics
 
+# import user interface
+source("interface.R")
 
-if (!require(tidyverse)) install.packages("tidyerse")
-library(tidyverse)
-if (!require(styler)) install.packages("styler")
-if (!require(lintr)) install.packages("lintr")
+# install packages
+lapply(interface$dependency_list, require, character.only = TRUE)
 
 
 # import utility functions
 list.files("util", "*.R$", full.names = TRUE, ignore.case = TRUE) %>% sapply(source)
 
-# import user interface
-source("interface.R")
 
 # read raw data filenames
 participants <- list.files(interface$raw_dir)
@@ -388,3 +386,4 @@ for (subject in participants) {
       )
     )
 }
+
