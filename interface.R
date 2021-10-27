@@ -175,7 +175,7 @@ interface <- list(
       outside_aoi_label = "outside",
       aoilist = list(
         aoi1 = list(
-          hit_name = TRUE,
+          hit_name = "onscreen",
           x_topleft = -40,
           y_topleft = -40,
           x_bottomright = 1960,
