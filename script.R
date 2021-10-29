@@ -95,10 +95,10 @@ for (subject in participants) {
 
   # ------------------------------------------------------------------------------------------------
   # ...
+  # Looking Times
   # ------------------------------------------------------------------------------------------------
   df_subject$TotalLTScreenOut <-
-    get_looks(df, aoiset_screen, startend_test_outcome)$looking_times
-
+    get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"))$looking_times
 
 
 

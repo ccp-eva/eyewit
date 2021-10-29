@@ -1,29 +1,48 @@
-get_looks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), intra_scope_cut = TRUE) {
+get_looks <- function(df, aoi_collection, scope, intra_scope_window = c("start", "end"), intra_scope_cut = TRUE) {
 
   # check if intra_scope_window was passed as an argument, if so ...
   # ... use time ranges defined by intra_scope_window to overwrite scope
   if (!missing(intra_scope_window)) {
 
-    # Add the starttime (intra_scope_window[1]) to every start position (scope$start) ...
-    # ... of the recording timestamp to get the actual start window in milliseconds
-    starting_times <- df$RecordingTimestamp[scope$start] + intra_scope_window[1]
-    # Add the endtime argument to the starting times
-    ending_times <- starting_times + intra_scope_window[2]
+    # get all starting times at scope start
+    starting_times <- df$RecordingTimestamp[scope$start]
 
-    # find the closest matching index for starting and ending times
-    # find closest match (http://adomingues.github.io/2015/09/24/finding-closest-element-to-a-number-in-a-list/)
-    start_indexes <- unlist(
-      lapply(
-        starting_times,
-        function(x) which.min(abs(df$RecordingTimestamp - x))
+    # only modify scope if input was numeric
+    # check if there was an actual numeric value
+    if (intra_scope_window[1] != "start") {
+      # Add the starttime (intra_scope_window[1]) to every start position (scope$start) ...
+      # ... of the recording timestamp to get the actual start window in milliseconds
+      starting_times <- df$RecordingTimestamp[scope$start] + as.numeric(intra_scope_window[1])
+    }
+
+    if (intra_scope_window[2] != "end") {
+      # Add the endtime argument to the starting times
+      ending_times <- starting_times + as.numeric(intra_scope_window[2])
+    }
+
+    if (intra_scope_window[1] == "start") {
+      start_indexes <- scope$start
+    } else {
+      # find the closest matching index for starting and ending times
+      # find closest match (http://adomingues.github.io/2015/09/24/finding-closest-element-to-a-number-in-a-list/)
+      start_indexes <- unlist(
+        lapply(
+          starting_times,
+          function(x) which.min(abs(df$RecordingTimestamp - x))
+        )
       )
-    )
-    end_indexes <- unlist(
-      lapply(
-        ending_times,
-        function(x) which.min(abs(df$RecordingTimestamp - x))
+    }
+
+    if (intra_scope_window[2] == "end") {
+      end_indexes <- scope$end
+    } else {
+      end_indexes <- unlist(
+        lapply(
+          ending_times,
+          function(x) which.min(abs(df$RecordingTimestamp - x))
+        )
       )
-    )
+    }
 
     # overwrite scope
     scope <- list(start = start_indexes, end = end_indexes)
@@ -145,6 +164,7 @@ get_looks <- function(df, aoi_collection, scope, intra_scope_window = c(0, 0), i
 
       # check if multiple hit names are in current fixation index (implicitly applies to hit_names w/ length > 1 only)
       # see reference for the check below: (https://stackoverflow.com/a/2191824/2258480)
+      # This should not happen because we have a preflight check for overlapping AOIs, yet this might should stay in anyway
       if (sum(hit_names %in% hit_names_in_FixationIndex, na.rm = TRUE) > 1) {
         # log this index
         bad_fixation_indexes <- c(bad_fixation_indexes, i)
