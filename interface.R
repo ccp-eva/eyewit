@@ -6,8 +6,10 @@ interface <- list(
   raw_dir = "./raw/",
 
   # Define the initial column name for x/y coordinates you want to use
-  xy_columns = list(x = "GazePointXADCSpx",
-                    y = "GazePointYADCSpx"),
+  xy_columns = list(
+    x = "GazePointX (ADCSpx)",
+    y = "GazePointY (ADCSpx)"
+  ),
 
   # ==================================================
   # Define inter trial naming patterns (i.e., phases)
