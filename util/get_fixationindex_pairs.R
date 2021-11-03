@@ -1,5 +1,6 @@
 # returns a named list which contains rownumbers for a given Fixation index
 # ... $fistart is the first and $fiend the last value of a single FixationIndex range
+# https://github.com/Kalaschnik/media/blob/main/get_gazeshift_latency.png
 get_fixationindex_pairs <- function(fi_col) {
 
   # check if fixation indexes are an incremental list from 1:n
