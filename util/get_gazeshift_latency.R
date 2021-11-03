@@ -1,4 +1,4 @@
-# requires tidyverse
+# requires magrittr and dplyr
 get_gazeshift_latency <- function(df, aoisets) {
 
   # grab fixation index pairs
