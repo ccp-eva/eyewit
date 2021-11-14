@@ -1,7 +1,14 @@
-get_looks <- function(df, aoi_collection, scope, intra_scope_window = c("start", "end"), intra_scope_cut = TRUE) {
+get_looks <- function(df, aoi_collection, scope = NA, intra_scope_window = c("start", "end"), lookaway_stop = NA, intra_scope_cut = TRUE) {
+
   # If scope is not explicitly set, use scope boundary to include all rows
   if (missing(scope)) {
     scope <- list(start = 1, end = nrow(df))
+  }
+
+  # check if lookaway_stop was provided
+  if (!missing(lookaway_stop)) {
+    # overwrite scope$end if lookaway criterion is fulfilled
+    scope$end <- get_lookaway_scope_end(df, scope, lookaway_stop)
   }
 
   # check if intra_scope_window was passed as an argument, if so ...
