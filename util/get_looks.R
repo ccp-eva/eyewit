@@ -1,4 +1,8 @@
 get_looks <- function(df, aoi_collection, scope, intra_scope_window = c("start", "end"), intra_scope_cut = TRUE) {
+  # If scope is not explicitly set, use scope boundary to include all rows
+  if (missing(scope)) {
+    scope <- list(start = 1, end = nrow(df))
+  }
 
   # check if intra_scope_window was passed as an argument, if so ...
   # ... use time ranges defined by intra_scope_window to overwrite scope
