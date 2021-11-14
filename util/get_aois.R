@@ -1,4 +1,4 @@
-get_aois <- function(x, y, aoi_collection, scope = c(0, 0)) {
+get_aois <- function(x, y, aoi_collection, scope = NA) {
 
   # destructure aoi_collection
   no_evaluation_label <- aoi_collection$no_evaluation_label
