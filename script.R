@@ -22,7 +22,7 @@ incomplete_subjets <- c()
 for (subject in participants) {
 
   # remove later
-  subject <- participants[1]
+  subject <- participants[2]
 
   # read tsv files
   df_raw <- read_tsv(file.path(interface$raw_dir, subject))
@@ -76,6 +76,9 @@ for (subject in participants) {
   df <- add_column(df, "{interface$aoisets$screen$column_name}" :=
     get_aois(df$x, df$y, interface$aoisets$screen), .after = 3)
 
+  # Get inner AOI gaze shift latencies
+  gazeshifts <- get_gazeshift_latency(df, interface$aoisets)
+
   ##################################################################################################
   # Initialize empty subject tibble (the better data.frame)
   df_subject <- tibble(.rows = current_test_trials)
@@ -85,12 +88,19 @@ for (subject in participants) {
   # NAME INFORMATIONS
   # ------------------------------------------------------------------------------------------------
   df_subject$ID <- value_parser_by_key(interface$keys_filename, subject)$id
-  df_subject$Trial <- 1:current_test_trials
+  df_subject$TrialRun <- 1:current_test_trials
   df_subject$TrialCon <- c(rep(1, 6), rep(2, 6))
   df_subject$Sex <- value_parser_by_key(interface$keys_filename, subject)$sex
   df_subject$Age_Days <- value_parser_by_key(interface$keys_filename, subject)$age_days
   df_subject$Rec <- value_parser_by_key(interface$keys_filename, subject)$rec
   df_subject$Exp <- value_parser_by_key(interface$keys_filename, subject, trim_right = 4)$experiment
+
+  df_subject$TestPhase <- value_parser_by_key(interface$keys_videoname, names_test_outcome)$test_phase
+  df_subject$ConSoc <- value_parser_by_key(interface$keys_videoname, names_test_outcome)$con_soc
+  df_subject$ConOut <- value_parser_by_key(interface$keys_videoname, names_test_outcome)$con_object_change
+  df_subject$Dyad <- value_parser_by_key(interface$keys_videoname, names_test_outcome)$dyad
+  df_subject$Object <- value_parser_by_key(interface$keys_videoname, names_test_outcome, trim_right = 4)$object_id
+  df_subject$ObjectPos <- value_parser_by_key(interface$keys_videoname, names_test_outcome, trim_right = 4)$object_position
 
 
   # ------------------------------------------------------------------------------------------------
@@ -100,7 +110,14 @@ for (subject in participants) {
     get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"))$looking_times
 
 
+  df_subject$TotalLTObjectOut <- if_else(
+    df_subject$ObjectPos == "OBEN",
+    get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"))$looking_times$top,
+    get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"))$looking_times$bottom
+  )
 
+  df_subject$LTScreenOut <-
+    get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"), 2000)$looking_times
 
 
 
