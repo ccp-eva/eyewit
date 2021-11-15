@@ -53,10 +53,15 @@ get_looks <- function(df, aoi_collection, scope = NA, intra_scope_window = c("st
     scope <- list(start = start_indexes, end = end_indexes)
   }
 
+  lookaway_stop_applied <- FALSE
   # check if lookaway_stop was provided
   if (!missing(lookaway_stop)) {
+    # store former scope_end
+    former_scope_end <- scope$end
     # overwrite scope$end if lookaway criterion is fulfilled
     scope$end <- get_lookaway_scope_end(df, scope, lookaway_stop)
+    # create logical vector to track which scope$end was modified (for later analysis)
+    lookaway_stop_applied <- !(former_scope_end == scope$end)
   }
 
   # destructure aoi_collection
@@ -317,10 +322,17 @@ get_looks <- function(df, aoi_collection, scope = NA, intra_scope_window = c("st
         first_looks = first_looks,
         bad_fixation_indexes = bad_fixation_indexes,
         looking_frequencies = looking_frequencies,
-        gaze_shifts = gaze_shifts
+        gaze_shifts = gaze_shifts,
+        lookaway_stop_applied = lookaway_stop_applied
       )
     )
   }
 
-  return(list(looking_times = looking_times, bad_fixation_indexes = bad_fixation_indexes))
+  return(
+    list(
+      looking_times = looking_times,
+      bad_fixation_indexes = bad_fixation_indexes,
+      lookaway_stop_applied = lookaway_stop_applied
+    )
+  )
 }
