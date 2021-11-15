@@ -12,7 +12,8 @@ interface <- list(
   ),
 
   # ==================================================
-  # Define inter trial naming patterns (i.e., phases)
+  # Define inter trial naming patterns
+  # (for defining phases, trials, videos, etc)
   # ==================================================
   inter_trial_chunk_patterns = c(
     ".*a_THIRD-PRETEST.*",
