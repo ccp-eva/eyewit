@@ -5,12 +5,6 @@ get_looks <- function(df, aoi_collection, scope = NA, intra_scope_window = c("st
     scope <- list(start = 1, end = nrow(df))
   }
 
-  # check if lookaway_stop was provided
-  if (!missing(lookaway_stop)) {
-    # overwrite scope$end if lookaway criterion is fulfilled
-    scope$end <- get_lookaway_scope_end(df, scope, lookaway_stop)
-  }
-
   # check if intra_scope_window was passed as an argument, if so ...
   # ... use time ranges defined by intra_scope_window to overwrite scope
   if (!missing(intra_scope_window)) {
@@ -59,6 +53,11 @@ get_looks <- function(df, aoi_collection, scope = NA, intra_scope_window = c("st
     scope <- list(start = start_indexes, end = end_indexes)
   }
 
+  # check if lookaway_stop was provided
+  if (!missing(lookaway_stop)) {
+    # overwrite scope$end if lookaway criterion is fulfilled
+    scope$end <- get_lookaway_scope_end(df, scope, lookaway_stop)
+  }
 
   # destructure aoi_collection
   column_name <- aoi_collection$column_name
