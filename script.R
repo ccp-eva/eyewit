@@ -108,7 +108,7 @@ for (subject in participants) {
   df_subject$OutcomeDuration <-
     df$RecordingTimestamp[startend_test_outcome$end] - df$RecordingTimestamp[startend_test_outcome$start + 1]
 
-  df_subject$TwoSecCheck <- get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"), 2000)$lookaway_stop_applied
+  df_subject$TwoSecCheck <- get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"), 2000, TRUE)$lookaway_stop_applied
 
   # ------------------------------------------------------------------------------------------------
   # Looking Times - OUTCOME
@@ -125,7 +125,7 @@ for (subject in participants) {
   )
 
   df_subject$LTScreenOut <-
-    get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"), 2000)$looking_times
+    get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"), 2000, TRUE)$looking_times
 
   df_subject$LTObjectOut <- if_else(
     df_subject$ObjectPos == "OBEN",

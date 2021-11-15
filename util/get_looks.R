@@ -1,4 +1,12 @@
-get_looks <- function(df, aoi_collection, scope = NA, intra_scope_window = c("start", "end"), lookaway_stop = NA, intra_scope_cut = TRUE) {
+get_looks <- function(
+  df,
+  aoi_collection,
+  scope = NA,
+  intra_scope_window = c("start", "end"),
+  lookaway_stop = NA,
+  omit_first_overflow_fi = FALSE,
+  intra_scope_cut = TRUE
+  ) {
 
   # If scope is not explicitly set, use scope boundary to include all rows
   if (missing(scope)) {
@@ -53,16 +61,43 @@ get_looks <- function(df, aoi_collection, scope = NA, intra_scope_window = c("st
     scope <- list(start = start_indexes, end = end_indexes)
   }
 
+  # lookaway_stop should be processed before omit_first_overflow_fi
   lookaway_stop_applied <- FALSE
   # check if lookaway_stop was provided
   if (!missing(lookaway_stop)) {
-    # store former scope_end
+    # store former scope$end
     former_scope_end <- scope$end
     # overwrite scope$end if lookaway criterion is fulfilled
     scope$end <- get_lookaway_scope_end(df, scope, lookaway_stop)
-    # create logical vector to track which scope$end was modified (for later analysis)
+    # create logical vector to track which scope$end was modified
     lookaway_stop_applied <- !(former_scope_end == scope$end)
   }
+
+  omit_first_overflow_fi_applied <- FALSE
+  # continue here
+  if (omit_first_overflow_fi) {
+    # store former scope$start
+    former_scope_start <- scope$start
+    # overwrite scope$start
+    scope$start <- get_first_free_fi(df, scope)
+    # create logical vector to track which scope$start was modified
+    omit_first_overflow_fi_applied <- !(former_scope_start == scope$start)
+
+  }
+
+  # in rare cases (for very bad data) the omit_first_overflow and lookaway_stop can set ...
+  # ... the scope$start behind the scpe$end (compare: MEMOThird_02_W_312_Rec04_Exp4.tsv using:
+  # ... get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"), 2000, TRUE)
+  # ... see scope 3
+  # In these cases we assign the smaller scope$end to scope$start, so the function will treat it
+  # ... in a way as if there is no data (which is the case)
+  if (any(scope$end - scope$start < 0)) {
+    for (bs in which(scope$end < scope$start)) {
+      scope$start[bs] <- scope$end[bs]
+    }
+  }
+
+
 
   # destructure aoi_collection
   column_name <- aoi_collection$column_name
@@ -323,7 +358,9 @@ get_looks <- function(df, aoi_collection, scope = NA, intra_scope_window = c("st
         bad_fixation_indexes = bad_fixation_indexes,
         looking_frequencies = looking_frequencies,
         gaze_shifts = gaze_shifts,
-        lookaway_stop_applied = lookaway_stop_applied
+        omit_first_overflow_fi_applied,
+        lookaway_stop_applied = lookaway_stop_applied,
+        processed_scope = scope
       )
     )
   }
@@ -332,7 +369,9 @@ get_looks <- function(df, aoi_collection, scope = NA, intra_scope_window = c("st
     list(
       looking_times = looking_times,
       bad_fixation_indexes = bad_fixation_indexes,
-      lookaway_stop_applied = lookaway_stop_applied
+      omit_first_overflow_fi_applied = omit_first_overflow_fi_applied,
+      lookaway_stop_applied = lookaway_stop_applied,
+      processed_scope = scope
     )
   )
 }
