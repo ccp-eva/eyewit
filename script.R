@@ -88,12 +88,11 @@ for (subject in participants) {
   # NAME INFORMATIONS
   # ------------------------------------------------------------------------------------------------
   df_subject$ID <- value_parser_by_key(interface$keys_filename, subject)$id
-  df_subject$TrialRun <- 1:current_test_trials
-  df_subject$TrialCon <- c(rep(1, 6), rep(2, 6))
   df_subject$Sex <- value_parser_by_key(interface$keys_filename, subject)$sex
   df_subject$Age_Days <- value_parser_by_key(interface$keys_filename, subject)$age_days
-  df_subject$Rec <- value_parser_by_key(interface$keys_filename, subject)$rec
   df_subject$Exp <- value_parser_by_key(interface$keys_filename, subject, trim_right = 4)$experiment
+  df_subject$Rec <- value_parser_by_key(interface$keys_filename, subject)$rec
+
 
   df_subject$TestPhase <- value_parser_by_key(interface$keys_videoname, names_test_outcome)$test_phase
   df_subject$ConSoc <- value_parser_by_key(interface$keys_videoname, names_test_outcome)$con_soc
@@ -102,10 +101,19 @@ for (subject in participants) {
   df_subject$Object <- value_parser_by_key(interface$keys_videoname, names_test_outcome, trim_right = 4)$object_id
   df_subject$ObjectPos <- value_parser_by_key(interface$keys_videoname, names_test_outcome, trim_right = 4)$object_position
 
+  df_subject$TrialRun <- 1:current_test_trials
+  df_subject$TrialCon <- c(rep(1, 6), rep(2, 6))
+
+
+  df_subject$OutcomeDuration <-
+    df$RecordingTimestamp[startend_test_outcome$end] - df$RecordingTimestamp[startend_test_outcome$start + 1]
+
+  df_subject$TwoSecCheck <- get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"), 2000)$lookaway_stop_applied
 
   # ------------------------------------------------------------------------------------------------
-  # Looking Times
+  # Looking Times - OUTCOME
   # ------------------------------------------------------------------------------------------------
+
   df_subject$TotalLTScreenOut <-
     get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"))$looking_times
 
@@ -119,10 +127,77 @@ for (subject in participants) {
   df_subject$LTScreenOut <-
     get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"), 2000)$looking_times
 
+  df_subject$LTObjectOut <- if_else(
+    df_subject$ObjectPos == "OBEN",
+    get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), 2000)$looking_times$top,
+    get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), 2000)$looking_times$bottom
+  )
+
+  df_subject$FirstLookDurationObjectOut <- "TODO"
 
 
+  # ------------------------------------------------------------------------------------------------
+  # Looking Times - ACTION
+  # ------------------------------------------------------------------------------------------------
+
+  df_subject$TotalLTScreenAct <-
+    get_looks(df, interface$aoisets$screen, startend_test_action, c(3201, 18200))$looking_times
+
+  df_subject$TotalLTActorLeftAct <-
+    get_looks(df, interface$aoisets$actionphasebody, startend_test_action, c(3201, 18200))$looking_times$left
+
+  df_subject$TotalLTActorRightAct <-
+    get_looks(df, interface$aoisets$actionphasebody, startend_test_action, c(3201, 18200))$looking_times$right
+
+  df_subject$TotalLTActorSumAct <- df_subject$TotalLTActorLeftAct + df_subject$TotalLTActorRightAct
 
 
+  df_subject$TotalLTFaceLeftAct <-
+    get_looks(df, interface$aoisets$actionphaseface, startend_test_action, c(3201, 18200))$looking_times$left
+
+  df_subject$TotalLTFaceRightAct <-
+    get_looks(df, interface$aoisets$actionphaseface, startend_test_action, c(3201, 18200))$looking_times$right
+
+  df_subject$TotalLTFaceSumAct <- df_subject$TotalLTFaceLeftAct + df_subject$TotalLTFaceRightAct
+
+  # ------------------------------------------------------------------------------------------------
+  # Looking Times - INCLUSION ACTION
+  # ------------------------------------------------------------------------------------------------
+
+  df_subject$LTScreenAct_5to6 <-
+    get_looks(df, interface$aoisets$screen, startend_test_action, c(5201, 6200))$looking_times
+
+  df_subject$LTScreenAct_7to8 <-
+    get_looks(df, interface$aoisets$screen, startend_test_action, c(7201, 8200))$looking_times
+
+  df_subject$LTScreenAct_9to10 <-
+    get_looks(df, interface$aoisets$screen, startend_test_action, c(9201, 10200))$looking_times
+
+  df_subject$LTScreenAct_11to12 <-
+    get_looks(df, interface$aoisets$screen, startend_test_action, c(11201, 12200))$looking_times
+
+  df_subject$LTScreenAct_13to14 <-
+    get_looks(df, interface$aoisets$screen, startend_test_action, c(13201, 14200))$looking_times
+
+  df_subject$LTScreenAct_15to16 <-
+    get_looks(df, interface$aoisets$screen, startend_test_action, c(15201, 16200))$looking_times
+
+  df_subject$InterPhaseCheckerSoc <-
+    if_else(
+      df_subject$LTScreenAct_5to6 > 0 |
+      df_subject$LTScreenAct_9to10 > 0 |
+      df_subject$LTScreenAct_13to14 > 0,
+      TRUE, FALSE
+    )
+
+  df_subject$InterPhaseCheckerGazing <-
+    if_else(
+      df_subject$LTScreenAct_7to8 > 0 |
+        df_subject$LTScreenAct_11to12 > 0 |
+        df_subject$LTScreenAct_15to16 > 0,
+      TRUE, FALSE
+    )
+
+  df_subject$InterPhaseCheckerValid <- df_subject$InterPhaseCheckerSoc & df_subject$InterPhaseCheckerGazing
 
 }
-
