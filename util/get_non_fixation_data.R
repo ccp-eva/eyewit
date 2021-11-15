@@ -36,6 +36,13 @@ get_non_fixation_data <- function(df, scope = NA) {
     # GET ALL NON FIXATION INDEX ROW NUMBERS (nfi_rn) IN CURRENT SCOPE
     # the start of a non(!) fixation rn is the end of a fixation rn + 1
     nfi_rn_start <- fi_pairs$fiend[fixations_in_current_scope] + 1
+    # if the last row number is a fixation, then there is no nfi anymore, thus use the
+    # ... last row number and pretend it is a nfi
+    # ... (this more theoretical, and will not be relevant in practice)
+    if (max(fi_pairs$fiend[fixations_in_current_scope]) == nrow(df)) {
+      nfi_rn_start <- fi_pairs$fiend[fixations_in_current_scope]
+    }
+
     # likewise for the end
     nfi_rn_end <- fi_pairs$fistart[fixations_in_current_scope] - 1
     # the first end value is not needed as we always need the first valid fixation
