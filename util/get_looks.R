@@ -74,7 +74,6 @@ get_looks <- function(
   }
 
   omit_first_overflow_fi_applied <- FALSE
-  # continue here
   if (omit_first_overflow_fi) {
     # store former scope$start
     former_scope_start <- scope$start
