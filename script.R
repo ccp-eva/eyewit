@@ -1,6 +1,3 @@
-rm(list = ls(all.names = TRUE)) # Clear workspace
-graphics.off() # close all open graphics
-
 # import user interface
 source("interface.R")
 
