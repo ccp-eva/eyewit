@@ -1,5 +1,5 @@
 is_aoilist_overlapping <- function(aoisets, verbose = FALSE) {
-  for (i in 1:length(aoisets)) {
+  for (i in seq_along(aoisets)) {
 
     if (verbose) print(paste("Checking AOIs in Column:", aoisets[[i]]$column_name))
 

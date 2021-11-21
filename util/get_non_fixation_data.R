@@ -12,7 +12,7 @@ get_non_fixation_data <- function(df, scope = NA) {
   non_fixation_data <- vector("list", length(scope$start))
 
   # define structure
-  for (i in 1:length(non_fixation_data)) {
+  for (i in seq_along(non_fixation_data)) {
     non_fixation_data[[i]] <- list(
       start = c(),
       end = c(),
@@ -21,7 +21,7 @@ get_non_fixation_data <- function(df, scope = NA) {
   }
 
   # loop over scope
-  for (i in 1:length(scope$start)) {
+  for (i in seq_along(scope$start)) {
 
     # subset df in current scope
     df_sub <- df[scope$start[i]:scope$end[i], , drop = FALSE]

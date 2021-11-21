@@ -19,7 +19,7 @@ value_parser_by_key <- function(keys, delimited_string, delimiter = "_", drop_nt
   # check argumet
   if (!missing(drop_nth_delimiter)) {
 
-    for (i in 1:length(drop_nth_delimiter)) {
+    for (i in seq_along(drop_nth_delimiter)) {
 
       # delimiter positions change for each iteration
       delimiter_positions <- unlist(gregexpr(pattern = "_", delimited_string))

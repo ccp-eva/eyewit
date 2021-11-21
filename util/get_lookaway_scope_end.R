@@ -7,7 +7,7 @@ get_lookaway_scope_end <- function(df, scope, lookaway_stop) {
   nf_data <- get_non_fixation_data(df, scope)
 
   # loop over durations within nf_data to check which durations are greater lookaway_stop
-  for (i in 1:length(nf_data)) {
+  for (i in seq_along(nf_data)) {
 
     # check if lookaway_stop criterion is fulfilled
     if (TRUE %in% (nf_data[[i]]$durations > lookaway_stop)) {
