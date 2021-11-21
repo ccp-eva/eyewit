@@ -349,7 +349,7 @@ get_looks <- function(
         bad_fixation_indexes = bad_fixation_indexes,
         looking_frequencies = looking_frequencies,
         gaze_shifts = gaze_shifts,
-        omit_first_overflow_fi_applied,
+        omit_first_overflow_fi_applied = omit_first_overflow_fi_applied,
         lookaway_stop_applied = lookaway_stop_applied,
         processed_scope = scope
       )
