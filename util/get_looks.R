@@ -106,6 +106,9 @@ get_looks <- function(
     hit_names <- c(hit_names, aoi$hit_name)
   }
 
+  outside_aoi_label <- aoi_collection$outside_aoi_label
+
+
   # create a storage container (i.e. a empty lists) for all hit_names ...
   # ... that track looking times over all trials (e.g., looking_times$left)
   looking_times <- setNames(vector("list", length(hit_names)), hit_names)
@@ -240,9 +243,9 @@ get_looks <- function(
         last_hit_name <- hn_in_current_FI
 
         # check for FALSE within the fixation (i.e., subject was not looking at active AOIs), and track it
-      } else if (FALSE %in% hit_names_in_FixationIndex) {
+      } else if (outside_aoi_label %in% hit_names_in_FixationIndex) {
         # update the last_hit_name with FALSE as there was subject were not looking at active AOIs
-        last_hit_name <- FALSE
+        last_hit_name <- outside_aoi_label
       }
 
 
