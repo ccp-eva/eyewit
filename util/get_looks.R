@@ -118,14 +118,8 @@ get_looks <- function(
   hit_names_unknown <- c(hit_names, "unknown")
   gaze_shifts <- setNames(lapply(hit_names_unknown, function(x) setNames(rep(list(numeric()), length(hit_names_unknown) - 1L), setdiff(hit_names_unknown, x))), hit_names_unknown)
 
-
-  # flag if first looks should be used (if there is only one hitname FLs aren’t  necessary)
-  use_first_looks <- ifelse(length(hit_names) == 1, FALSE, TRUE)
-
   # storage container for first_looks
-  if (use_first_looks) {
-    first_looks <- c()
-  }
+  first_looks <- c()
 
   # log fixation indexes that contain multiple hit_names
   bad_fixation_indexes <- c()
@@ -158,9 +152,9 @@ get_looks <- function(
           gaze_shifts[[hn_origin]][[hn_target]] <- c(gaze_shifts[[hn_origin]][[hn_target]], 0)
         }
       }
-      if (use_first_looks) {
-        first_looks <- c(first_looks, NA)
-      }
+
+      first_looks <- c(first_looks, NA)
+
       # go to next trial
       next
     }
@@ -270,7 +264,7 @@ get_looks <- function(
             current_trial_total_duration[[hn]] <- current_trial_total_duration[[hn]] + current_GazeEventDuration
 
             # set first_look if flag is not set
-            if (!found_first_look && use_first_looks) {
+            if (!found_first_look) {
               first_look <- hn
               found_first_look <- TRUE
             }
@@ -291,7 +285,7 @@ get_looks <- function(
             current_trial_total_duration[[hn]] <- current_trial_total_duration[[hn]] + current_GazeEventDuration
 
             # set first_look if flag is not set
-            if (!found_first_look && use_first_looks) {
+            if (!found_first_look) {
               first_look <- hn
               found_first_look <- TRUE
             }
@@ -332,12 +326,11 @@ get_looks <- function(
 
     # Append first look to list
     # check if first_look was there
-    if (first_look == "" && use_first_looks) {
+    if (first_look == "") {
       first_look <- NA
     }
-    if (use_first_looks) {
-      first_looks <- c(first_looks, first_look)
-    }
+
+    first_looks <- c(first_looks, first_look)
   }
 
   # End of loop over entire scope / all trials
@@ -349,7 +342,6 @@ get_looks <- function(
     looking_times <- unlist(looking_times[[1]])
   }
 
-  if (use_first_looks) {
     return(
       list(
         looking_times = looking_times,
@@ -362,15 +354,4 @@ get_looks <- function(
         processed_scope = scope
       )
     )
-  }
-
-  return(
-    list(
-      looking_times = looking_times,
-      bad_fixation_indexes = bad_fixation_indexes,
-      omit_first_overflow_fi_applied = omit_first_overflow_fi_applied,
-      lookaway_stop_applied = lookaway_stop_applied,
-      processed_scope = scope
-    )
-  )
 }
