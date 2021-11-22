@@ -232,7 +232,7 @@ get_looks <- function(
           # Gaze Shifts
           # False case: Origin was not in any defined AOI, but somehwere else (i.e., last hit name = FALSE), then
           #             we set the origin to "unknown"
-          if (last_hit_name == FALSE) {
+          if (last_hit_name == outside_aoi_label) {
             current_trial_gaze_shifts$unknown[[hn_in_current_FI]] <- current_trial_gaze_shifts$unknown[[hn_in_current_FI]] + 1
           }
           # Normal case: Origin was in a different AOI
