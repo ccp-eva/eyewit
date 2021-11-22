@@ -5,6 +5,7 @@ get_looks <- function(
   intra_scope_window = c("start", "end"),
   lookaway_stop = NA,
   omit_first_overflow_fi = FALSE,
+  first_look_cutoff = NA,
   intra_scope_cut = TRUE
   ) {
 
@@ -61,6 +62,16 @@ get_looks <- function(
     scope <- list(start = start_indexes, end = end_indexes)
   }
 
+  omit_first_overflow_fi_applied <- FALSE
+  if (omit_first_overflow_fi) {
+    # store former scope$start
+    former_scope_start <- scope$start
+    # overwrite scope$start
+    scope$start <- get_first_free_fi(df, scope)
+    # create logical vector to track which scope$start was modified
+    omit_first_overflow_fi_applied <- !(former_scope_start == scope$start)
+  }
+
   # lookaway_stop should be processed before omit_first_overflow_fi
   lookaway_stop_applied <- FALSE
   # check if lookaway_stop was provided
@@ -71,17 +82,6 @@ get_looks <- function(
     scope$end <- get_lookaway_scope_end(df, scope, lookaway_stop)
     # create logical vector to track which scope$end was modified
     lookaway_stop_applied <- !(former_scope_end == scope$end)
-  }
-
-  omit_first_overflow_fi_applied <- FALSE
-  if (omit_first_overflow_fi) {
-    # store former scope$start
-    former_scope_start <- scope$start
-    # overwrite scope$start
-    scope$start <- get_first_free_fi(df, scope)
-    # create logical vector to track which scope$start was modified
-    omit_first_overflow_fi_applied <- !(former_scope_start == scope$start)
-
   }
 
   # in rare cases (for very bad data) the omit_first_overflow and lookaway_stop can set ...
@@ -124,9 +124,17 @@ get_looks <- function(
   # storage container for first_looks
   first_looks <- c()
 
+  first_looks_collection <- vector("list", length(hit_names)) |> setNames(hit_names)
+  # define structure
+  for (hn in hit_names) {
+      first_looks_collection[[hn]]$found_first <- FALSE
+      first_looks_collection[[hn]]$last_hn <- NA
+      first_looks_collection[[hn]]$durations <- rep(NA, length(scope$start))
+      first_looks_collection[[hn]]$used_first_look_cutoff <- vector("logical", length(scope$start))
+  }
+
   # log fixation indexes that contain multiple hit_names
   bad_fixation_indexes <- c()
-
 
   ######################################
   #### loop over scope / all trials ####
@@ -157,6 +165,10 @@ get_looks <- function(
       }
 
       first_looks <- c(first_looks, NA)
+
+      # for (hn in hit_names) {
+      #   first_looks_durations[[hn]] <- c(first_looks_durations[[hn]], NA)
+      # }
 
       # go to next trial
       next
@@ -196,6 +208,10 @@ get_looks <- function(
     found_first_look <- FALSE
     first_look <- ""
 
+    # set first_look durations for current trial
+    current_first_look_duration <- setNames(vector("list", length(hit_names)), hit_names)
+
+
 
     # get first and last FixationIndex (remove NAs), which define the boundaries of a single trial
     min_FixationIndex <- min(inter_trial_FixationIndexes, na.rm = TRUE)
@@ -220,7 +236,7 @@ get_looks <- function(
         # next
       }
 
-      # ----- Looking frequency (Looks) & Gaze Shifts -----
+      # ----- Looking frequency (Looks), Gaze Shifts, Last Hit Name -----
       # Check if there is a defined hit_name within all the hit_names of the current fixation index
       if (TRUE %in% (hit_names %in% hit_names_in_FixationIndex)) {
         # get the current hit_name within the current fixation index
@@ -249,7 +265,6 @@ get_looks <- function(
         # update the last_hit_name with FALSE as there was subject were not looking at active AOIs
         last_hit_name <- outside_aoi_label
       }
-
 
       # iterate over hit names
       for (hn in hit_names) {
@@ -311,6 +326,19 @@ get_looks <- function(
             first_look <- hn
             found_first_look <- TRUE
           }
+
+
+          # first_look_collection part
+          # enter found first only once it detects the hn
+          if (!first_looks_collection[[hn]]$found_first) {
+            first_looks_collection[[hn]]$found_first <- TRUE
+            first_looks_collection[[hn]]$last_hn <- hn
+          }
+
+          if (first_looks_collection[[hn]]$found_first && first_looks_collection[[hn]]$last_hn == hn) {
+            current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_GazeEventDuration
+          }
+
         }
       }
     }
