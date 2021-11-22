@@ -69,6 +69,15 @@ interface <- list(
       "LocalTimeStamp",
       "StudioEventIndex"),
 
+  condition_soc_out_mapping = list(
+    COMNO = 1,
+    COMIDENTITY = 2,
+    COMLOCATION = 3,
+    NCOMNO = 4,
+    NCOMIDENTITY = 5,
+    NCOMLOCATION = 6
+  ),
+
   # ==================================================
   # Define AOI sets
   # ==================================================
