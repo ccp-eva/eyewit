@@ -214,8 +214,10 @@ get_looks <- function(
       if (sum(hit_names %in% hit_names_in_FixationIndex, na.rm = TRUE) > 1) {
         # log this index
         bad_fixation_indexes <- c(bad_fixation_indexes, i)
+        # stop execution, as this should be impossible
+        stop()
         # go to next index
-        next
+        # next
       }
 
       # ----- Looking frequency (Looks) & Gaze Shifts -----
