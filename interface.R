@@ -78,6 +78,9 @@ interface <- list(
       "LocalTimeStamp",
       "StudioEventIndex"),
 
+  # ==================================================
+  # Helper list for condition mapping in df_subject
+  # ==================================================
   condition_soc_out_mapping = list(
     COMNO = 1,
     COMIDENTITY = 2,
