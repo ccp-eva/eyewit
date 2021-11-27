@@ -32,6 +32,16 @@ get_non_fixation_data <- function(df, scope = NA) {
     # get all fixation indexes within current scope
     fixations_in_current_scope <- unique(df_sub$FixationIndex)
 
+    # check if fixations_in_current_scope is empty, because it contained only NAs
+    # ... if so assign NA to non_fixation_data start, end and durations
+    if (length(fixations_in_current_scope) == 0) {
+      non_fixation_data[[i]]$start <- NA
+      non_fixation_data[[i]]$end <- NA
+      non_fixation_data[[i]]$durations <- NA
+      # go to next i
+      next
+    }
+
 
     # GET ALL NON FIXATION INDEX ROW NUMBERS (nfi_rn) IN CURRENT SCOPE
     # the start of a non(!) fixation rn is the end of a fixation rn + 1
