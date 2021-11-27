@@ -22,7 +22,7 @@ for (subject in participants) {
   subject <- participants[2]
 
   # read tsv files
-  df_raw <- read_tsv(file.path(interface$raw_dir, subject))
+  df_raw <- read_tsv(file.path(interface$raw_dir, subject), col_types = interface$mc_types)
 
   # run preflight checks & diagnostics, returns a lean df
   df <- preflight(df_raw, interface)

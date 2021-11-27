@@ -58,6 +58,17 @@ interface <- list(
       "GazePointY (ADCSpx)"
     ),
 
+  # Column Type definitions for parsing raw data correctly
+  mc_types = list(
+    RecordingTimestamp = col_double(),
+    StudioEvent = col_character(),
+    StudioEventData = col_character(),
+    FixationIndex = col_double(),
+    GazeEventDuration = col_double(),
+    "GazePointX (ADCSpx)" = col_double(),
+    "GazePointY (ADCSpx)" = col_double()
+  ),
+
   # ==================================================
   # Columns of Interests (Add as many as you want)
   # ==================================================
