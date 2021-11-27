@@ -2,7 +2,7 @@
 source("interface.R")
 
 # install packages
-lapply(interface$dependency_list, require, character.only = TRUE)
+lapply(c("tidyverse", "styler", "lintr"), require, character.only = TRUE)
 
 
 # import utility functions

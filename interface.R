@@ -1,7 +1,5 @@
 interface <- list(
 
-  dependency_list = c("tidyverse", "styler", "lintr"),
-
   # Set subject raw data directory
   raw_dir = "./raw/",
 
