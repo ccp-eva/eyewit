@@ -1,3 +1,4 @@
+# https://github.com/Kalaschnik/media/blob/main/get_gazeshift_latency.png
 # requires magrittr and dplyr
 get_gazeshift_latency <- function(df, aoisets) {
 
