@@ -28,6 +28,18 @@ get_gazeshift_latency <- function(df, aoisets) {
         filter(FixationDiff == 1) %>%
         pull(FixationIndex)
 
+      # OUTSIDE CHECK
+      # If there is an "outside" fixation/saccade between two consecutive fixations, it will skew
+      # the duration. Thus, if the given "outside" label is detected in two consecutive fixations,
+      # the corresponding entry will be removed from the latencies and the fi_pairs list
+      for (fi_parent in fi_parents) {
+        if (is_hitname_in_range(df[[curr_colname]], aoiset$outside_aoi_label, fi_parent, fi_parent + 1)) {
+
+          # remove that element from the fi_parent vector
+          fi_parents <- fi_parents[fi_parents != fi_parent]
+        }
+      }
+
       # save fi_pairs in latencies list (first value is parent, second is child)
       latencies[[curr_colname]][[curr_hitname]]$fi_pairs <- list(
         fi_parents, fi_parents + 1
