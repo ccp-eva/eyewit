@@ -10,7 +10,7 @@
 
 As of now this repo is a collection of R functions. Release 1.0.0 aims to put all these into a libarary (`eyewit::`).
 
-**Project Progress Tracker:** https://github.com/Kalaschnik/eyewit/projects/4
+**Project Progress Tracker:** https://github.com/ccp-eva/eyewit/projects/4
 
 ### Road to Unit Tests
 
