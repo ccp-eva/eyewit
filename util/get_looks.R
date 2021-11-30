@@ -90,6 +90,7 @@ get_looks <- function(
   # In these cases we assign the smaller scope$end to scope$start, so the function will treat it
   # ... in a way as if there is no data (which is the case)
   if (any(scope$end - scope$start < 0)) {
+    stop("Investigate prior comment")
     for (bs in which(scope$end < scope$start)) {
       scope$start[bs] <- scope$end[bs]
     }
