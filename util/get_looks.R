@@ -61,6 +61,16 @@ get_looks <- function(
     scope <- list(start = start_indexes, end = end_indexes)
   }
 
+  omit_first_overflow_fi_applied <- FALSE
+  if (omit_first_overflow_fi) {
+    # store former scope$start
+    former_scope_start <- scope$start
+    # overwrite scope$start
+    scope$start <- get_first_free_fi(df, scope)
+    # create logical vector to track which scope$start was modified
+    omit_first_overflow_fi_applied <- !(former_scope_start == scope$start)
+  }
+
   # lookaway_stop should be processed before omit_first_overflow_fi
   lookaway_stop_applied <- FALSE
   # check if lookaway_stop was provided
@@ -71,17 +81,6 @@ get_looks <- function(
     scope$end <- get_lookaway_scope_end(df, scope, lookaway_stop)
     # create logical vector to track which scope$end was modified
     lookaway_stop_applied <- !(former_scope_end == scope$end)
-  }
-
-  omit_first_overflow_fi_applied <- FALSE
-  if (omit_first_overflow_fi) {
-    # store former scope$start
-    former_scope_start <- scope$start
-    # overwrite scope$start
-    scope$start <- get_first_free_fi(df, scope)
-    # create logical vector to track which scope$start was modified
-    omit_first_overflow_fi_applied <- !(former_scope_start == scope$start)
-
   }
 
   # in rare cases (for very bad data) the omit_first_overflow and lookaway_stop can set ...
