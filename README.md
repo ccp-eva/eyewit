@@ -1,6 +1,6 @@
 <img align="right" width="150" src="assets/logo.svg">
 
-# Tobii Eye-Tracking Utilities / `EyeWit`
+# `eyewit` (former Tobii Eyetracking Utilities)
 
 > Helper functions for common eye-tracking data wrangling tasks and eye-tracking analysis around _Tobii’s I-VT Fixation Filter_
 
