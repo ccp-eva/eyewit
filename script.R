@@ -20,8 +20,10 @@ incomplete_subjets <- c()
 # Loop over all participants
 for (subject in participants) {
 
+  print(subject)
+
   # remove later
-  subject <- participants[9]
+  # subject <- participants[1]
 
   # read tsv files
   df_raw <- read_tsv(file.path(interface$raw_dir, subject), col_types = interface$mc_types)
