@@ -84,14 +84,14 @@ get_looks <- function(
     lookaway_stop_applied <- !(former_scope_end == scope$end)
   }
 
-  # in rare cases (for very bad data) the omit_first_overflow and lookaway_stop can set ...
-  # ... the scope$start behind the scpe$end (compare: MEMOThird_02_W_312_Rec04_Exp4.tsv using:
-  # ... get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"), 2000, TRUE)
-  # ... see scope 3
-  # In these cases we assign the smaller scope$end to scope$start, so the function will treat it
+  # in some cases the combination of a small intra_scope_window, a given omit_first_overflow_fi and
+  #... lookaway_stop can set the scope$start behind the scpe$end
+  # You can try to avoid this by not setting the omit_first_overflow_fi or increase the
+  # ...intra_scope_windows.
+  # By default the script assign the smaller scope$end to scope$start, so the function will treat it
   # ... in a way as if there is no data (which is the case)
   if (any(scope$end - scope$start < 0)) {
-    stop("Investigate prior comment")
+    warning("Skipped Evaluation because scope$start was greater than scope$end")
     for (bs in which(scope$end < scope$start)) {
       scope$start[bs] <- scope$end[bs]
     }
