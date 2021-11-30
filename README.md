@@ -10,6 +10,8 @@
 
 As of now this repo is a collection of R functions. Release 1.0.0 aims to put all these into a libarary (`eyewit::`).
 
+**Project Progress Tracker:** https://github.com/Kalaschnik/eyewit/projects/4
+
 ### Road to Unit Tests
 
 Modification in delicate functions (e.g., calculating looking time) may result in wrong calculations. Thus, an automatic unit test must be performed to grant correct calculations. This will be the next milestone after 1.0.0.
