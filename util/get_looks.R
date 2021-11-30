@@ -331,14 +331,14 @@ get_looks <- function(
               first_looks_collection[[hn]]$last_fi <- i
 
               # check if outside label is between this fi and the next fi
-              if (is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
+              if (i < max(df$FixationIndex, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
                 # outside fixation or saccade after last fi
                 current_first_look_ending_reason[[hn]] <- "outside"
                 first_looks_collection[[hn]]$forced_stop <- TRUE
               }
 
               # check if the time criterion is met within this fi and the next fi#
-              if (!first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
+              if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
                   (
                     df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
                     df$RecordingTimestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
@@ -390,14 +390,14 @@ get_looks <- function(
               first_looks_collection[[hn]]$last_fi <- i
 
               # check if outside label is between this fi and the next fi
-              if (is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
+              if (i < max(df$FixationIndex, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
                 # outside fixation or saccade after last fi
                 current_first_look_ending_reason[[hn]] <- "outside"
                 first_looks_collection[[hn]]$forced_stop <- TRUE
               }
 
               # check if the time criterion is met within this fi and the next fi#
-              if (!first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
+              if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
                   (
                     df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
                     df$RecordingTimestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
@@ -446,14 +446,14 @@ get_looks <- function(
             first_looks_collection[[hn]]$last_fi <- i
 
             # check if outside label is between this fi and the next fi
-            if (is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
+            if (i < max(df$FixationIndex, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
               # outside fixation or saccade after last fi
               current_first_look_ending_reason[[hn]] <- "outside"
               first_looks_collection[[hn]]$forced_stop <- TRUE
             }
 
             # check if the time criterion is met within this fi and the next fi#
-            if (!first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
+            if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
                 (
                   df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
                   df$RecordingTimestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
