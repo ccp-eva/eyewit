@@ -30,7 +30,7 @@ get_gazeshift_latency <- function(df, aoisets) {
 
       # OUTSIDE CHECK
       # If there is an "outside" fixation/saccade between two consecutive fixations, it will skew
-      # the duration. Thus, if the given "outside" label is detected in two consecutive fixations,
+      # the duration. Thus, if the given "outside" label is detected between two consecutive fixations,
       # the corresponding entry will be removed from the latencies and the fi_pairs list
       for (fi_parent in fi_parents) {
         if (is_hitname_in_range(df[[curr_colname]], aoiset$outside_aoi_label, fi_parent, fi_parent + 1)) {
