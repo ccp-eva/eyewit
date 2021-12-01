@@ -8,7 +8,7 @@
 
 ### Road to Package `eyewit`
 
-As of now this repo is a collection of R functions. Release 1.0.0 aims to put all these into a libarary (`eyewit::`).
+As of now this repo is a collection of R functions. Release 1.0.0 aims to put all these into a library (`eyewit::`).
 
 **Project Progress Tracker:** https://github.com/ccp-eva/eyewit/projects/4
 
