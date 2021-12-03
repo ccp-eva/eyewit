@@ -45,8 +45,16 @@ preflight <- function(df, interface) {
 
   message("   ⚔️  No intersecting AOIs found")
 
-  cat("--------------------------------------------------------------------\n")
-  message("--------------------------------------------------------------------\n")
+  message("\n   Single Samples Summary (i.e., the difference in time between each sample (row):")
+  smmry <- df$RecordingTimestamp |> diff() |> summary()
+  print(smmry)
+  message(
+    "   Overall Sampling Frequency\n",
+    "   - mean sampling frequency:\t", format(round(1000 / smmry[[4]], 2), nsmall = 1), "\n",
+    "   - median sampling frequency:\t", format(round(1000 / smmry[[3]], 2), nsmall = 1)
+  )
+  rm(smmry)
+
   message("--------------------------------------------------------------------")
 
   return(df)
