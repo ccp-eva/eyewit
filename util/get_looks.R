@@ -31,7 +31,7 @@ get_looks <- function(
 
     if (intra_scope_window[2] != "end") {
       # Add the endtime argument to the starting times
-      ending_times <- starting_times + as.numeric(intra_scope_window[2])
+      ending_times <- df$RecordingTimestamp[scope$start] + as.numeric(intra_scope_window[2])
     }
 
     if (intra_scope_window[1] == "start") {
