@@ -13,6 +13,17 @@ get_first_free_fi <- function(df, scope) {
 
   # iterative over valid Fixation indexes (thus skipping NAs)
   for (i in which(!!scope_start_fis)) {
+
+    # check if it possible to go to the next fixation index (if it was already the last one you would get NA)
+    if (scope_start_fis[i] == max(df$FixationIndex, na.rm = TRUE)) {
+      warning(paste0(
+        "Fixation Index: ", scope_start_fis[i], " (", fi_pairs$fistart[scope_start_fis[i]], ":",
+        fi_pairs$fiend[scope_start_fis[i]], ") is the last fixation index in this data. ",
+        "No skipping will be applied. Instead this fixation index will be used."
+      ))
+      next
+    }
+
     # get subsequent fixation index (+1) and retrieve row number using fi_pars and assign
     scope_start[i] <- fi_pairs$fistart[scope_start_fis[i] + 1]
   }
