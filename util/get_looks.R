@@ -286,7 +286,6 @@ get_looks <- function(
         last_hit_name <- outside_aoi_label
       }
 
-
       # iterate over hit names
       for (hn in hit_names) {
 
@@ -308,6 +307,7 @@ get_looks <- function(
             if (!found_first_look) {
               first_look <- hn
               found_first_look <- TRUE
+              first_look_initial_timestamp <- df$RecordingTimestamp[fi_pairs$fistart[i]]
             }
 
             # first_look_collection part
@@ -335,6 +335,8 @@ get_looks <- function(
                 # outside fixation or saccade after last fi
                 current_first_look_ending_reason[[hn]] <- "outside"
                 first_looks_collection[[hn]]$forced_stop <- TRUE
+                # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
+                current_first_look_duration[[hn]] <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1] - first_look_initial_timestamp
               }
 
               # check if the time criterion is met within this fi and the next fi#
@@ -345,6 +347,8 @@ get_looks <- function(
               ) {
                 current_first_look_ending_reason[[hn]] <- "timecriterion"
                 first_looks_collection[[hn]]$forced_stop <- TRUE
+                # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
+                current_first_look_duration[[hn]] <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1] - first_look_initial_timestamp
               }
             }
 
@@ -367,6 +371,7 @@ get_looks <- function(
             if (!found_first_look) {
               first_look <- hn
               found_first_look <- TRUE
+              first_look_initial_timestamp <- df$RecordingTimestamp[fi_pairs$fistart[i]]
             }
 
             # first_look_collection part
@@ -394,6 +399,8 @@ get_looks <- function(
                 # outside fixation or saccade after last fi
                 current_first_look_ending_reason[[hn]] <- "outside"
                 first_looks_collection[[hn]]$forced_stop <- TRUE
+                # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
+                current_first_look_duration[[hn]] <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1] - first_look_initial_timestamp
               }
 
               # check if the time criterion is met within this fi and the next fi#
@@ -404,6 +411,8 @@ get_looks <- function(
               ) {
                 current_first_look_ending_reason[[hn]] <- "timecriterion"
                 first_looks_collection[[hn]]$forced_stop <- TRUE
+                # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
+                current_first_look_duration[[hn]] <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1] - first_look_initial_timestamp
               }
             }
 
@@ -422,6 +431,7 @@ get_looks <- function(
           if (!found_first_look) {
             first_look <- hn
             found_first_look <- TRUE
+            first_look_initial_timestamp <- df$RecordingTimestamp[fi_pairs$fistart[i]]
           }
 
 
@@ -450,6 +460,8 @@ get_looks <- function(
               # outside fixation or saccade after last fi
               current_first_look_ending_reason[[hn]] <- "outside"
               first_looks_collection[[hn]]$forced_stop <- TRUE
+              # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
+              current_first_look_duration[[hn]] <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1] - first_look_initial_timestamp
             }
 
             # check if the time criterion is met within this fi and the next fi#
@@ -460,6 +472,8 @@ get_looks <- function(
                ) {
               current_first_look_ending_reason[[hn]] <- "timecriterion"
               first_looks_collection[[hn]]$forced_stop <- TRUE
+              # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
+              current_first_look_duration[[hn]] <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1] - first_look_initial_timestamp
             }
           }
 
