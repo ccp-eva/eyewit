@@ -2,10 +2,27 @@ Package: eyewit
 Title: Bootstrapping Common Eyetracking Tasks around Tobii’s I-VT Filter
 Version: 0.3.0
 Authors@R: 
-    person("Steven", "Kalinke", , "steven.kalinke@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-3795-6829"))
+    c(
+      person(
+        given = "Steven",
+        family = "Kalinke",
+        role = c("aut", "cre", "cph"),
+        email = "steven.kalinke@gmail.com",
+        comment = c(ORCID = "0000-0002-3795-6829")
+      )
+    )
 Description: Rre-process raw data from Tobii eyetracking experiment.
 License: MIT + file LICENSE
+URL: https://github.com/ccp-eva/eyewit
+BugReports: https://github.com/ccp-eva/eyewit/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+Depends:
+    R (>=4.1.0)
+Suggests: 
+    testthat (>= 3.0.0)
+Imports: 
+    stringr    
+Config/testthat/edition: 3
+
