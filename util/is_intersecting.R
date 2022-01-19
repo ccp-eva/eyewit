@@ -15,6 +15,3 @@ is_intersecting <- function(rect1, rect2){
 
   return(x_intersect && y_intersect)
 }
-
-is_aoilist_overlapping(interface$aoisets)
-
