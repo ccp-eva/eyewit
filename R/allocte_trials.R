@@ -1,8 +1,20 @@
+#' Title
+#'
+#' @param df df
+#' @param index_pairs index_pairs
+#' @param chunks_per_trial chunks_per_trial
+#' @param reset_to_1 reset_to_1
+#' @param fill_StudioEventData fill_StudioEventData
+#'
+#' @return None
+#' @export
+#'
+
 allocate_trials <- function(df, index_pairs, chunks_per_trial = 1, reset_to_1 = TRUE, fill_StudioEventData = TRUE) {
 
   # Check if Trial column exists, if not create it
   if (!"Trial" %in% colnames(df)) {
-    df <- add_column(df, Trial = NA, .before = 1)
+    df <- tibble::add_column(df, Trial = NA, .before = 1)
   }
 
   if (length(index_pairs) > 2 && missing(chunks_per_trial)) {

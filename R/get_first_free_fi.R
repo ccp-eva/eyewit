@@ -1,3 +1,11 @@
+#' Title
+#'
+#' @param df df
+#' @param scope scope
+#'
+#' @return None
+#' @export
+#'
 get_first_free_fi <- function(df, scope) {
 
   # init return vector

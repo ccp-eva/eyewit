@@ -1,3 +1,11 @@
+#' Title
+#'
+#' @param preflook_string_vector preflook_string_vector
+#' @param familiar_object_vector familiar_object_vector
+#'
+#' @return None
+#' @export
+#'
 get_preflook_pos <- function(preflook_string_vector, familiar_object_vector) {
 
   preflook_string_vector_length <- length(preflook_string_vector)

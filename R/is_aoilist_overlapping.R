@@ -1,3 +1,11 @@
+#' Title
+#'
+#' @param aoisets aoisets
+#' @param verbose verbose
+#'
+#' @return None
+#' @export
+#'
 is_aoilist_overlapping <- function(aoisets, verbose = FALSE) {
   for (i in seq_along(aoisets)) {
 
@@ -15,7 +23,7 @@ is_aoilist_overlapping <- function(aoisets, verbose = FALSE) {
           print(paste(
             "Comparing AOIs: ",
             aoisets[[i]]$aoilist[[j]]$hit_name,
-            "↔",
+            "\U2194",
             aoisets[[i]]$aoilist[[k]]$hit_name
           ))
           print(paste(

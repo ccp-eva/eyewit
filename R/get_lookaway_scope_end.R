@@ -1,3 +1,12 @@
+#' Title
+#'
+#' @param df df
+#' @param scope scope
+#' @param lookaway_stop lookaway_stop
+#'
+#' @return None
+#' @export
+#'
 get_lookaway_scope_end <- function(df, scope, lookaway_stop) {
 
   # destructure provided scope

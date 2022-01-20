@@ -1,3 +1,12 @@
+#' Title
+#'
+#' @param df df
+#' @param scope scope
+#'
+#' @return None
+#' @export
+#'
+
 get_non_fixation_data <- function(df, scope = NA) {
 
   # If scope is not explicitly set, use scope boundary to include all rows

@@ -1,3 +1,11 @@
+#' Title
+#'
+#' @param df df
+#' @param fam_index_pairs fam_index_pairs
+#'
+#' @return None
+#' @export
+#'
 get_objects <- function(df, fam_index_pairs) {
 
   # familar objects

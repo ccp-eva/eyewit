@@ -1,5 +1,16 @@
-# this function accepts a column containing hitnames, a target hitname to look for, and a
-# ... starting and ending fixation index
+#' Is hitname in range
+#'
+#' this function accepts a column containing hitnames, a target hitname to look for, and a
+#' starting and ending fixation index
+#'
+#' @param vec vec
+#' @param hitname hitname
+#' @param fi_start fi_start
+#' @param fi_end fi_end
+#'
+#' @return None
+#' @export
+#'
 is_hitname_in_range <- function(vec, hitname, fi_start, fi_end) {
 
   if (!"fi_pairs" %in% ls(envir = .GlobalEnv)) {

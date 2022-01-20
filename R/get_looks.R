@@ -1,3 +1,17 @@
+#' Title
+#'
+#' @param df df
+#' @param aoi_collection aoi_collection
+#' @param scope scope
+#' @param intra_scope_window intra_scope_window
+#' @param lookaway_stop lookaway_stop
+#' @param omit_first_overflow_fi omit_first_overflow_fi
+#' @param first_look_emergency_cutoff first_look_emergency_cutoff
+#' @param intra_scope_cut intra_scope_cut
+#'
+#' @return None
+#' @export
+#'
 get_looks <- function(
   df,
   aoi_collection,
@@ -112,15 +126,15 @@ get_looks <- function(
 
   # create a storage container (i.e. a empty lists) for all hit_names ...
   # ... that track looking times over all trials (e.g., looking_times$left)
-  looking_times <- setNames(vector("list", length(hit_names)), hit_names)
+  looking_times <- stats::setNames(vector("list", length(hit_names)), hit_names)
 
   # create a storage container for all looking frequencies (i.e., counting the number of looks within an AOI)
-  looking_frequencies <- setNames(vector("list", length(hit_names)), hit_names)
+  looking_frequencies <- stats::setNames(vector("list", length(hit_names)), hit_names)
 
   # create a storage container for gaze shifts (use it with get_looks$OriginHitname$TargetHitname)
   # https://stackoverflow.com/a/63451891/2258480
   hit_names_unknown <- c(hit_names, "unknown")
-  gaze_shifts <- setNames(lapply(hit_names_unknown, function(x) setNames(rep(list(numeric()), length(hit_names_unknown) - 1L), setdiff(hit_names_unknown, x))), hit_names_unknown)
+  gaze_shifts <- stats::setNames(lapply(hit_names_unknown, function(x) stats::setNames(rep(list(numeric()), length(hit_names_unknown) - 1L), setdiff(hit_names_unknown, x))), hit_names_unknown)
 
   # storage container for first_looks
   first_looks <- c()
@@ -154,7 +168,7 @@ get_looks <- function(
 
     # Filter out all NAs within the current trial and check if there are still...
     # ... valid fixations left. If not, skip current trial/scope
-    if (length(na.omit(inter_trial_FixationIndexes)) == 0) {
+    if (length(stats::na.omit(inter_trial_FixationIndexes)) == 0) {
       # Append 0 to looking_times, looking_frequencies, gaze_shifts, and NA to FirstLook in the current trial and skip to next
       for (hn in hit_names) {
         looking_times[[hn]] <- c(looking_times[[hn]], 0)
@@ -183,14 +197,14 @@ get_looks <- function(
 
     # RESET/INIT STORAGE CONTAINERS PER TRIAL
     # init storage containers for all fixation indexes for hit_names in the current trial
-    current_trial_total_duration <- setNames(vector("list", length(hit_names)), hit_names)
+    current_trial_total_duration <- stats::setNames(vector("list", length(hit_names)), hit_names)
     for (hn in hit_names) {
       # set to current trial duration to 0
       current_trial_total_duration[[hn]] <- 0
     }
 
     # init storage containers for looking frequencies
-    current_trial_total_looks <- setNames(vector("list", length(hit_names)), hit_names)
+    current_trial_total_looks <- stats::setNames(vector("list", length(hit_names)), hit_names)
     for (hn in hit_names) {
       # set to current trial duration to 0
       current_trial_total_looks[[hn]] <- 0
@@ -198,7 +212,7 @@ get_looks <- function(
 
 
     # init storage containers for gaze shifts
-    current_trial_gaze_shifts <- setNames(lapply(hit_names_unknown, function(x) setNames(rep(list(numeric()), length(hit_names_unknown) - 1L), setdiff(hit_names_unknown, x))), hit_names_unknown)
+    current_trial_gaze_shifts <- stats::setNames(lapply(hit_names_unknown, function(x) stats::setNames(rep(list(numeric()), length(hit_names_unknown) - 1L), setdiff(hit_names_unknown, x))), hit_names_unknown)
     for (hn_origin in hit_names_unknown) {
       hn_origin_reduced <- hit_names_unknown[hit_names_unknown != hn_origin]
       for (hn_target in hn_origin_reduced) {
@@ -215,8 +229,8 @@ get_looks <- function(
     first_look <- ""
 
     # set first_look durations for current trial
-    current_first_look_duration <- setNames(vector("list", length(hit_names)), hit_names)
-    current_first_look_ending_reason <- setNames(vector("list", length(hit_names)), hit_names)
+    current_first_look_duration <- stats::setNames(vector("list", length(hit_names)), hit_names)
+    current_first_look_ending_reason <- stats::setNames(vector("list", length(hit_names)), hit_names)
     for (hn in hit_names) {
       # set to current trial duration to 0
       current_first_look_duration[[hn]] <- 0
@@ -248,7 +262,7 @@ get_looks <- function(
         # stop execution, as this should be impossible (but it is, it is a tobii thing)
         # stop()
         # go to next index
-        warning(str_interp("At Fixation index: ${i}, are multiple hit names (aois) within the same Fixation (see bad_fixation_indexes"))
+        warning(stringr::str_interp("At Fixation index: ${i}, are multiple hit names (aois) within the same Fixation (see bad_fixation_indexes"))
         next
       }
 

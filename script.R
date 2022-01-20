@@ -1,7 +1,7 @@
 rm(list = ls(all.names = TRUE)) # Clear workspace
 graphics.off() # close all open graphics
 
-# install packages
+# install CRAN packages
 lapply(c("tidyverse", "styler", "lintr"), require, character.only = TRUE)
 
 # import user interface

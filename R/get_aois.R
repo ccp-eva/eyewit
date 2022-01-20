@@ -1,3 +1,13 @@
+#' Title
+#'
+#' @param x x
+#' @param y y
+#' @param aoi_collection aoi_collection
+#' @param scope scope
+#'
+#' @return None
+#' @export
+#'
 get_aois <- function(x, y, aoi_collection, scope = NA) {
 
   # destructure aoi_collection

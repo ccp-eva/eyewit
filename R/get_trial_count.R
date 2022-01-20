@@ -1,3 +1,10 @@
+#' Title
+#'
+#' @param se_lists se_lists
+#'
+#' @return None
+#' @export
+#'
 get_trial_count <- function(se_lists) {
 
   if (

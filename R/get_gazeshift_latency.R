@@ -1,5 +1,14 @@
-# https://github.com/Kalaschnik/media/blob/main/get_gazeshift_latency.png
-# requires magrittr and dplyr
+#' Title
+#'
+#' https://github.com/Kalaschnik/media/blob/main/get_gazeshift_latency.png
+#'
+#' @param df A dataframe
+#' @param aoisets a AOI set
+#'
+#' @return None
+#' @export
+#'
+
 get_gazeshift_latency <- function(df, aoisets) {
 
   # grab fixation index pairs
@@ -20,13 +29,13 @@ get_gazeshift_latency <- function(df, aoisets) {
 
 
       fi_parents <- df %>%
-        filter(!is.na(FixationIndex)) %>%
-        filter(!!sym(curr_colname) == curr_hitname) %>%
-        mutate(
-          FixationDiff = c(diff(FixationIndex), NA)
+        dplyr::filter(!is.na(rlang::.data$FixationIndex)) %>%
+        dplyr::filter(!!rlang::sym(curr_colname) == curr_hitname) %>%
+        dplyr::mutate(
+          FixationDiff = c(diff(rlang::.data$FixationIndex), NA)
         ) %>%
-        filter(FixationDiff == 1) %>%
-        pull(FixationIndex)
+        dplyr::filter(rlang::.data$FixationDiff == 1) %>%
+        dplyr::pull(rlang::.data$FixationIndex)
 
       # OUTSIDE CHECK
       # If there is an "outside" fixation/saccade between two consecutive fixations, it will skew
@@ -64,14 +73,14 @@ get_gazeshift_latency <- function(df, aoisets) {
     }
 
     # calculate median over all hit_names with curr_colname
-    latencies[[curr_colname]]$hitnames_median <- median(latencies[[curr_colname]]$hitnames_median)
+    latencies[[curr_colname]]$hitnames_median <- stats::median(latencies[[curr_colname]]$hitnames_median)
 
     # fill grand median
     latencies$aois_median <- c(latencies[[curr_colname]]$hitnames_median, latencies$aois_median)
   }
 
   # calculate grand median
-  latencies$aois_median <- median(latencies$aois_median)
+  latencies$aois_median <- stats::median(latencies$aois_median)
 
   # remove placeholder init value
   latencies$init <- NULL

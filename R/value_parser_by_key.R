@@ -1,19 +1,29 @@
-# usage:
-
-# keys <- c("age", "sex", "location", "language")
-# delimited_string <- "36_f_leipzig_german.mp4"
-# delimiter = "_"
-# drop_nth_delimiter = 2
-# trim_right = 4
-
-# location <- value_parser_by_key(keys, delimited_string, trim_right = 4)$language # german
-# location <- value_parser_by_key(c("age"), delimited_string, drop_nth_delimiter = c(1,2,3))$age # 36fleipziggerman.mp4
-
+#' Title
+#'
+#' @param keys keys
+#' @param delimited_string delimited_string
+#' @param delimiter delimiter
+#' @param drop_nth_delimiter drop_nth_delimiter
+#' @param trim_right trim_right
+#'
+#' @return None
+#' @export
+#'
+#' @examples
+#' ## usage:
+#' # keys <- c("age", "sex", "location", "language")
+#' # delimited_string <- "36_f_leipzig_german.mp4"
+#' # delimiter = "_"
+#' # drop_nth_delimiter = 2
+#' # trim_right = 4
+#' # location <- value_parser_by_key(keys, delimited_string, trim_right = 4)$language # german
+#' # location <- value_parser_by_key(c("age"), delimited_string, drop_nth_delimiter = c(1,2,3))$age
+#' # ...36fleipziggerman.mp4
 value_parser_by_key <- function(keys, delimited_string, delimiter = "_", drop_nth_delimiter, trim_right) {
 
   # check argument
   if (!missing(trim_right)) {
-    delimited_string <- str_sub(delimited_string, end = (trim_right + 1) * -1)
+    delimited_string <- stringr::str_sub(delimited_string, end = (trim_right + 1) * -1)
   }
 
   # check argumet
@@ -45,7 +55,7 @@ value_parser_by_key <- function(keys, delimited_string, delimiter = "_", drop_nt
     expr = {
       # message("Assign keys to delimited values in all list items")
       # R is just sick: https://stackoverflow.com/a/61407360/2258480
-      setNames(asplit(do.call(rbind, strsplit(delimited_string, delimiter)), 2), keys)
+      stats::setNames(asplit(do.call(rbind, strsplit(delimited_string, delimiter)), 2), keys)
     },
     error = function(e) {
       message("error")
