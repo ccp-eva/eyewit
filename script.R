@@ -1,15 +1,14 @@
 rm(list = ls(all.names = TRUE)) # Clear workspace
 graphics.off() # close all open graphics
 
+# load eyewit
+library(eyewit)
+
 # install CRAN packages
 lapply(c("tidyverse", "styler", "lintr"), require, character.only = TRUE)
 
 # import user interface
 source("interface.R")
-
-# import utility functions
-list.files("util", "*.R$", full.names = TRUE, ignore.case = TRUE) |> sapply(source) |> invisible()
-
 
 # read raw data filenames
 participants <- list.files(interface$raw_dir)
