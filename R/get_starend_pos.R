@@ -11,6 +11,8 @@
 #' @param StudioEvent_start The name of the start marker (e.g. MovieStart).
 #' @param StudioEvent_end The name of the end marker (MovieEnd)
 #'
+#' @export
+#'
 #' @return Returns a named list of start and stop positions for a given regexp.
 #' @examples
 #' # get_StartEnd_list(coi_df, ".*Familiar.*", "MovieStart", "MovieEnd")

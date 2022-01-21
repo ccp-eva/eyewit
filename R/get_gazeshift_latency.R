@@ -4,6 +4,7 @@
 #'
 #' @param df A dataframe
 #' @param aoisets a AOI set
+#' @importFrom rlang sym
 #'
 #' @return None
 #' @export
@@ -29,13 +30,13 @@ get_gazeshift_latency <- function(df, aoisets) {
 
 
       fi_parents <- df %>%
-        dplyr::filter(!is.na(rlang::.data$FixationIndex)) %>%
-        dplyr::filter(!!rlang::sym(curr_colname) == curr_hitname) %>%
+        dplyr::filter(!is.na(FixationIndex)) %>%
+        dplyr::filter(!!sym(curr_colname) == curr_hitname) %>%
         dplyr::mutate(
-          FixationDiff = c(diff(rlang::.data$FixationIndex), NA)
+          FixationDiff = c(diff(FixationIndex), NA)
         ) %>%
-        dplyr::filter(rlang::.data$FixationDiff == 1) %>%
-        dplyr::pull(rlang::.data$FixationIndex)
+        dplyr::filter(FixationDiff == 1) %>%
+        dplyr::pull(FixationIndex)
 
       # OUTSIDE CHECK
       # If there is an "outside" fixation/saccade between two consecutive fixations, it will skew

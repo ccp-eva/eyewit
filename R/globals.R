@@ -1,1 +1,1 @@
-utils::globalVariables(c("df", "fi_pairs"))
+utils::globalVariables(c("df", "fi_pairs", "FixationIndex", "FixationDiff"))
