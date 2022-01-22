@@ -1,6 +1,6 @@
 Package: eyewit
 Title: Bootstrapping Common Eyetracking Tasks around Tobii’s I-VT Filter
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: 
     c(
       person(
