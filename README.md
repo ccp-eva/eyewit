@@ -1,31 +1,36 @@
 <img align="right" width="170" src="assets/logo.svg">
 
-# `eyewit`
+# eyewit
 ### Tobii Eyetracking Utility Functions
 
-> Helper functions for common eye-tracking data wrangling tasks and eye-tracking analysis around _Tobii’s I-VT Fixation Filter_
+> An R package for pre-processing raw eye-tracking data around *Tobii's I-VT Fixation Filter*
 
 ----
 
-## Development
+## Installation
 
-### Road to Package `eyewit`
+`devtools::install_github(ccp-eva/eyewit)`
 
-As of now this repo is a collection of R functions. Release 1.0.0 aims to put all these into a library (`eyewit::`).
+## What’s Happening
 
-**Project Progress Tracker:** https://github.com/ccp-eva/eyewit/projects/4
+### eyewit Roadmap
+#### Release 0.5
+Progress is tracked here: https://github.com/ccp-eva/eyewit/projects/4
+Now that eyewit is an actual R package, I need to address the following points:
+- [ ] Allmost all functions need proper documentation
+- [ ] Many functions need unit tests
+- [ ] Refactor functions (espacially `get_looks`)
 
-### Road to Unit Tests
+#### Release 0.6
+Progress is tracked here: https://github.com/ccp-eva/eyewit/projects/8
 
-Modification in delicate functions (e.g., calculating looking time) may result in wrong calculations. Thus, an automatic unit test must be performed to grant correct calculations. This will be the next milestone after 1.0.0.
+### January 2022
+- [x] Successfully converted to an R package (`devtools::install_github(ccp-eva/eyewit)`)
 
-### Road to Shiny
-
-When this package reached a mature state, I will transfer functionality in a web UI.
 
 ## Functions
 
-Listed in rough execution order
+As of January 2022, functions are being refactored and documented in their corresponding helper files. This table will is out of date and will be removed!
 
 | **Objects**               | **Description**                                                                                                                                                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
