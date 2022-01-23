@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using these metadata."
+authors:
+  - family-names: Kalinke
+    given-names: Steven
+    orcid: https://orcid.org/0000-0002-3795-6829
+    affiliation: "Max Planck Institute for Evolutionary Anthropology"
+    email: "steven_kalinke@eva.mpg.de"
+    website: https://github.com/ccp-eva/eyewit
+
+title: "eyewit"
+abstract: "An R package for pre-processing raw eye-tracking data around Tobii's I-VT Fixation Filter"
+date-released: 2022
+doi: ""
+keywords:
+  - "r, eyetracking, tobii"
+license: "MIT"
+repository-code: "https://github.com/ccp-eva/eyewit"
+preferred-citation:
+  type: software
+  authors:
+    - family-names: "Kalinke"
+      given-names: "Steven"
+      orcid: "https://orcid.org/0000-0000-0000-0000"
+  doi: ""
+  title: "eyewit"
+  year: 2022

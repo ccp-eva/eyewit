@@ -8,3 +8,4 @@
 ^script\.R$
 ^util$
 ^interface\.R$
+^CITATION\.cff$
