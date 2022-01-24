@@ -17,7 +17,8 @@
 #'
 #' @examples
 #' # This example is checking two AOI sets. The first AOI set contains 4 AOIs, the second two.
-#' # Running this set returns FALS, as all AOIs in each individual list are not overlapping.
+#' # Running this set returns FALSE, as all AOIs in each individual list are not overlapping.
+#' # See test-is_aoilist_intersecting for an intersecting example.
 #' aoisets_false <- list(
 #'   aoiset1 = list(
 #'     column_name = "set1",

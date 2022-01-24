@@ -7,7 +7,7 @@
 is_aoilist_intersecting(aoisets, verbose = FALSE)
 }
 \arguments{
-\item{aoisets}{An AOI object containing arbitrary AOI lists containing arbitrary AOIs as defined in interface.R}
+\item{aoisets}{An AOI object containing arbitrary AOI sets as defined in interface.R}
 
 \item{verbose}{Enable verbose output (defaults to FALSE)}
 }
@@ -15,23 +15,37 @@ is_aoilist_intersecting(aoisets, verbose = FALSE)
 Returns a logical scalar
 }
 \description{
-The first input is the aoisets list as defined in the interface.R file. The function permutates
-over all AOIs and checks if they are intersecting
+The first input is the aoisets list as defined in the interface.R file. The function iterates
+over all defined AOI sets and checks if the individual lists are intersecting.
 }
 \details{
-This function uses \link{is_intersecting}
+For reporting purposes, this function also requires a \code{column_name} and \code{hit_name} for
+identifying the current set and the current AOI. In each iteration the function is calling
+\link{is_intersecting}.
 }
 \examples{
-#' is_aoilist_intersecting(
-  list(x_topleft = 10, y_topleft = 10, x_bottomright = 20, y_bottomright = 20),
-  list(x_topleft = 15, y_topleft = 15, x_bottomright = 25, y_bottomright = 25)
-) # Rectangles are clearly intersecting (⧉) → returns TRUE
+# This example is checking two AOI sets. The first AOI set contains 4 AOIs, the second two.
+# Running this set returns FALSE, as all AOIs in each individual list are not overlapping.
+# See test-is_aoilist_intersecting for an intersecting example.
+aoisets_false <- list(
+  aoiset1 = list(
+    column_name = "set1",
+    aoilist = list(
+      aoi1 = list(hit_name = "left", x_topleft = 60, y_topleft = 290, x_bottomright = 690, y_bottomright = 1130),
+      aoi2 = list(hit_name = "right", x_topleft = 1225, y_topleft = 290, x_bottomright = 1855, y_bottomright = 1130),
+      aoi3 = list(hit_name = "top", x_topleft = 790, y_topleft = 10, x_bottomright = 1130, y_bottomright = 350),
+      aoi4 = list(hit_name = "bottom", x_topleft = 790, y_topleft = 730, x_bottomright = 1130, y_bottomright = 1070)
+    )
+  ),
 
-#' is_aoilist_intersecting(
-  list(x_topleft = 10, y_topleft = 10, x_bottomright = 20, y_bottomright = 20),
-  list(x_topleft = 15, y_topleft = 15, x_bottomright = 25, y_bottomright = 25)
-) # Rectangles are clearly intersecting (⧉) → returns TRUE
-
+  aoiset2 = list(
+    column_name = "set2",
+    aoilist = list(
+      aoi1 = list(hit_name = "top", x_topleft = 790, y_topleft = 10, x_bottomright = 1130, y_bottomright = 350),
+      aoi2 = list(hit_name = "bottom", x_topleft = 790, y_topleft = 730, x_bottomright = 1130, y_bottomright = 1070)
+    )
+  )
+)
 }
 \seealso{
 Other preflight functions: 
