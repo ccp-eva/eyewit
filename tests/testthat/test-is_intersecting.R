@@ -1,4 +1,4 @@
-test_that("Detecting Intersections", {
+test_that("Checking Rectangle Intersections", {
   expect_true(
     is_intersecting(
       list(x_topleft = 10, y_topleft = 10, x_bottomright = 20, y_bottomright = 20),

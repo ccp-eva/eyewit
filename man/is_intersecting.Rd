@@ -13,9 +13,8 @@ is_intersecting(rect1, rect2)
 Returns a logical scalar
 }
 \description{
-Given a list of two rectangles that include coordinates for their corresponding coordinates
-(see examples below), this function returns a boolean scalar (either TRUE or FALSE) if
-the two rectangles intersect.
+Given a list of two rectangles—each containing four coordinates—this function returns a boolean
+scalar (either TRUE or FALSE) if the two rectangles intersect or touch each other.
 }
 \details{
 This function is part various preflight checks. \strong{It is important that you provide the key names
@@ -38,4 +37,8 @@ is_intersecting(
   list(x_topleft = 21, y_topleft = 10, x_bottomright = 31, y_bottomright = 20)
 ) # No intersect (◻◻) → returns FALSE
 }
-\concept{eyewit internal helpers}
+\seealso{
+Other preflight functions: 
+\code{\link{is_aoilist_intersecting}()}
+}
+\concept{preflight functions}
