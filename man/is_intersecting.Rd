@@ -39,6 +39,7 @@ is_intersecting(
 }
 \seealso{
 Other preflight functions: 
+\code{\link{fi2rn}()},
 \code{\link{is_aoilist_intersecting}()}
 }
 \concept{preflight functions}
