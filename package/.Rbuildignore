@@ -2,10 +2,7 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^\.lintr$
-^\.github$
-^assets$
 ^raw$
 ^script\.R$
 ^util$
 ^interface\.R$
-^CITATION\.cff$
