@@ -3,28 +3,38 @@
 #' Given a vector containing fixation indexes, this function returns a named list containing
 #' corresponding row names to the given fixation indexes. Since fixation indexes span a range
 #' for each index, the function uses the two groups: `fistart` and `fiend` to separate them.
+#' That means, `$fistart` denotes all row names where a fixation index is starting, wheras `$fiend`
+#' denotes all row names where the fixation index ends.
+#' Since the function is used in several places within the package, it gets
+#' **executed during the preflight automatically**. That means you don’t need to call this
+#' function on your own. To access the content, you can call the **variable**:
+#' `.eyewit_util$fi2rn` (see examples).
 #'
+#' @family preflight functions
 #'
+#' @param fi_col A column vector containing fixation indexes
 #'
-#'
-#' Since FixationIndexes span a range fixation_indexes_to_row_numbers fi2rn
-#' `fistart` and `fiend`.
-#' $fistart is the first and $fiend the last value for a given single FixationIndex
-#'
-#'
-#'
-#' @param fi_col A column vector containing FixationIndexes
-#'
-#' @return A named list which contains rownumbers for a given FixationIndex
+#' @return A named list
 #' @export
 #'
 #' @examples
-#' # Todo fi2rn(df$FixationIndex)$fistart[110] returns a rn of 6835
-
-# todo check bounces of FI, if FI it out of bounce show warning and return NULL
-# todo make a rn2fi function
-# add fi2rn as hidden variable in preflight
-# or rather in a helper list -> util$fi2rn, util$gazeshifts, etc.
+#' \dontrun{
+#' # Assume you have fixation indexes in a df with a column named FixationIndex
+#'
+#' # returns all $fistart and $fiend row names and store it (this is what happens in preflight)
+#' fi2rn <- fi2rn(df$FixationIndex)
+#'
+#' # now call the variable because the function call is expensive
+#'
+#' # get the first row number of the first fixation index
+#' fi2rn(df$FixationIndex)$fistart[1]
+#'
+#' # get the last row number of the first fixation index
+#' fi2rn(df$FixationIndex)$fiend[1]
+#'
+#' # get the last row number of the 42. fixation index
+#' fi2rn(df$FixationIndex)$fiend[42]
+#' }
 fi2rn <- function(fi_col) {
 
   # check if fixation indexes are an incremental list from 1:n
