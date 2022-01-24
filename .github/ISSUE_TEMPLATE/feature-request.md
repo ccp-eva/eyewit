@@ -1,7 +1,7 @@
 ---
 name: "⭐ Feature request"
 about: Suggest an idea for this project
-title: "⭐ [Describe Your Feature]"
+title: "[Describe Your Feature]"
 labels: 'enhancement'
 assignees: ''
 
