@@ -49,7 +49,7 @@ preflight <- function(df, interface) {
   message("   \U1F522  Dataframe is in incremental sequence")
 
   # check if aoi sets have no overlapping coordinates in a single set
-  is_aoilist_overlapping(interface$aoisets)
+  is_aoilist_intersecting(interface$aoisets)
 
   message("   \U2694  No intersecting AOIs found")
 

@@ -1,14 +1,13 @@
 #' Check if two rectangles are intersecting each other
 #'
-#' Given a list of two rectangles that include coordinates for their corresponding coordinates
-#' (see examples below), this function returns a boolean scalar (either TRUE or FALSE) if
-#' the two rectangles intersect.
+#' Given a list of two rectangles—each containing four coordinates—this function returns a boolean
+#' scalar (either TRUE or FALSE) if the two rectangles intersect or touch each other.
 #'
 #' This function is part various preflight checks. **It is important that you provide the key names
 #' with the correct names** (i.e., x_topleft, y_topleft, x_bottomright, y_bottomright) for both
 #' rectangles
 #'
-#' @family eyewit internal helpers
+#' @family preflight functions
 #'
 #' @param rect1,rect2 A named list with the key names: x_topleft, y_topleft, x_bottomright, y_bottomright
 #'
@@ -33,18 +32,10 @@
 
 is_intersecting <- function(rect1, rect2){
 
-  x1 <- rect1$x_topleft
-  y1 <- rect1$y_topleft
-  x2 <- rect1$x_bottomright
-  y2 <- rect1$y_bottomright
-
-  x3 <- rect2$x_topleft
-  y3 <- rect2$y_topleft
-  x4 <- rect2$x_bottomright
-  y4 <- rect2$y_bottomright
-
-  x_intersect = max(x1, x3) <= min(x2, x4)
-  y_intersect = max(y1, y3) <= min(y2, y4)
+  x_intersect =
+    max(rect1$x_topleft, rect2$x_topleft) <= min(rect1$x_bottomright, rect2$x_bottomright)
+  y_intersect =
+    max(rect1$y_topleft, rect2$y_topleft) <= min(rect1$y_bottomright, rect2$y_bottomright)
 
   return(x_intersect && y_intersect)
 }
