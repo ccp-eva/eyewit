@@ -14,7 +14,7 @@ get_gazeshift_latency <- function(df, aoisets) {
 
   # grab fixation index pairs
   # ... to get the rownumber for a given FixationIndex, use: fipair$end[FixationIndex]
-  fi_pairs <- get_fixationindex_pairs(df$FixationIndex)
+  fi_pairs <- fi2rn(df$FixationIndex)
 
   # init named list
   latencies <- list(init = NULL)

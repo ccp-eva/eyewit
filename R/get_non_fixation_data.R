@@ -15,7 +15,7 @@ get_non_fixation_data <- function(df, scope = NA) {
   }
 
   # get fixation pairs
-  fi_pairs <- get_fixationindex_pairs(df$FixationIndex)
+  fi_pairs <- fi2rn(df$FixationIndex)
 
   # init storage list to return
   non_fixation_data <- vector("list", length(scope$start))

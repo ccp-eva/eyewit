@@ -12,7 +12,7 @@ get_first_free_fi <- function(df, scope) {
   scope_start <- scope$start
 
   # get fi pairs for help
-  fi_pairs <- get_fixationindex_pairs(df$FixationIndex)
+  fi_pairs <- fi2rn(df$FixationIndex)
 
   # check if current scope$start is a "Fixation"
   # we can use the fact, that every valid "Fixation" gets an numeric index

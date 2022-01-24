@@ -14,7 +14,7 @@
 is_hitname_in_range <- function(vec, hitname, fi_start, fi_end) {
 
   if (!"fi_pairs" %in% ls(envir = .GlobalEnv)) {
-    fi_pairs <- get_fixationindex_pairs(df$FixationIndex)
+    fi_pairs <- fi2rn(df$FixationIndex)
     # save to global env for performance
     list2env(fi_pairs, envir = .GlobalEnv)
   }
