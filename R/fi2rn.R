@@ -1,6 +1,17 @@
-#' Get FixationIndex pairs
+#' Map FixationIndexes to RowNumbers (fi2rn)
 #'
+#' Given a vector containing fixation indexes, this function returns a named list containing
+#' corresponding row names to the given fixation indexes. Since fixation indexes span a range
+#' for each index, the function uses the two groups: `fistart` and `fiend` to separate them.
+#'
+#'
+#'
+#'
+#' Since FixationIndexes span a range fixation_indexes_to_row_numbers fi2rn
+#' `fistart` and `fiend`.
 #' $fistart is the first and $fiend the last value for a given single FixationIndex
+#'
+#'
 #'
 #' @param fi_col A column vector containing FixationIndexes
 #'
@@ -8,9 +19,13 @@
 #' @export
 #'
 #' @examples
-#' # Todo get_fixationindex_pairs(df$FixationIndex)$fistart[110] returns a rn of 6835
+#' # Todo fi2rn(df$FixationIndex)$fistart[110] returns a rn of 6835
 
-get_fixationindex_pairs <- function(fi_col) {
+# todo check bounces of FI, if FI it out of bounce show warning and return NULL
+# todo make a rn2fi function
+# add fi2rn as hidden variable in preflight
+# or rather in a helper list -> util$fi2rn, util$gazeshifts, etc.
+fi2rn <- function(fi_col) {
 
   # check if fixation indexes are an incremental list from 1:n
   stopifnot(
