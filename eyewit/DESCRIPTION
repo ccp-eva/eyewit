@@ -29,5 +29,6 @@ Imports:
     rlang,
     stringr,
     readr,
-    stats
+    stats,
+    utils
 Config/testthat/edition: 3
