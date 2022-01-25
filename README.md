@@ -9,7 +9,7 @@
 
 ## Installation
 
-`devtools::install_github("ccp-eva/eyewit/package")`
+`devtools::install_github("ccp-eva/eyewit/eyewit")`
 
 ## What’s Happening
 
