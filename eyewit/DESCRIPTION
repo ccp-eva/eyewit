@@ -11,7 +11,8 @@ Authors@R:
         comment = c(ORCID = "0000-0002-3795-6829")
       )
     )
-Description: Rre-process raw data from Tobii eyetracking experiment.
+Description: Pre-process and analyze raw data from Tobii eyetracking experiments. The package
+    is built around the raw output of Tobii Pro Lab and Pro Studio (tba).
 License: MIT + file LICENSE
 URL: https://github.com/ccp-eva/eyewit
 BugReports: https://github.com/ccp-eva/eyewit/issues
