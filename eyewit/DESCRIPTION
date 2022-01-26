@@ -1,8 +1,9 @@
 Package: eyewit
 Title: Bootstrapping Common Eyetracking Tasks around Tobii’s I-VT Filter
 Version: 0.3.1
+Date: 2022-02-22
 Authors@R: 
-    person("Steven", "Kalinke", , "steven.kalinke@gmail.com", role = c("aut", "cre", "cph"),
+    person("Steven", "Kalinke", , "steven.kalinke@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-3795-6829"))
 Description: Pre-process and analyze raw data from Tobii eyetracking
     experiments. The package is built around the raw output of Tobii Pro
