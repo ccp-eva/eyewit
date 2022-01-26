@@ -22,7 +22,7 @@ for (subject in participants) {
   # subject <- participants[1]
 
   # read tsv files
-  df_raw <- read_tsv(file.path(interface$raw_dir, subject), col_types = interface$mc_types)
+  df_raw <- readr::read_tsv(file.path(interface$raw_dir, subject), col_types = interface$mc_types)
 
   # run preflight checks & diagnostics, returns a lean df
   df <- preflight(df_raw, interface)
@@ -61,16 +61,16 @@ for (subject in participants) {
     as.character()
 
   # Insert AOI Columns
-  df <- add_column(df, "{interface$aoisets$actionphasebody$column_name}" :=
+  df <- tibble::add_column(df, "{interface$aoisets$actionphasebody$column_name}" :=
     get_aois(df$x, df$y, interface$aoisets$actionphasebody, startend_test_action), .before = 1)
 
-  df <- add_column(df, "{interface$aoisets$actionphaseface$column_name}" :=
+  df <- tibble::add_column(df, "{interface$aoisets$actionphaseface$column_name}" :=
     get_aois(df$x, df$y, interface$aoisets$actionphaseface, startend_test_action), .after = 1)
 
-  df <- add_column(df, "{interface$aoisets$outcomephase$column_name}" :=
+  df <- tibble::add_column(df, "{interface$aoisets$outcomephase$column_name}" :=
     get_aois(df$x, df$y, interface$aoisets$outcomephase, startend_test_outcome), .after = 2)
 
-  df <- add_column(df, "{interface$aoisets$screen$column_name}" :=
+  df <- tibble::add_column(df, "{interface$aoisets$screen$column_name}" :=
     get_aois(df$x, df$y, interface$aoisets$screen), .after = 3)
 
   # helper variable
@@ -80,7 +80,7 @@ for (subject in participants) {
 
   ##################################################################################################
   # Initialize empty subject tibble (the better data.frame)
-  df_subject <- tibble(.rows = current_test_trials)
+  df_subject <- tibble::tibble(.rows = current_test_trials)
 
   # Build Summary table
   # ================================================================================================
@@ -130,7 +130,7 @@ for (subject in participants) {
     get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"), omit_first_overflow_fi = TRUE)$looking_times
 
 
-  df_subject$TotalLTObjectOut <- if_else(
+  df_subject$TotalLTObjectOut <- dplyr::if_else(
     df_subject$ObjectPos == "OBEN",
     get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), omit_first_overflow_fi = TRUE)$looking_times$top,
     get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), omit_first_overflow_fi = TRUE)$looking_times$bottom
@@ -145,7 +145,7 @@ for (subject in participants) {
       lookaway_stop = 2000,
       omit_first_overflow_fi = TRUE)$looking_times
 
-  df_subject$LTObjectOut <- if_else(
+  df_subject$LTObjectOut <- dplyr::if_else(
     df_subject$ObjectPos == "OBEN",
     get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), 2000, TRUE)$looking_times$top,
     get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), 2000, TRUE)$looking_times$bottom
@@ -179,7 +179,7 @@ for (subject in participants) {
         )
     )$first_looks_collection$bottom$durations
 
-  df_subject$FirstLookDurationObjectOut <- if_else(
+  df_subject$FirstLookDurationObjectOut <- dplyr::if_else(
     df_subject$ObjectPos == "OBEN",
     df_subject$FirstLookDurationObjectOutTop,
     df_subject$FirstLookDurationObjectOutBottom
@@ -213,7 +213,7 @@ for (subject in participants) {
         )
     )$first_looks_collection$bottom$ending_reason
 
-  df_subject$FirstLookDurationObjectOutReason <- if_else(
+  df_subject$FirstLookDurationObjectOutReason <- dplyr::if_else(
     df_subject$ObjectPos == "OBEN",
     df_subject$FirstLookDurationObjectOutTopReason,
     df_subject$FirstLookDurationObjectOutBottomReason
@@ -227,7 +227,7 @@ for (subject in participants) {
   df_subject$TotalLTScreenAct <-
     get_looks(df, interface$aoisets$screen, startend_test_action, c(3201, 18200), omit_first_overflow_fi = TRUE)$looking_times
 
-  df_subject$TotalLTObjectAct <- if_else(
+  df_subject$TotalLTObjectAct <- dplyr::if_else(
     df_subject$ObjectPos == "OBEN",
     get_looks(df, interface$aoisets$actionphasebody, startend_test_action, c(3201, 18200), omit_first_overflow_fi = TRUE)$looking_times$top,
     get_looks(df, interface$aoisets$actionphasebody, startend_test_action, c(3201, 18200), omit_first_overflow_fi = TRUE)$looking_times$bottom
@@ -272,7 +272,7 @@ for (subject in participants) {
     get_looks(df, interface$aoisets$screen, startend_test_action, c(15201, 16200), omit_first_overflow_fi = TRUE)$looking_times
 
   df_subject$InterPhaseCheckerSoc <-
-    if_else(
+    dplyr::if_else(
       df_subject$LTScreenAct_5to6 > 0 |
       df_subject$LTScreenAct_9to10 > 0 |
       df_subject$LTScreenAct_13to14 > 0,
@@ -280,7 +280,7 @@ for (subject in participants) {
     )
 
   df_subject$InterPhaseCheckerGazing <-
-    if_else(
+    dplyr::if_else(
       df_subject$LTScreenAct_7to8 > 0 |
         df_subject$LTScreenAct_11to12 > 0 |
         df_subject$LTScreenAct_15to16 > 0,

@@ -60,13 +60,13 @@ interface <- list(
 
   # Column Type definitions for parsing raw data correctly
   mc_types = list(
-    RecordingTimestamp = col_double(),
-    StudioEvent = col_character(),
-    StudioEventData = col_character(),
-    FixationIndex = col_double(),
-    GazeEventDuration = col_double(),
-    "GazePointX (ADCSpx)" = col_double(),
-    "GazePointY (ADCSpx)" = col_double()
+    RecordingTimestamp = readr::col_double(),
+    StudioEvent = readr::col_character(),
+    StudioEventData = readr::col_character(),
+    FixationIndex = readr::col_double(),
+    GazeEventDuration = readr::col_double(),
+    "GazePointX (ADCSpx)" = readr::col_double(),
+    "GazePointY (ADCSpx)" = readr::col_double()
   ),
 
   # ==================================================
