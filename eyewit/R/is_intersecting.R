@@ -5,11 +5,12 @@
 #'
 #' This function is part various preflight checks. **It is important that you provide the key names
 #' with the correct names** (i.e., x_topleft, y_topleft, x_bottomright, y_bottomright) for both
-#' rectangles
+#' rectangles.
 #'
 #' @family preflight functions
 #'
-#' @param rect1,rect2 A named list with the key names: x_topleft, y_topleft, x_bottomright, y_bottomright
+#' @param rect1,rect2 A named list with the key names: x_topleft, y_topleft, x_bottomright,
+#'   y_bottomright.
 #'
 #' @return Returns a logical scalar
 #' @export
