@@ -25,7 +25,7 @@ Now that eyewit is an actual R package, I need to address the following points:
 Progress is tracked here: https://github.com/ccp-eva/eyewit/projects/8
 
 ### January 2022
-- [x] Successfully converted to an R package (`devtools::install_github("ccp-eva/eyewit/package")`)
+- [x] Successfully converted to an R package (`devtools::install_github("ccp-eva/eyewit/eyewit")`)
 
 
 ## Functions
