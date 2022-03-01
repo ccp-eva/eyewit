@@ -30,12 +30,10 @@
 #'   list(x_topleft = 10, y_topleft = 10, x_bottomright = 20, y_bottomright = 20),
 #'   list(x_topleft = 21, y_topleft = 10, x_bottomright = 31, y_bottomright = 20)
 #' ) # No intersect (◻◻) → returns FALSE
-
-is_intersecting <- function(rect1, rect2){
-
-  x_intersect =
+is_intersecting <- function(rect1, rect2) {
+  x_intersect <-
     max(rect1$x_topleft, rect2$x_topleft) <= min(rect1$x_bottomright, rect2$x_bottomright)
-  y_intersect =
+  y_intersect <-
     max(rect1$y_topleft, rect2$y_topleft) <= min(rect1$y_bottomright, rect2$y_bottomright)
 
   return(x_intersect && y_intersect)
