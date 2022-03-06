@@ -3,6 +3,7 @@
 export("%>%")
 export(allocate_trials)
 export(fi2rn)
+export(fi_summary)
 export(get_aois)
 export(get_first_free_fi)
 export(get_gazeshift_latency)
