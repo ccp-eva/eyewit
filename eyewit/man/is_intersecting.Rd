@@ -7,7 +7,8 @@
 is_intersecting(rect1, rect2)
 }
 \arguments{
-\item{rect1, rect2}{A named list with the key names: x_topleft, y_topleft, x_bottomright, y_bottomright}
+\item{rect1, rect2}{A named list with the key names: x_topleft, y_topleft, x_bottomright,
+y_bottomright.}
 }
 \value{
 Returns a logical scalar
@@ -19,7 +20,7 @@ scalar (either TRUE or FALSE) if the two rectangles intersect or touch each othe
 \details{
 This function is part various preflight checks. \strong{It is important that you provide the key names
 with the correct names} (i.e., x_topleft, y_topleft, x_bottomright, y_bottomright) for both
-rectangles
+rectangles.
 }
 \examples{
 is_intersecting(

@@ -16,7 +16,7 @@ A named list
 Given a vector containing fixation indexes, this function returns a named list containing
 corresponding row names to the given fixation indexes. Since fixation indexes span a range
 for each index, the function uses the two groups: \code{fistart} and \code{fiend} to separate them.
-That means, \verb{$fistart} denotes all row names where a fixation index is starting, wheras \verb{$fiend}
+That means, \verb{$fistart} denotes all row names where a fixation index is starting, whereas \verb{$fiend}
 denotes all row names where the fixation index ends.
 Since the function is used in several places within the package, it gets
 \strong{executed during the preflight automatically}. That means you don’t need to call this
