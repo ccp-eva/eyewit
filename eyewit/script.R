@@ -1,5 +1,5 @@
 # load eyewit
-library(eyewit)
+#library(eyewit)
 
 # install CRAN packages
 lapply(c("tidyverse", "styler", "lintr"), require, character.only = TRUE)
