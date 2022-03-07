@@ -179,8 +179,13 @@ fi_summary <- function(df,
       current_scope_end <- scope$end[trial]
 
       subset_start <- which(fi_df$RowStart <= current_scope_start) |> max()
-      subset_end <- which(fi_df$RowEnd >= current_scope_end) |> min()
-
+      # it may be that there no more fi_df$RowEnd indexes which are greater than curren_scope_end
+      # ... especially in the last trial. Thus, we use the last Fixation Index
+      subset_end <- ifelse(
+        any(fi_df$RowEnd >= current_scope_end),
+        which(fi_df$RowEnd >= current_scope_end) |> min(),
+        fi_df$FI |> max()
+      )
 
       # the current_scope_start must be within:
       # ... fi_df$RowStart[subset_start] and fi_df$RowEnd[subset_start]
