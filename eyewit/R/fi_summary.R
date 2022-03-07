@@ -42,19 +42,14 @@
 #'
 #' ## df, aoisets, trial scope
 #' If you provide a trial scopes, the returned df will be trimmed down to respect the row ranges.
-#' *NB*, when using trial scopes, the last value for every scope end at **FixationGapDuration** will
-#' show NA. This behavior is on purpose. Because if a trial block ends, usually another media
-#' elements starts and there is a longer inactive scence, you want to avoid having these larger
-#' values in your data. For example, the duration between the last fixation index of scene A and
-#' first fixation index of scene B is naturally higher, and should not be evaluated.
-#' Since a scene/trial was ending anyways, it is not a good proxy for detecting a look-away
-#' during a trial. You can bypass this option by setting `na_trailing_gap_duration` to FALSE.
+#' *NB*, when using trial scopes, you can set the last value of the FixationDuration Gap to NA.
+#' This is usually not desired, but may be useful in some situations.
 #'
 #' @param df A dataframe containing columns created by [get_aois].
 #' @param aoi_sets *[Optional]* A list of AOI sets.
 #' @param scope *[Optional]* A trial scope list.
 #' @param show_non_hn_labels *[Optional]* TRUE or FALSE (default).
-#' @param na_trailing_gap_duration *[Optional]* TRUE (default) or FALSE.
+#' @param na_trailing_gap_duration *[Optional]* TRUE or FALSE (default).
 #'
 #' @return Returns a dataframe (tibble) providing AOI information for all fixation indexes
 #' @export
@@ -68,7 +63,7 @@ fi_summary <- function(df,
                        aoisets = NA,
                        scope = NA,
                        show_non_hn_labels = FALSE,
-                       na_trailing_gap_duration = TRUE) {
+                       na_trailing_gap_duration = FALSE) {
 
   # create tibble based on fi2rn() and map it in a df
   fi_df <- tibble::tibble(.rows = length(.eyewit_utils$fi2rn$fistart))
@@ -205,7 +200,7 @@ fi_summary <- function(df,
         subset_end <- subset_end - 1L
       }
 
-      # remove misleading gap_duration for last trials indexes
+      # remove gap_duration for last trials indexes
       if (na_trailing_gap_duration) {
         fi_df$FixationGapDuration[subset_end] <- NA
       }
