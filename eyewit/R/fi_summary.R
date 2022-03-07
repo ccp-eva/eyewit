@@ -42,14 +42,11 @@
 #'
 #' ## df, aoisets, trial scope
 #' If you provide a trial scopes, the returned df will be trimmed down to respect the row ranges.
-#' *NB*, when using trial scopes, you can set the last value of the FixationDuration Gap to NA.
-#' This is usually not desired, but may be useful in some situations.
 #'
 #' @param df A dataframe containing columns created by [get_aois].
 #' @param aoi_sets *[Optional]* A list of AOI sets.
 #' @param scope *[Optional]* A trial scope list.
 #' @param show_non_hn_labels *[Optional]* TRUE or FALSE (default).
-#' @param na_trailing_gap_duration *[Optional]* TRUE or FALSE (default).
 #'
 #' @return Returns a dataframe (tibble) providing AOI information for all fixation indexes
 #' @export
@@ -62,8 +59,7 @@
 fi_summary <- function(df,
                        aoisets = NA,
                        scope = NA,
-                       show_non_hn_labels = FALSE,
-                       na_trailing_gap_duration = FALSE) {
+                       show_non_hn_labels = FALSE) {
 
   # create tibble based on fi2rn() and map it in a df
   fi_df <- tibble::tibble(.rows = length(.eyewit_utils$fi2rn$fistart))
@@ -95,12 +91,13 @@ fi_summary <- function(df,
       fi_df$TSStart <- vector("integer", nrow(fi_df))
       fi_df$TSEnd <- vector("integer", nrow(fi_df))
       fi_df$TSEnd1 <- vector("integer", nrow(fi_df)) # The sample after the fi end
-      fi_df$FixationDuration <- vector("integer", nrow(fi_df))
-      fi_df$FixationGapDuration <- vector("integer", nrow(fi_df))
+      fi_df$FDur <- vector("integer", nrow(fi_df))
+      fi_df$FGapDur <- vector("integer", nrow(fi_df))
 
       # iterate over all fixation indexes of df and copy all values from the current aoi column
       # ... matching the current fixation index from df to fi_df
       for (fi in seq.int(nrow(fi_df))) {
+
         current_hitnames[[fi]] <-
           df[[current_colname]][which(df$FixationIndex == fi)] |>
           unique()
@@ -110,14 +107,14 @@ fi_summary <- function(df,
         # for end value use the i + 1 sample from the TSEnd to get correct durations (compare with
         # ... GazeEventDuration column)
         fi_df$TSEnd1[fi] <- df$RecordingTimestamp[which(df$FixationIndex == fi) |> max() + 1]
-        fi_df$FixationDuration[fi] <- fi_df$TSEnd1[fi] - fi_df$TSStart[fi]
+        fi_df$FDur[fi] <- fi_df$TSEnd1[fi] - fi_df$TSStart[fi]
 
 
-        # Calculate gap duration from between fixation indexes
+        # Calculate gap duration between fixation indexes
         ending_times_of_former_fixation <- fi_df$TSEnd1[1:length(fi_df$TSEnd1) - 1]
         starting_times_of_latter_fixation <- fi_df$TSStart[2:length(fi_df$TSStart)]
         fixation_gap_duration <- starting_times_of_latter_fixation - ending_times_of_former_fixation
-        fi_df$FixationGapDuration <- c(fixation_gap_duration, NA)
+        fi_df$FGapDur <- c(fixation_gap_duration, NA)
 
 
         # if participants stare at the screen, it may happen that there are
@@ -166,6 +163,10 @@ fi_summary <- function(df,
 
   if (!missing(scope)) {
 
+    # add fixation gap duration column which is sensitive to scope end
+    # init it with the contents fo FGapDur
+    fi_df <- tibble::add_column(fi_df, FGapDurTrlEnd = fi_df$FGapDur, .after = "FGapDur")
+
     # prepare subsetting df
     fi_df_sub <- tibble::tibble()
 
@@ -200,10 +201,10 @@ fi_summary <- function(df,
         subset_end <- subset_end - 1L
       }
 
-      # remove gap_duration for last trials indexes
-      if (na_trailing_gap_duration) {
-        fi_df$FixationGapDuration[subset_end] <- NA
-      }
+
+      # overwrite fixation gap duration trial end for last entry
+      fi_df$FGapDurTrlEnd[subset_end] <- df$RecordingTimestamp[current_scope_end] - fi_df$TSEnd1[subset_end]
+
 
       # subset
       fi_df_sub <- rbind(fi_df_sub, fi_df[subset_start:subset_end, ])
