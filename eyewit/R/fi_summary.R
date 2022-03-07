@@ -41,7 +41,12 @@
 #'
 #'
 #' ## df, aoisets, trial scope
-#' If you provide a trial scopes, the returned df will be trimmed down to respect the row ranges.
+#' If you provide a trial scopes, the returned df will be trimmed down to respect the row ranges. It
+#' will use have an additional column `FGapDurTrlEnd` which is similar to `FGapDur`; yet, this
+#' column will respect the trial scope end in the calculation for the duration. For example,
+#' if the fixation index 420 is the last one in trail 7, `FGapDur` will show the time difference
+#' from 420 to 421. In contrast, `FGapDurTrlEnd` will show the time difference from 420 to the
+#' scope end time (e.g., "MovieEnd"). Thus, `FGapDurTrlEnd` is naturally smaller than `FGapDur`.
 #'
 #' @param df A dataframe containing columns created by [get_aois].
 #' @param aoi_sets *[Optional]* A list of AOI sets.

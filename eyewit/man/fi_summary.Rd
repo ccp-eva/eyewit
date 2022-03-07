@@ -4,13 +4,7 @@
 \alias{fi_summary}
 \title{Fixation Index Summary}
 \usage{
-fi_summary(
-  df,
-  aoisets = NA,
-  scope = NA,
-  show_non_hn_labels = FALSE,
-  na_trailing_gap_duration = FALSE
-)
+fi_summary(df, aoisets = NA, scope = NA, show_non_hn_labels = FALSE)
 }
 \arguments{
 \item{df}{A dataframe containing columns created by \link{get_aois}.}
@@ -18,8 +12,6 @@ fi_summary(
 \item{scope}{\emph{\link{Optional}} A trial scope list.}
 
 \item{show_non_hn_labels}{\emph{\link{Optional}} TRUE or FALSE (default).}
-
-\item{na_trailing_gap_duration}{\emph{\link{Optional}} TRUE or FALSE (default).}
 
 \item{aoi_sets}{\emph{\link{Optional}} A list of AOI sets.}
 }
@@ -67,9 +59,12 @@ Compare this tribble with the previous one:\preformatted{tribble(
 
 \subsection{df, aoisets, trial scope}{
 
-If you provide a trial scopes, the returned df will be trimmed down to respect the row ranges.
-\emph{NB}, when using trial scopes, you can set the last value of the FixationDuration Gap to NA.
-This is usually not desired, but may be useful in some situations.
+If you provide a trial scopes, the returned df will be trimmed down to respect the row ranges. It
+will use have an additional column \code{FGapDurTrlEnd} which is similar to \code{FGapDur}; yet, this
+column will respect the trial scope end in the calculation for the duration. For example,
+if the fixation index 420 is the last one in trail 7, \code{FGapDur} will show the time difference
+from 420 to 421. In contrast, \code{FGapDurTrlEnd} will show the time difference from 420 to the
+scope end time (e.g., "MovieEnd"). Thus, \code{FGapDurTrlEnd} is naturally smaller than \code{FGapDur}.
 }
 }
 
