@@ -15,6 +15,9 @@ get_trimmed_fixation_durations(df, trialrange)
 Returns a named list containing durations in ms for the fixation which overflow the scope
 }
 \description{
+Given a df and trialranges, the functions trims
+leading and trailing overflowing fixations
+to get an accuarte duration
 gets the adjusted fixiation durations for trials where a fixation started before the trial and
 trials where the fixation lasted after the ending of a trial. The function will trim the
 leading and trailing overflow fixations and will return the duration based on the provided trialrange.
