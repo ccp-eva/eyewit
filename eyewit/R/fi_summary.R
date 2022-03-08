@@ -159,12 +159,12 @@ fi_summary <- function(df,
         # specifically remove all entries that are not legit_hitnames
         for (fi in seq.int(nrow(fi_df))) {
           fi_df[[clean_colname]][[fi]] <-
-            legit_hitnames[which(legit_hitnames %in% fi_df$AOIActionPhaseBody[[fi]])]
+            legit_hitnames[which(legit_hitnames %in% fi_df[[clean_colname]][[fi]])]
         }
 
         # check for character 0 and replace with NA (https://stackoverflow.com/a/44766446/2258480)
         fi_df[[clean_colname]] <-
-          lapply(fi_df$AOIActionPhaseBodyClean,
+          lapply(fi_df[[clean_colname]],
                  function(x) if (identical(x, character(0))) NA_character_ else x)
       }
     }
@@ -219,7 +219,6 @@ fi_summary <- function(df,
 
     } # loop end
 
-
     # overwrite fi_df with fi_df_sub if trialrange was set
     fi_df <- fi_df_sub
 
@@ -238,7 +237,6 @@ fi_summary <- function(df,
           trimmed_durations$trailing_durations[trialpos]
       }
     }
-
 
     # Add Columns for Trial rn Start/End for comparison with FIrnS/E
     fi_df <- tibble::add_column(fi_df, TrlrnS = fi_df$Trial, .after = "Trial")
