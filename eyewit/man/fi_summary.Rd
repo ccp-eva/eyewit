@@ -9,11 +9,11 @@ fi_summary(df, aoisets = NA, trialrange = NA, show_non_hn_labels = FALSE)
 \arguments{
 \item{df}{A dataframe containing columns created by \link{get_aois}.}
 
+\item{aoisets}{\emph{\link{Optional}} A list of all AOI sets, or a single AOI definition.}
+
 \item{trialrange}{\emph{\link{Optional}} A trial range (trlr) list.}
 
 \item{show_non_hn_labels}{\emph{\link{Optional}} TRUE or FALSE (default).}
-
-\item{aoi_sets}{\emph{\link{Optional}} A list of AOI sets.}
 }
 \value{
 Returns a dataframe (tibble) providing AOI information for all fixation indexes
@@ -34,7 +34,7 @@ If you only provide a df, this function is identical to \link{fi2rn}. It is thus
 
 \subsection{df, aoisets}{
 
-Returns a tibble respecting all AOI definitions\preformatted{tribble(
+Returns a tibble respecting all AOI definitions (or justa list depending on your input)\preformatted{tribble(
   ~FI, ~FIrnS, ~FIrnE, ~AOIColA,             ~AOIColN,
   1,   15,        30,      c("left"),            c("onscreen"),
   2,   45,        70,      c("right"),           c("onscreen"),

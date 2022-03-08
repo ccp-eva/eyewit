@@ -13,7 +13,7 @@
 #' [fi2rn], if you only need to know the row range for a given fixation index.
 #'
 #' ## df, aoisets
-#' Returns a tibble respecting all AOI definitions
+#' Returns a tibble respecting all AOI definitions (or justa list depending on your input)
 #
 #' ```
 #' tribble(
@@ -49,7 +49,7 @@
 #' trialrng end time (e.g., "MovieEnd"). Thus, `FGapDurTrlEnd` is naturally smaller than `FGapDur`.
 #'
 #' @param df A dataframe containing columns created by [get_aois].
-#' @param aoi_sets *[Optional]* A list of AOI sets.
+#' @param aoisets *[Optional]* A list of all AOI sets, or a single AOI definition.
 #' @param trialrange *[Optional]* A trial range (trlr) list.
 #' @param show_non_hn_labels *[Optional]* TRUE or FALSE (default).
 #'
@@ -80,6 +80,13 @@ fi_summary <- function(df,
 
   # if aoisets are set but trialrange is missing, continue here
   if (!missing(aoisets)) {
+
+    # if a single AOI definition was provided, wrap set structure around it
+    # check if aoisets has a "aoilist" key (name), if so it is a single aoi list
+    if ("aoilist" %in% names(aoisets)) {
+      aoisets <- list(aoidef = aoisets)
+    }
+
     for (i in seq.int(aoisets)) {
       current_colname <- aoisets[[i]]$column_name
 
