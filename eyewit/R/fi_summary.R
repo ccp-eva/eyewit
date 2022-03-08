@@ -209,10 +209,15 @@ fi_summary <- function(df,
         subset_end <- subset_end - 1L
       }
 
-
       # overwrite fixation gap duration trial end for last entry
-      fi_df$FGapDurTrlEnd[subset_end] <-
+      # the condition is necessary for fixations hitting or exceed the MovieEnd Index and would
+      # create negative gaps. If that is the case we can assign 0, because there was litterally
+      # no gap from the end of the fixation to the end of the trial
+      fi_df$FGapDurTrlEnd[subset_end] <- ifelse(
+        df$RecordingTimestamp[current_trialrange_end] - fi_df$FIrtsE1[subset_end] < 0,
+        0,
         df$RecordingTimestamp[current_trialrange_end] - fi_df$FIrtsE1[subset_end]
+      )
 
       # subset
       fi_df_sub <- rbind(fi_df_sub, fi_df[subset_start:subset_end, ])
