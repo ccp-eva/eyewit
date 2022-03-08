@@ -4,12 +4,12 @@
 \alias{fi_summary}
 \title{Fixation Index Summary}
 \usage{
-fi_summary(df, aoisets = NA, scope = NA, show_non_hn_labels = FALSE)
+fi_summary(df, aoisets = NA, trialrange = NA, show_non_hn_labels = FALSE)
 }
 \arguments{
 \item{df}{A dataframe containing columns created by \link{get_aois}.}
 
-\item{scope}{\emph{\link{Optional}} A trial scope list.}
+\item{trialrange}{\emph{\link{Optional}} A trial range (trlr) list.}
 
 \item{show_non_hn_labels}{\emph{\link{Optional}} TRUE or FALSE (default).}
 
@@ -35,7 +35,7 @@ If you only provide a df, this function is identical to \link{fi2rn}. It is thus
 \subsection{df, aoisets}{
 
 Returns a tibble respecting all AOI definitions\preformatted{tribble(
-  ~FI, ~RowStart, ~RowEnd, ~AOIColA,             ~AOIColN,
+  ~FI, ~FIrnS, ~FIrnE, ~AOIColA,             ~AOIColN,
   1,   15,        30,      c("left"),            c("onscreen"),
   2,   45,        70,      c("right"),           c("onscreen"),
   3,   80,        99,      c("left", "outside"), c("onscreen"),
@@ -49,7 +49,7 @@ Returns a tibble respecting all AOI definitions, and includes a clean-column
 without non-hitname labels. Non-hitname labels are defined in the \code{interface.R} file. Look for:
 \code{no_evaluation_label}, \code{missing_coordinate_label}, and \code{outside_aoi_label}.
 Compare this tribble with the previous one:\preformatted{tribble(
-  ~FI, ~RowStart, ~RowEnd, ~AOIColA,             ~AOIColAClean, ~AOIColN,      ~AOIColNClean,
+  ~FI, ~FIrnS, ~FIrnE, ~AOIColA,             ~AOIColAClean, ~AOIColN,      ~AOIColNClean,
   1,   15,        30,      c("left"),            c("left"),     c("onscreen"), NA,
   2,   45,        70,      c("right"),           c("right"),    c("onscreen"), NA,
   3,   80,        99,      c("left", "outside"), c("left"),     c("onscreen"), NA,
@@ -57,14 +57,14 @@ Compare this tribble with the previous one:\preformatted{tribble(
 }
 }
 
-\subsection{df, aoisets, trial scope}{
+\subsection{df, aoisets, trial range}{
 
-If you provide a trial scopes, the returned df will be trimmed down to respect the row ranges. It
+If you provide a trial range, the returned df will be trimmed down to respect the row ranges. It
 will use have an additional column \code{FGapDurTrlEnd} which is similar to \code{FGapDur}; yet, this
-column will respect the trial scope end in the calculation for the duration. For example,
+column will respect the trial range end in the calculation for the duration. For example,
 if the fixation index 420 is the last one in trail 7, \code{FGapDur} will show the time difference
 from 420 to 421. In contrast, \code{FGapDurTrlEnd} will show the time difference from 420 to the
-scope end time (e.g., "MovieEnd"). Thus, \code{FGapDurTrlEnd} is naturally smaller than \code{FGapDur}.
+trialrng end time (e.g., "MovieEnd"). Thus, \code{FGapDurTrlEnd} is naturally smaller than \code{FGapDur}.
 }
 }
 
