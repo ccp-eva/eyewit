@@ -7,13 +7,20 @@
 #' @return None
 #' @export
 #'
-get_lookaway_scope_end <- function(df, scope, lookaway_stop) {
+get_lookaway_scope_end_deprecated <- function(df, aoi_collection, scope, lookaway_stop) {
 
   # destructure provided scope
   scope_end <- scope$end
 
-  # get non-fixation data
-  nf_data <- get_non_fixation_data(df, scope)
+  # DEPRECATED FOR REFERENCE
+  # nf_data <- get_non_fixation_data(df, scope)
+
+  # STOP WORKING ON LOOKAWAY HERE
+  # get fi_summary for provided aoilist and scope
+  # fi_smry <- fi_summary(df, aoi_collection, scope, TRUE)
+
+  # fi_summary[, grepl(".*Clean", names(fi_summary))]
+
 
   # loop over durations within nf_data to check which durations are greater lookaway_stop
   for (i in seq_along(nf_data)) {

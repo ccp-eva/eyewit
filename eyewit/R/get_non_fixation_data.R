@@ -7,7 +7,7 @@
 #' @export
 #'
 
-get_non_fixation_data <- function(df, scope = NA) {
+get_non_fixation_data_deprecated <- function(df, scope = NA) {
 
   # If scope is not explicitly set, use scope boundary to include all rows
   if (missing(scope)) {
