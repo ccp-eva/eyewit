@@ -380,26 +380,28 @@ get_looks <- function(
 
 
             ##################### LOOKAWAY
-            if (!lookaway_collection[[hn]]$found_first_hn) {
-              lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
-              lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
-
-
-              current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
-
-              lookaway_collection[[hn]]$found_first_hn <- TRUE
-              first_looks_collection[[hn]]$init_fi <- i
-            }
-
-            if (i != first_looks_collection[[hn]]$init_fi) {
-
-              lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
-
-              if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
-                current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+            if (!missing(lookaway_stop)) {
+              if (!lookaway_collection[[hn]]$found_first_hn) {
+                lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
                 lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
-              } else {
-                current_lookaway_stop_applied[[hn]] <- TRUE
+
+
+                current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+
+                lookaway_collection[[hn]]$found_first_hn <- TRUE
+                first_looks_collection[[hn]]$init_fi <- i
+              }
+
+              if (i != first_looks_collection[[hn]]$init_fi) {
+
+                lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+
+                if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
+                  current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+                  lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+                } else {
+                  current_lookaway_stop_applied[[hn]] <- TRUE
+                }
               }
             }
 
@@ -481,26 +483,28 @@ get_looks <- function(
 
 
             ##################### LOOKAWAY
-            if (!lookaway_collection[[hn]]$found_first_hn) {
-              lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
-              lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
-
-
-              current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
-
-              lookaway_collection[[hn]]$found_first_hn <- TRUE
-              first_looks_collection[[hn]]$init_fi <- i
-            }
-
-            if (i != first_looks_collection[[hn]]$init_fi) {
-
-              lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
-
-              if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
-                current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+            if (!missing(lookaway_stop)) {
+              if (!lookaway_collection[[hn]]$found_first_hn) {
+                lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
                 lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
-              } else {
-                current_lookaway_stop_applied[[hn]] <- TRUE
+
+
+                current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+
+                lookaway_collection[[hn]]$found_first_hn <- TRUE
+                first_looks_collection[[hn]]$init_fi <- i
+              }
+
+              if (i != first_looks_collection[[hn]]$init_fi) {
+
+                lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+
+                if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
+                  current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+                  lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+                } else {
+                  current_lookaway_stop_applied[[hn]] <- TRUE
+                }
               }
             }
 
@@ -578,26 +582,28 @@ get_looks <- function(
 
 
           ##################### LOOKAWAY
-          if (!lookaway_collection[[hn]]$found_first_hn) {
-            lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
-            lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
-
-
-            current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
-
-            lookaway_collection[[hn]]$found_first_hn <- TRUE
-            first_looks_collection[[hn]]$init_fi <- i
-          }
-
-          if (i != first_looks_collection[[hn]]$init_fi) {
-
-            lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
-
-            if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
-              current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+          if (!missing(lookaway_stop)) {
+            if (!lookaway_collection[[hn]]$found_first_hn) {
+              lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
               lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
-            } else {
-              current_lookaway_stop_applied[[hn]] <- TRUE
+
+
+              current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+
+              lookaway_collection[[hn]]$found_first_hn <- TRUE
+              first_looks_collection[[hn]]$init_fi <- i
+            }
+
+            if (i != first_looks_collection[[hn]]$init_fi) {
+
+              lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+
+              if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
+                current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+                lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+              } else {
+                current_lookaway_stop_applied[[hn]] <- TRUE
+              }
             }
           }
 
