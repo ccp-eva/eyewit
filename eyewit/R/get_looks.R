@@ -23,6 +23,8 @@ get_looks <- function(
   intra_scope_cut = TRUE
   ) {
 
+  fi2rn <- fi2rn(df$FixationIndex)
+
   # If scope is not explicitly set, use scope boundary to include all rows
   if (missing(scope)) {
     scope <- list(start = 1, end = nrow(df))
