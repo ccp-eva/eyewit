@@ -95,7 +95,7 @@ get_looks <- function(
   # By default the script assign the smaller scope$end to scope$start, so the function will treat it
   # ... in a way as if there is no data (which is the case)
   if (any(scope$end - scope$start < 0)) {
-    warning("Skipped Evaluation because scope$start was greater than scope$end")
+    stop("Skipped Evaluation because scope$start was greater than scope$end")
     for (bs in which(scope$end < scope$start)) {
       scope$start[bs] <- scope$end[bs]
     }
