@@ -86,18 +86,6 @@ get_looks <- function(
     omit_first_overflow_fi_applied <- !(former_scope_start == scope$start)
   }
 
-  # lookaway_stop should be processed before omit_first_overflow_fi
-  lookaway_stop_applied <- FALSE
-  # check if lookaway_stop was provided
-  if (!missing(lookaway_stop)) {
-    # store former scope$end
-    former_scope_end <- scope$end
-    # overwrite scope$end if lookaway criterion is fulfilled
-    scope$end <- get_lookaway_scope_end(df, scope, lookaway_stop)
-    # create logical vector to track which scope$end was modified
-    lookaway_stop_applied <- !(former_scope_end == scope$end)
-  }
-
   # in some cases the combination of a small intra_scope_window, a given omit_first_overflow_fi and
   #... lookaway_stop can set the scope$start behind the scpe$end
   # You can try to avoid this by not setting the omit_first_overflow_fi or increase the
