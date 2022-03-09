@@ -268,7 +268,7 @@ get_looks <- function(
 
       # FYI: outside label can share the the same fi with a hitname
       # do not try to prevent that!
-      # see: https://github.com/Kalaschnik/media/possible-overlapping-aoi-with-outside-label.png
+      # see: https://raw.githubusercontent.com/kalaschnik/media/main/possible-overlapping-aoi-with-outside-label.png
 
       # ----- Looking frequency (Looks), Gaze Shifts, Last Hit Name -----
       # Check if there is a defined hit_name within all the hit_names of the current fixation index
