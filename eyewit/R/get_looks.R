@@ -23,8 +23,6 @@ get_looks <- function(
   intra_scope_cut = TRUE
   ) {
 
-  fi2rn <- fi2rn(df$FixationIndex)
-
   # If scope is not explicitly set, use scope boundary to include all rows
   if (missing(scope)) {
     scope <- list(start = 1, end = nrow(df))
@@ -132,13 +130,24 @@ get_looks <- function(
   first_looks_collection <- list()
   # define structure
   for (hn in hit_names) {
-      first_looks_collection[[hn]]$durations <- c()
-      # this can either be "lookaway" (because an "outside" aoi was detected or the consecutive fixation was in another aoi), or "time criterion")
-      first_looks_collection[[hn]]$ending_reason <- c()
-      first_looks_collection[[hn]]$found_first <- FALSE
-      first_looks_collection[[hn]]$forced_stop <- FALSE
-      first_looks_collection[[hn]]$init_fi <- NA
-      first_looks_collection[[hn]]$last_fi <- NA
+    first_looks_collection[[hn]]$durations <- c()
+    # this can either be "lookaway" (because an "outside" aoi was detected or the consecutive fixation was in another aoi), or "time criterion")
+    first_looks_collection[[hn]]$ending_reason <- c()
+    first_looks_collection[[hn]]$found_first <- FALSE
+    first_looks_collection[[hn]]$forced_stop <- FALSE
+    first_looks_collection[[hn]]$init_fi <- NA
+    first_looks_collection[[hn]]$last_fi <- NA
+  }
+
+  lookaway_collection <- list()
+  # define structure
+  for (hn in hit_names) {
+    lookaway_collection[[hn]]$found_first_hn <- FALSE
+    lookaway_collection[[hn]]$lookaway_stop_applied <- FALSE
+    lookaway_collection[[hn]]$previous_end_rts <- NA
+    lookaway_collection[[hn]]$current_start_rts <- NA
+    lookaway_collection[[hn]]$durations <- c()
+    first_looks_collection[[hn]]$init_fi <- NA
   }
 
   # log fixation indexes that contain multiple hit_names
@@ -229,6 +238,15 @@ get_looks <- function(
       first_looks_collection[[hn]]$forced_stop <- FALSE
     }
 
+
+    # set first_look durations for current trial
+    current_lookaway_duration <- stats::setNames(vector("list", length(hit_names)), hit_names)
+    current_lookaway_stop_applied <- stats::setNames(vector("list", length(hit_names)), hit_names)
+    for (hn in hit_names) {
+      current_lookaway_duration[[hn]] <- 0
+      lookaway_collection[[hn]]$found_first_hn <- FALSE
+      current_lookaway_stop_applied[[hn]] <- FALSE
+    }
 
 
     # get first and last FixationIndex (remove NAs), which define the boundaries of a single trial
@@ -356,6 +374,44 @@ get_looks <- function(
               }
             }
 
+
+
+
+
+
+            ##################### LOOKAWAY
+            if (!lookaway_collection[[hn]]$found_first_hn) {
+              lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+              lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+
+
+              current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+
+              lookaway_collection[[hn]]$found_first_hn <- TRUE
+              first_looks_collection[[hn]]$init_fi <- i
+            }
+
+            if (i != first_looks_collection[[hn]]$init_fi) {
+
+              lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+
+              if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
+                current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+                lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+              } else {
+                current_lookaway_stop_applied[[hn]] <- TRUE
+              }
+            }
+
+
+
+
+
+
+
+
+
+
             # go to the next fixation index
             break
           }
@@ -420,6 +476,39 @@ get_looks <- function(
               }
             }
 
+
+
+
+
+            ##################### LOOKAWAY
+            if (!lookaway_collection[[hn]]$found_first_hn) {
+              lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+              lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+
+
+              current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+
+              lookaway_collection[[hn]]$found_first_hn <- TRUE
+              first_looks_collection[[hn]]$init_fi <- i
+            }
+
+            if (i != first_looks_collection[[hn]]$init_fi) {
+
+              lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+
+              if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
+                current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+                lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+              } else {
+                current_lookaway_stop_applied[[hn]] <- TRUE
+              }
+            }
+
+
+
+
+
+
             # go to the next fixation index
             break
           }
@@ -481,9 +570,48 @@ get_looks <- function(
             }
           }
 
-        }
-      }
-    }
+
+
+
+
+
+
+
+          ##################### LOOKAWAY
+          if (!lookaway_collection[[hn]]$found_first_hn) {
+            lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+            lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+
+
+            current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+
+            lookaway_collection[[hn]]$found_first_hn <- TRUE
+            first_looks_collection[[hn]]$init_fi <- i
+          }
+
+          if (i != first_looks_collection[[hn]]$init_fi) {
+
+            lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+
+            if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
+              current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+              lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+            } else {
+              current_lookaway_stop_applied[[hn]] <- TRUE
+            }
+          }
+
+
+
+
+
+
+
+
+
+        } # end of if (hn %in% hit_names_in_FixationIndex)
+      } # end of for (hn in hit_names)
+    } # end of for (i in min_FixationIndex:max_FixationIndex)
 
 
     # Append it to the Trial Lists
@@ -492,6 +620,9 @@ get_looks <- function(
       looking_frequencies[[hn]] <- c(looking_frequencies[[hn]], current_trial_total_looks[[hn]])
       first_looks_collection[[hn]]$durations <- c(first_looks_collection[[hn]]$durations, current_first_look_duration[[hn]])
       first_looks_collection[[hn]]$ending_reason <- c(first_looks_collection[[hn]]$ending_reason, current_first_look_ending_reason[[hn]])
+
+      lookaway_collection[[hn]]$durations <- c(lookaway_collection[[hn]]$durations, current_lookaway_duration[[hn]])
+      lookaway_collection[[hn]]$lookaway_stop_applied <- c(lookaway_collection[[hn]]$lookaway_stop_applied, current_lookaway_stop_applied[[hn]])
     }
     # Append gaze shifts
     for (hn_origin in hit_names_unknown) {
@@ -526,9 +657,9 @@ get_looks <- function(
         first_looks_collection = first_looks_collection,
         bad_fixation_indexes = bad_fixation_indexes,
         looking_frequencies = looking_frequencies,
+        lookaway_collection = lookaway_collection,
         gaze_shifts = gaze_shifts,
         omit_first_overflow_fi_applied = omit_first_overflow_fi_applied,
-        lookaway_stop_applied = lookaway_stop_applied,
         processed_scope = scope
       )
     )
