@@ -125,7 +125,7 @@ for (subject in participants) {
     aoi_collection = interface$aoisets$screen,
     scope = startend_test_outcome,
     intra_scope_window = c(120, "end"),
-    lookaway_stop = 2000, TRUE)$lookaway_stop_applied
+    lookaway_stop = 2000, TRUE)$lookaway_collection$onscreen$lookaway_stop_applied
 
   # ------------------------------------------------------------------------------------------------
   # Looking Times - OUTCOME
