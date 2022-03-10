@@ -148,12 +148,12 @@ for (subject in participants) {
       scope = startend_test_outcome,
       intra_scope_window = c(120, "end"),
       lookaway_stop = 2000,
-      omit_first_overflow_fi = TRUE)$looking_times
+      omit_first_overflow_fi = TRUE)$lookaway_collection$onscreen$durations
 
   df_subject$LTObjectOut <- dplyr::if_else(
     df_subject$ObjectPos == "OBEN",
-    get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), 2000, TRUE)$looking_times$top,
-    get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), 2000, TRUE)$looking_times$bottom
+    get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), 2000, TRUE)$lookaway_collection$top$durations,
+    get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), 2000, TRUE)$lookaway_collection$bottom$durations
   )
 
   df_subject$FirstLookDurationObjectOutTop <-
