@@ -22,7 +22,7 @@ get_trimmed_fixation_durations <- function(df, trialrange) {
   if (df$FixationIndex[trialrange$start] |> is.na() |> any()) {
     # get indexes, fixation indexes, and relative position of leading fixations before trial started
     leading_fi_positions <- which(!is.na(df$FixationIndex[trialrange$start]))
-    leading_fi <- df$FixationIndex[trialrange$start] |> na.omit() |> as.vector()
+    leading_fi <- df$FixationIndex[trialrange$start] |> stats::na.omit() |> as.vector()
     leading_i <- trialrange$start[leading_fi_positions]
 
     # get true starting timestamp
@@ -44,7 +44,7 @@ get_trimmed_fixation_durations <- function(df, trialrange) {
   # same for trailing indexes
   if (df$FixationIndex[trialrange$end] |> is.na() |> any()) {
     trailing_fi_positions <- which(!is.na(df$FixationIndex[trialrange$end]))
-    trailing_fi <- df$FixationIndex[trialrange$end] |> na.omit() |> as.vector()
+    trailing_fi <- df$FixationIndex[trialrange$end] |> stats::na.omit() |> as.vector()
     trailing_i <- trialrange$end[trailing_fi_positions]
 
     adj_end_timestamp <- df$RecordingTimestamp[trailing_i] # sitting on the marker is good
