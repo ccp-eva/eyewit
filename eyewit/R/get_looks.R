@@ -143,7 +143,7 @@ get_looks <- function(
   # define structure
   for (hn in hit_names) {
     lookaway_collection[[hn]]$found_first_hn <- FALSE
-    lookaway_collection[[hn]]$lookaway_stop_applied <- FALSE
+    lookaway_collection[[hn]]$lookaway_stop_applied <- c()
     lookaway_collection[[hn]]$previous_end_rts <- NA
     lookaway_collection[[hn]]$current_start_rts <- NA
     lookaway_collection[[hn]]$durations <- c()
