@@ -49,9 +49,9 @@
 #' trialrng end time (e.g., "MovieEnd"). Thus, `FGapDurTrlEnd` is naturally smaller than `FGapDur`.
 #'
 #' @param df A dataframe containing columns created by [get_aois].
-#' @param aoisets *[Optional]* A list of all AOI sets, or a single AOI definition.
-#' @param trialrange *[Optional]* A trial range (trlr) list.
-#' @param show_non_hn_labels *[Optional]* TRUE or FALSE (default).
+#' @param aoisets *(Optional)* A list of all AOI sets, or a single AOI definition.
+#' @param trialrange *(Optional)* A trial range (trlr) list.
+#' @param show_non_hn_labels *(Optional)* TRUE or FALSE (default).
 #'
 #' @return Returns a dataframe (tibble) providing AOI information for all fixation indexes
 #' @export

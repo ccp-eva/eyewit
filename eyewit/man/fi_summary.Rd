@@ -9,11 +9,11 @@ fi_summary(df, aoisets = NA, trialrange = NA, show_non_hn_labels = FALSE)
 \arguments{
 \item{df}{A dataframe containing columns created by \link{get_aois}.}
 
-\item{aoisets}{\emph{\link{Optional}} A list of all AOI sets, or a single AOI definition.}
+\item{aoisets}{\emph{(Optional)} A list of all AOI sets, or a single AOI definition.}
 
-\item{trialrange}{\emph{\link{Optional}} A trial range (trlr) list.}
+\item{trialrange}{\emph{(Optional)} A trial range (trlr) list.}
 
-\item{show_non_hn_labels}{\emph{\link{Optional}} TRUE or FALSE (default).}
+\item{show_non_hn_labels}{\emph{(Optional)} TRUE or FALSE (default).}
 }
 \value{
 Returns a dataframe (tibble) providing AOI information for all fixation indexes
