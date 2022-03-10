@@ -78,9 +78,9 @@ for (subject in participants) {
   # Get inner AOI gaze shift latencies (used in get_looks implicitly for given)
   gazeshifts <- get_gazeshift_latency(df, interface$aoisets)
   # get detailed information about single fixation indexes (trial-scoped)
-  fi_summary_overal <- fi_summary(df, interface$aoisets)
-  fi_summary_test_action <- fi_summary(df, interface$aoisets, startend_test_action)
-  fi_summary_test_outcome <- fi_summary(df, interface$aoisets, startend_test_outcome)
+  fi_summary_overal <- fi_summary(df, interface$aoisets, show_non_hn_labels = TRUE)
+  fi_summary_test_action <- fi_summary(df, interface$aoisets, startend_test_action, TRUE)
+  fi_summary_test_outcome <- fi_summary(df, interface$aoisets, startend_test_outcome, TRUE)
 
 
   ##################################################################################################
