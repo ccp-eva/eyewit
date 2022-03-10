@@ -35,7 +35,7 @@ Progress is tracked here: https://github.com/ccp-eva/eyewit/projects/8
 
 ## Common Abbreviations
 
-Those abbreviations are used either in the docs or in the code.
+Those abbreviations are used either in the docs or in the code...
 
 ## Functions
 
