@@ -112,6 +112,7 @@ for (subject in participants) {
   df_subject$Dyad <- value_parser_by_key(interface$keys_videoname, names_test_outcome)$dyad
   df_subject$Object <- value_parser_by_key(interface$keys_videoname, names_test_outcome, trim_right = 4)$object_id
   df_subject$ObjectPos <- value_parser_by_key(interface$keys_videoname, names_test_outcome, trim_right = 4)$object_position
+  df_subject$ObjectPosAct <- value_parser_by_key(interface$keys_videoname, names_test_action, trim_right = 4)$object_position
 
   df_subject$TrialRun <- 1:current_test_trials
   df_subject$TrialCon <- c(rep(1, current_test_trials / 2), rep(2, current_test_trials / 2))
@@ -224,6 +225,19 @@ for (subject in participants) {
     df_subject$FirstLookDurationObjectOutBottomReason
   )
 
+  df_subject$FirstLookDurationScreen <-
+    get_looks(
+      df = df,
+      aoi_collection = interface$aoisets$screen,
+      scope = startend_test_outcome,
+      intra_scope_window = c(120, "end"),
+      omit_first_overflow_fi = TRUE,
+      first_look_emergency_cutoff =
+        round(
+          median(gazeshifts$AOIScreen$onscreen$latencies) +
+            3 * sd(gazeshifts$AOIScreen$onscreen$latencies)
+        )
+    )$first_looks_collection$onscreen$durations
 
   # ------------------------------------------------------------------------------------------------
   # Looking Times - ACTION
@@ -294,8 +308,8 @@ for (subject in participants) {
 
   df_subject$InterPhaseCheckerValid <- df_subject$InterPhaseCheckerSoc & df_subject$InterPhaseCheckerGazing
 
-  # todo save df_subject as whatever
-
-
+  # write tables for individual participants
+  # replace with readr functions ones this is clear: https://github.com/tidyverse/readr/issues/1388
+  write.table(df_subject, paste0(interface$output_dir, subject), sep = '\t', row.names = FALSE)
 }
 
