@@ -1,5 +1,6 @@
 # exclude subject files
 eyewit/raw/
+eyewit/preproc-tsv/
 
 
 # The following part comes from gitignore.io
