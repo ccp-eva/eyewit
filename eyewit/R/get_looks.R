@@ -387,7 +387,7 @@ get_looks <- function(
 
 
             ##################### LOOKAWAY
-            if (!missing(lookaway_stop)) {
+            if (!missing(lookaway_stop) && !current_lookaway_stop_applied[[hn]]) {
               if (!lookaway_collection[[hn]]$found_first_hn) {
                 lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
                 lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
@@ -490,7 +490,7 @@ get_looks <- function(
 
 
             ##################### LOOKAWAY
-            if (!missing(lookaway_stop)) {
+            if (!missing(lookaway_stop) && !current_lookaway_stop_applied[[hn]]) {
               if (!lookaway_collection[[hn]]$found_first_hn) {
                 lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
                 lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
@@ -589,7 +589,7 @@ get_looks <- function(
 
 
           ##################### LOOKAWAY
-          if (!missing(lookaway_stop)) {
+          if (!missing(lookaway_stop) && !current_lookaway_stop_applied[[hn]]) {
             if (!lookaway_collection[[hn]]$found_first_hn) {
               lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
               lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
