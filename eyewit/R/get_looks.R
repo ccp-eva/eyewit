@@ -189,6 +189,13 @@ get_looks <- function(
         first_looks_collection[[hn]]$ending_reason <- c(first_looks_collection[[hn]]$ending_reason, NA)
       }
 
+      for (hn in hit_names) {
+        lookaway_collection[[hn]]$durations <- c(lookaway_collection[[hn]]$durations, NA)
+        lookaway_collection[[hn]]$lookaway_stop_applied <- c(lookaway_collection[[hn]]$lookaway_stop_applied, NA)
+      }
+
+
+
       # go to next trial
       next
     }
