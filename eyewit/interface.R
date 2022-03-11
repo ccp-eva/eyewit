@@ -2,6 +2,7 @@ interface <- list(
 
   # Set subject raw data directory
   raw_dir = "./raw/",
+  output_dir = "./preproc-tsv/",
 
   # Define the initial column name for x/y coordinates you want to use
   xy_columns = list(
