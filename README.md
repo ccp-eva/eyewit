@@ -12,6 +12,9 @@
 
 `devtools::install_github("ccp-eva/eyewit/eyewit")`
 
+Or specific release/tag, e.g,:  
+`devtools::install_github("ccp-eva/eyewit/eyewit@v0.3.6")`
+
 ## What’s Happening
 
 ### eyewit Roadmap
