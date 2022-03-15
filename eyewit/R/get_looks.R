@@ -147,7 +147,7 @@ get_looks <- function(
     lookaway_collection[[hn]]$previous_end_rts <- NA
     lookaway_collection[[hn]]$current_start_rts <- NA
     lookaway_collection[[hn]]$durations <- c()
-    first_looks_collection[[hn]]$init_fi <- NA
+    lookaway_collection[[hn]]$init_fi <- NA
   }
 
   # log fixation indexes that contain multiple hit_names
@@ -396,10 +396,10 @@ get_looks <- function(
                 current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
 
                 lookaway_collection[[hn]]$found_first_hn <- TRUE
-                first_looks_collection[[hn]]$init_fi <- i
+                lookaway_collection[[hn]]$init_fi <- i
               }
 
-              if (i != first_looks_collection[[hn]]$init_fi) {
+              if (i != lookaway_collection[[hn]]$init_fi) {
 
                 lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
 
@@ -499,10 +499,10 @@ get_looks <- function(
                 current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
 
                 lookaway_collection[[hn]]$found_first_hn <- TRUE
-                first_looks_collection[[hn]]$init_fi <- i
+                lookaway_collection[[hn]]$init_fi <- i
               }
 
-              if (i != first_looks_collection[[hn]]$init_fi) {
+              if (i != lookaway_collection[[hn]]$init_fi) {
 
                 lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
 
@@ -598,10 +598,10 @@ get_looks <- function(
               current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
 
               lookaway_collection[[hn]]$found_first_hn <- TRUE
-              first_looks_collection[[hn]]$init_fi <- i
+              lookaway_collection[[hn]]$init_fi <- i
             }
 
-            if (i != first_looks_collection[[hn]]$init_fi) {
+            if (i != lookaway_collection[[hn]]$init_fi) {
 
               lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
 
