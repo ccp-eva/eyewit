@@ -313,3 +313,10 @@ for (subject in participants) {
   write.table(df_subject, paste0(interface$output_dir, subject), sep = '\t', row.names = FALSE)
 }
 
+# Read in tsv files from pre-processing folder
+tsv_files <- list.files(interface$output_dir, full.names = TRUE)
+
+# Creating data frame
+overall.data <- tsv_files %>%
+  map(read_tsv) %>%    # read in all the files individually, using the function read_tsv() from the readr package
+  reduce(rbind)        # reduce with rbind into one dataframe
