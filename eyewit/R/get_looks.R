@@ -12,16 +12,14 @@
 #' @return None
 #' @export
 #'
-get_looks <- function(
-  df,
-  aoi_collection,
-  scope = NA,
-  intra_scope_window = c("start", "end"),
-  lookaway_stop = NA,
-  omit_first_overflow_fi = FALSE,
-  first_look_emergency_cutoff = NA,
-  intra_scope_cut = TRUE
-  ) {
+get_looks <- function(df,
+                      aoi_collection,
+                      scope = NA,
+                      intra_scope_window = c("start", "end"),
+                      lookaway_stop = NA,
+                      omit_first_overflow_fi = FALSE,
+                      first_look_emergency_cutoff = NA,
+                      intra_scope_cut = TRUE) {
 
   # If scope is not explicitly set, use scope boundary to include all rows
   if (missing(scope)) {
@@ -87,7 +85,7 @@ get_looks <- function(
   }
 
   # in some cases the combination of a small intra_scope_window, a given omit_first_overflow_fi and
-  #... lookaway_stop can set the scope$start behind the scpe$end
+  # ... lookaway_stop can set the scope$start behind the scpe$end
   # You can try to avoid this by not setting the omit_first_overflow_fi or increase the
   # ...intra_scope_windows.
   # By default the script assign the smaller scope$end to scope$start, so the function will treat it
@@ -349,12 +347,12 @@ get_looks <- function(
 
             if (
               first_looks_collection[[hn]]$found_first && !first_looks_collection[[hn]]$forced_stop &&
-              (
-                # check if initial i
-                first_looks_collection[[hn]]$init_fi == i ||
-                # or check if consecutive fixation
-                first_looks_collection[[hn]]$last_fi == i - 1
-              )
+                (
+                  # check if initial i
+                  first_looks_collection[[hn]]$init_fi == i ||
+                    # or check if consecutive fixation
+                    first_looks_collection[[hn]]$last_fi == i - 1
+                )
             ) {
               current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_GazeEventDuration
               first_looks_collection[[hn]]$last_fi <- i
@@ -370,8 +368,8 @@ get_looks <- function(
 
               # check if the time criterion is met within this fi and the next fi#
               if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
-                  (
-                    df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
+                (
+                  df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
                     df$RecordingTimestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
               ) {
                 current_first_look_ending_reason[[hn]] <- "timecriterion"
@@ -400,7 +398,6 @@ get_looks <- function(
               }
 
               if (i != lookaway_collection[[hn]]$init_fi) {
-
                 lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
 
                 if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
@@ -453,12 +450,12 @@ get_looks <- function(
 
             if (
               first_looks_collection[[hn]]$found_first && !first_looks_collection[[hn]]$forced_stop &&
-              (
-                # check if initial i
-                first_looks_collection[[hn]]$init_fi == i ||
-                # or check if consecutive fixation
-                first_looks_collection[[hn]]$last_fi == i - 1
-              )
+                (
+                  # check if initial i
+                  first_looks_collection[[hn]]$init_fi == i ||
+                    # or check if consecutive fixation
+                    first_looks_collection[[hn]]$last_fi == i - 1
+                )
             ) {
               current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_GazeEventDuration
               first_looks_collection[[hn]]$last_fi <- i
@@ -474,8 +471,8 @@ get_looks <- function(
 
               # check if the time criterion is met within this fi and the next fi#
               if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
-                  (
-                    df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
+                (
+                  df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
                     df$RecordingTimestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
               ) {
                 current_first_look_ending_reason[[hn]] <- "timecriterion"
@@ -503,7 +500,6 @@ get_looks <- function(
               }
 
               if (i != lookaway_collection[[hn]]$init_fi) {
-
                 lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
 
                 if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
@@ -549,12 +545,12 @@ get_looks <- function(
 
           if (
             first_looks_collection[[hn]]$found_first && !first_looks_collection[[hn]]$forced_stop &&
-            (
-              # check if initial i
-              first_looks_collection[[hn]]$init_fi == i ||
-              # or check if consecutive fixation
-              first_looks_collection[[hn]]$last_fi == i - 1
-            )
+              (
+                # check if initial i
+                first_looks_collection[[hn]]$init_fi == i ||
+                  # or check if consecutive fixation
+                  first_looks_collection[[hn]]$last_fi == i - 1
+              )
           ) {
             current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_GazeEventDuration
             first_looks_collection[[hn]]$last_fi <- i
@@ -570,10 +566,10 @@ get_looks <- function(
 
             # check if the time criterion is met within this fi and the next fi#
             if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
-                (
-                  df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
+              (
+                df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
                   df$RecordingTimestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
-               ) {
+            ) {
               current_first_look_ending_reason[[hn]] <- "timecriterion"
               first_looks_collection[[hn]]$forced_stop <- TRUE
               # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
@@ -602,7 +598,6 @@ get_looks <- function(
             }
 
             if (i != lookaway_collection[[hn]]$init_fi) {
-
               lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
 
               if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
@@ -613,15 +608,6 @@ get_looks <- function(
               }
             }
           }
-
-
-
-
-
-
-
-
-
         } # end of if (hn %in% hit_names_in_FixationIndex)
       } # end of for (hn in hit_names)
     } # end of for (i in min_FixationIndex:max_FixationIndex)
@@ -663,17 +649,17 @@ get_looks <- function(
     looking_times <- unlist(looking_times[[1]])
   }
 
-    return(
-      list(
-        looking_times = looking_times,
-        first_looks = first_looks,
-        first_looks_collection = first_looks_collection,
-        bad_fixation_indexes = bad_fixation_indexes,
-        looking_frequencies = looking_frequencies,
-        lookaway_collection = lookaway_collection,
-        gaze_shifts = gaze_shifts,
-        omit_first_overflow_fi_applied = omit_first_overflow_fi_applied,
-        processed_scope = scope
-      )
+  return(
+    list(
+      looking_times = looking_times,
+      first_looks = first_looks,
+      first_looks_collection = first_looks_collection,
+      bad_fixation_indexes = bad_fixation_indexes,
+      looking_frequencies = looking_frequencies,
+      lookaway_collection = lookaway_collection,
+      gaze_shifts = gaze_shifts,
+      omit_first_overflow_fi_applied = omit_first_overflow_fi_applied,
+      processed_scope = scope
     )
+  )
 }
