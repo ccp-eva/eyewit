@@ -180,8 +180,8 @@ for (subject in participants) {
       omit_first_overflow_fi = TRUE,
       first_look_emergency_cutoff =
         round(
-          median(gazeshifts$AOIOutcomePhase$top$latencies) +
-            3 * sd(gazeshifts$AOIOutcomePhase$top$latencies)
+          median(gazeshifts$AOIOutcomePhase$bottom$latencies) +
+            3 * sd(gazeshifts$AOIOutcomePhase$bottom$latencies)
         )
     )$first_looks_collection$bottom$durations
 
