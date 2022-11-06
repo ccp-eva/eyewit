@@ -34,13 +34,15 @@ If you only provide a df, this function is identical to \link{fi2rn}. It is thus
 
 \subsection{df, aoisets}{
 
-Returns a tibble respecting all AOI definitions (or justa list depending on your input)\preformatted{tribble(
+Returns a tibble respecting all AOI definitions (or justa list depending on your input)
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{tribble(
   ~FI, ~FIrnS, ~FIrnE, ~AOIColA,             ~AOIColN,
   1,   15,        30,      c("left"),            c("onscreen"),
   2,   45,        70,      c("right"),           c("onscreen"),
   3,   80,        99,      c("left", "outside"), c("onscreen"),
 )
-}
+}\if{html}{\out{</div>}}
 }
 
 \subsection{df, aoisets, show_non_hn_labels = TRUE}{
@@ -48,13 +50,15 @@ Returns a tibble respecting all AOI definitions (or justa list depending on your
 Returns a tibble respecting all AOI definitions, and includes a clean-column
 without non-hitname labels. Non-hitname labels are defined in the \code{interface.R} file. Look for:
 \code{no_evaluation_label}, \code{missing_coordinate_label}, and \code{outside_aoi_label}.
-Compare this tribble with the previous one:\preformatted{tribble(
+Compare this tribble with the previous one:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{tribble(
   ~FI, ~FIrnS, ~FIrnE, ~AOIColA,             ~AOIColAClean, ~AOIColN,      ~AOIColNClean,
   1,   15,        30,      c("left"),            c("left"),     c("onscreen"), NA,
   2,   45,        70,      c("right"),           c("right"),    c("onscreen"), NA,
   3,   80,        99,      c("left", "outside"), c("left"),     c("onscreen"), NA,
 )
-}
+}\if{html}{\out{</div>}}
 }
 
 \subsection{df, aoisets, trial range}{
