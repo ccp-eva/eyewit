@@ -65,7 +65,7 @@ preflight <- function(df, interface) {
 
   message("--------------------------------------------------------------------")
 
-  .eyewit_utils <<- list(
+  .eyewit_utils <- list(
     fi2rn = fi2rn(df$FixationIndex)
   )
 
