@@ -14,6 +14,7 @@ BugReports: https://github.com/ccp-eva/eyewit/issues
 Depends:
     R (>= 4.1.0)
 Imports:
+    crayon,
     dplyr,
     magrittr,
     readr,
