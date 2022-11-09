@@ -47,6 +47,7 @@ interface <- list(
       "timestamp",
       "event",
       "eventValue",
+      "gazeType",
       "FixationIndex",
       "GazeEventDuration",
       "x",
@@ -60,7 +61,6 @@ interface <- list(
   coi =
     c(
     	"participant",
-    	"GazeEventType",
       "LocalTimeStamp",
       "StudioEventIndex"
     ),
