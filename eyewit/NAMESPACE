@@ -2,6 +2,7 @@
 
 export("%>%")
 export(allocate_trials)
+export(create_fi)
 export(fi2rn)
 export(fi_summary)
 export(get_aois)
