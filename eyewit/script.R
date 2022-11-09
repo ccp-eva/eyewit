@@ -10,6 +10,10 @@ source("interface.R")
 # read raw data filenames
 participants <- list.files(interface$raw_dir)
 
+# take a random sample from raw folder to determine vendor labels, and only read headers
+sample <- readr::read_tsv(file.path(interface$raw_dir, sample(participants, 1)), col_types = readr::cols(), n_max = 0)
+(vendor <- vendor_check(sample))
+
 # incomplete subjects (i.e., not having 2 pretest & 12 test trials)
 incomplete_subjets <- c()
 
@@ -22,7 +26,7 @@ for (subject in participants) {
   # subject <- participants[1]
 
   # read tsv files
-  df_raw <- readr::read_tsv(file.path(interface$raw_dir, subject), col_types = interface$mc_types)
+  df_raw <- readr::read_tsv(file.path(interface$raw_dir, subject), col_types = readr::cols())
 
   # run preflight checks & diagnostics, returns a lean df
   df <- preflight(df_raw, interface)
@@ -119,7 +123,7 @@ for (subject in participants) {
 
 
   df_subject$OutcomeDuration <-
-    df$RecordingTimestamp[startend_test_outcome$end] - df$RecordingTimestamp[startend_test_outcome$start + 1]
+    df$timestamp[startend_test_outcome$end] - df$timestamp[startend_test_outcome$start + 1]
 
   df_subject$TwoSecCheck <- get_looks(
     df = df,

@@ -31,19 +31,19 @@ get_looks <- function(df,
   if (!missing(intra_scope_window)) {
 
     # get all starting times at scope start
-    starting_times <- df$RecordingTimestamp[scope$start]
+    starting_times <- df$timestamp[scope$start]
 
     # only modify scope if input was numeric
     # check if there was an actual numeric value
     if (intra_scope_window[1] != "start") {
       # Add the starttime (intra_scope_window[1]) to every start position (scope$start) ...
       # ... of the recording timestamp to get the actual start window in milliseconds
-      starting_times <- df$RecordingTimestamp[scope$start] + as.numeric(intra_scope_window[1])
+      starting_times <- df$timestamp[scope$start] + as.numeric(intra_scope_window[1])
     }
 
     if (intra_scope_window[2] != "end") {
       # Add the endtime argument to the starting times
-      ending_times <- df$RecordingTimestamp[scope$start] + as.numeric(intra_scope_window[2])
+      ending_times <- df$timestamp[scope$start] + as.numeric(intra_scope_window[2])
     }
 
     if (intra_scope_window[1] == "start") {
@@ -54,7 +54,7 @@ get_looks <- function(df,
       start_indexes <- unlist(
         lapply(
           starting_times,
-          function(x) which.min(abs(df$RecordingTimestamp - x))
+          function(x) which.min(abs(df$timestamp - x))
         )
       )
     }
@@ -65,7 +65,7 @@ get_looks <- function(df,
       end_indexes <- unlist(
         lapply(
           ending_times,
-          function(x) which.min(abs(df$RecordingTimestamp - x))
+          function(x) which.min(abs(df$timestamp - x))
         )
       )
     }
@@ -323,8 +323,8 @@ get_looks <- function(df,
           # check if the first fixation index started before the current_start and if intra_scope_cut is TRUE
           if (i == min_FixationIndex && which(df$FixationIndex == i)[1] < current_start && intra_scope_cut) {
             # get start and end milliseconds
-            start_ms <- df$RecordingTimestamp[current_start]
-            end_ms <- df$RecordingTimestamp[which(df$FixationIndex == i)][length(which(df$FixationIndex == i))]
+            start_ms <- df$timestamp[current_start]
+            end_ms <- df$timestamp[which(df$FixationIndex == i)][length(which(df$FixationIndex == i))]
 
             # set the difference of start_ms and end_ms to the current GazeEventDuration
             current_GazeEventDuration <- end_ms - start_ms
@@ -335,7 +335,7 @@ get_looks <- function(df,
             if (!found_first_look) {
               first_look <- hn
               found_first_look <- TRUE
-              first_look_initial_timestamp <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+              first_look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
             }
 
             # first_look_collection part
@@ -344,7 +344,7 @@ get_looks <- function(df,
               first_looks_collection[[hn]]$found_first <- TRUE
               first_looks_collection[[hn]]$init_fi <- i
               first_looks_collection[[hn]]$last_fi <- i
-              first_looks_collection[[hn]]$first_look_initial_timestamp <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+              first_looks_collection[[hn]]$first_look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
             }
 
             if (
@@ -365,19 +365,19 @@ get_looks <- function(df,
                 current_first_look_ending_reason[[hn]] <- "outside"
                 first_looks_collection[[hn]]$forced_stop <- TRUE
                 # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
-                current_first_look_duration[[hn]] <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1] - first_looks_collection[[hn]]$first_look_initial_timestamp
+                current_first_look_duration[[hn]] <- df$timestamp[fi_pairs$fiend[i] + 1] - first_looks_collection[[hn]]$first_look_initial_timestamp
               }
 
               # check if the time criterion is met within this fi and the next fi#
               if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
                 (
-                  df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
-                    df$RecordingTimestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
+                  df$timestamp[fi_pairs$fistart[i + 1]] -
+                    df$timestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
               ) {
                 current_first_look_ending_reason[[hn]] <- "timecriterion"
                 first_looks_collection[[hn]]$forced_stop <- TRUE
                 # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
-                current_first_look_duration[[hn]] <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1] - first_looks_collection[[hn]]$first_look_initial_timestamp
+                current_first_look_duration[[hn]] <- df$timestamp[fi_pairs$fiend[i] + 1] - first_looks_collection[[hn]]$first_look_initial_timestamp
               }
             }
 
@@ -389,8 +389,8 @@ get_looks <- function(df,
             ##################### LOOKAWAY
             if (!missing(lookaway_stop) && !current_lookaway_stop_applied[[hn]]) {
               if (!lookaway_collection[[hn]]$found_first_hn) {
-                lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
-                lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+                lookaway_collection[[hn]]$current_start_rts <- df$timestamp[fi_pairs$fistart[i]]
+                lookaway_collection[[hn]]$previous_end_rts <- df$timestamp[fi_pairs$fiend[i] + 1]
 
 
                 current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
@@ -400,11 +400,11 @@ get_looks <- function(df,
               }
 
               if (i != lookaway_collection[[hn]]$init_fi) {
-                lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+                lookaway_collection[[hn]]$current_start_rts <- df$timestamp[fi_pairs$fistart[i]]
 
                 if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
                   current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
-                  lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+                  lookaway_collection[[hn]]$previous_end_rts <- df$timestamp[fi_pairs$fiend[i] + 1]
                 } else {
                   current_lookaway_stop_applied[[hn]] <- TRUE
                 }
@@ -427,8 +427,8 @@ get_looks <- function(df,
           # check if the last fixation index continues after the current_end_pos and if markercut is TRUE
           if (i == max_FixationIndex && which(df$FixationIndex == i)[length(which(df$FixationIndex == i))] > current_end && intra_scope_cut) {
             # get start and end milliseconds
-            start_ms <- df$RecordingTimestamp[which(df$FixationIndex == i)][1]
-            end_ms <- df$RecordingTimestamp[current_end]
+            start_ms <- df$timestamp[which(df$FixationIndex == i)][1]
+            end_ms <- df$timestamp[current_end]
 
             # set the difference of start_ms and end_ms to the current GazeEventDuration
             current_GazeEventDuration <- end_ms - start_ms
@@ -439,7 +439,7 @@ get_looks <- function(df,
             if (!found_first_look) {
               first_look <- hn
               found_first_look <- TRUE
-              first_look_initial_timestamp <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+              first_look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
             }
 
             # first_look_collection part
@@ -448,7 +448,7 @@ get_looks <- function(df,
               first_looks_collection[[hn]]$found_first <- TRUE
               first_looks_collection[[hn]]$init_fi <- i
               first_looks_collection[[hn]]$last_fi <- i
-              first_looks_collection[[hn]]$first_look_initial_timestamp <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+              first_looks_collection[[hn]]$first_look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
             }
 
             if (
@@ -469,19 +469,19 @@ get_looks <- function(df,
                 current_first_look_ending_reason[[hn]] <- "outside"
                 first_looks_collection[[hn]]$forced_stop <- TRUE
                 # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
-                current_first_look_duration[[hn]] <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1] - first_looks_collection[[hn]]$first_look_initial_timestamp
+                current_first_look_duration[[hn]] <- df$timestamp[fi_pairs$fiend[i] + 1] - first_looks_collection[[hn]]$first_look_initial_timestamp
               }
 
               # check if the time criterion is met within this fi and the next fi#
               if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
                 (
-                  df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
-                    df$RecordingTimestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
+                  df$timestamp[fi_pairs$fistart[i + 1]] -
+                    df$timestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
               ) {
                 current_first_look_ending_reason[[hn]] <- "timecriterion"
                 first_looks_collection[[hn]]$forced_stop <- TRUE
                 # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
-                current_first_look_duration[[hn]] <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1] - first_looks_collection[[hn]]$first_look_initial_timestamp
+                current_first_look_duration[[hn]] <- df$timestamp[fi_pairs$fiend[i] + 1] - first_looks_collection[[hn]]$first_look_initial_timestamp
               }
             }
 
@@ -492,8 +492,8 @@ get_looks <- function(df,
             ##################### LOOKAWAY
             if (!missing(lookaway_stop) && !current_lookaway_stop_applied[[hn]]) {
               if (!lookaway_collection[[hn]]$found_first_hn) {
-                lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
-                lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+                lookaway_collection[[hn]]$current_start_rts <- df$timestamp[fi_pairs$fistart[i]]
+                lookaway_collection[[hn]]$previous_end_rts <- df$timestamp[fi_pairs$fiend[i] + 1]
 
 
                 current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
@@ -503,11 +503,11 @@ get_looks <- function(df,
               }
 
               if (i != lookaway_collection[[hn]]$init_fi) {
-                lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+                lookaway_collection[[hn]]$current_start_rts <- df$timestamp[fi_pairs$fistart[i]]
 
                 if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
                   current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
-                  lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+                  lookaway_collection[[hn]]$previous_end_rts <- df$timestamp[fi_pairs$fiend[i] + 1]
                 } else {
                   current_lookaway_stop_applied[[hn]] <- TRUE
                 }
@@ -534,7 +534,7 @@ get_looks <- function(df,
           if (!found_first_look) {
             first_look <- hn
             found_first_look <- TRUE
-            first_look_initial_timestamp <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+            first_look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
           }
 
 
@@ -544,7 +544,7 @@ get_looks <- function(df,
             first_looks_collection[[hn]]$found_first <- TRUE
             first_looks_collection[[hn]]$init_fi <- i
             first_looks_collection[[hn]]$last_fi <- i
-            first_looks_collection[[hn]]$first_look_initial_timestamp <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+            first_looks_collection[[hn]]$first_look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
           }
 
           if (
@@ -565,19 +565,19 @@ get_looks <- function(df,
               current_first_look_ending_reason[[hn]] <- "outside"
               first_looks_collection[[hn]]$forced_stop <- TRUE
               # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
-              current_first_look_duration[[hn]] <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1] - first_looks_collection[[hn]]$first_look_initial_timestamp
+              current_first_look_duration[[hn]] <- df$timestamp[fi_pairs$fiend[i] + 1] - first_looks_collection[[hn]]$first_look_initial_timestamp
             }
 
             # check if the time criterion is met within this fi and the next fi#
             if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
               (
-                df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
-                  df$RecordingTimestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
+                df$timestamp[fi_pairs$fistart[i + 1]] -
+                  df$timestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
             ) {
               current_first_look_ending_reason[[hn]] <- "timecriterion"
               first_looks_collection[[hn]]$forced_stop <- TRUE
               # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
-              current_first_look_duration[[hn]] <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1] - first_looks_collection[[hn]]$first_look_initial_timestamp
+              current_first_look_duration[[hn]] <- df$timestamp[fi_pairs$fiend[i] + 1] - first_looks_collection[[hn]]$first_look_initial_timestamp
             }
           }
 
@@ -591,8 +591,8 @@ get_looks <- function(df,
           ##################### LOOKAWAY
           if (!missing(lookaway_stop) && !current_lookaway_stop_applied[[hn]]) {
             if (!lookaway_collection[[hn]]$found_first_hn) {
-              lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
-              lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+              lookaway_collection[[hn]]$current_start_rts <- df$timestamp[fi_pairs$fistart[i]]
+              lookaway_collection[[hn]]$previous_end_rts <- df$timestamp[fi_pairs$fiend[i] + 1]
 
 
               current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
@@ -602,11 +602,11 @@ get_looks <- function(df,
             }
 
             if (i != lookaway_collection[[hn]]$init_fi) {
-              lookaway_collection[[hn]]$current_start_rts <- df$RecordingTimestamp[fi_pairs$fistart[i]]
+              lookaway_collection[[hn]]$current_start_rts <- df$timestamp[fi_pairs$fistart[i]]
 
               if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
                 current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
-                lookaway_collection[[hn]]$previous_end_rts <- df$RecordingTimestamp[fi_pairs$fiend[i] + 1]
+                lookaway_collection[[hn]]$previous_end_rts <- df$timestamp[fi_pairs$fiend[i] + 1]
               } else {
                 current_lookaway_stop_applied[[hn]] <- TRUE
               }

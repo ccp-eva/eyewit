@@ -114,11 +114,11 @@ fi_summary <- function(df,
           df[[current_colname]][which(df$FixationIndex == fi)] |>
           unique()
 
-        fi_df$FIrtsS[fi] <- df$RecordingTimestamp[which(df$FixationIndex == fi)] |> min()
-        fi_df$FIrtsE[fi] <- df$RecordingTimestamp[which(df$FixationIndex == fi)] |> max()
+        fi_df$FIrtsS[fi] <- df$timestamp[which(df$FixationIndex == fi)] |> min()
+        fi_df$FIrtsE[fi] <- df$timestamp[which(df$FixationIndex == fi)] |> max()
         # for end value use the i + 1 sample from the FIrtsE to get correct durations (compare with
         # ... GazeEventDuration column)
-        fi_df$FIrtsE1[fi] <- df$RecordingTimestamp[which(df$FixationIndex == fi) |> max() + 1]
+        fi_df$FIrtsE1[fi] <- df$timestamp[which(df$FixationIndex == fi) |> max() + 1]
         fi_df$FDur[fi] <- fi_df$FIrtsE1[fi] - fi_df$FIrtsS[fi]
 
 
@@ -221,9 +221,9 @@ fi_summary <- function(df,
       # create negative gaps. If that is the case we can assign 0, because there was litterally
       # no gap from the end of the fixation to the end of the trial
       fi_df$FGapDurTrlEnd[subset_end] <- ifelse(
-        df$RecordingTimestamp[current_trialrange_end] - fi_df$FIrtsE1[subset_end] < 0,
+        df$timestamp[current_trialrange_end] - fi_df$FIrtsE1[subset_end] < 0,
         0,
-        df$RecordingTimestamp[current_trialrange_end] - fi_df$FIrtsE1[subset_end]
+        df$timestamp[current_trialrange_end] - fi_df$FIrtsE1[subset_end]
       )
 
       # subset
@@ -258,8 +258,8 @@ fi_summary <- function(df,
     fi_df$TrlrnE <- trialrange$end[fi_df$TrlrnE]
 
     # Add trial recording timestamps for reference
-    fi_df <- tibble::add_column(fi_df, TrlrtsS = df$RecordingTimestamp[fi_df$TrlrnS], .after = "TrlrnE")
-    fi_df <- tibble::add_column(fi_df, TrlrtsE = df$RecordingTimestamp[fi_df$TrlrnE], .after = "TrlrtsS")
+    fi_df <- tibble::add_column(fi_df, TrlrtsS = df$timestamp[fi_df$TrlrnS], .after = "TrlrnE")
+    fi_df <- tibble::add_column(fi_df, TrlrtsE = df$timestamp[fi_df$TrlrnE], .after = "TrlrtsS")
   }
 
   return(fi_df)

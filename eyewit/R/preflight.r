@@ -12,12 +12,23 @@ preflight <- function(df, interface) {
   message("=====================   \U1F9FE  PREFLIGHT REPORT   =====================")
   message("====================================================================")
 
+  # rename df columns based on key names defined in vendor_lookup
+  names(df)[names(df) == vendor_lookup[[vendor]]$x] <- 'x'
+  names(df)[names(df) == vendor_lookup[[vendor]]$y] <- 'y'
+  names(df)[names(df) == vendor_lookup[[vendor]]$timestamp] <- 'timestamp'
+  message("   \U1F5FA  Renaming vendor-specific column names to eyewit generic names")
+
+
   # check if a mandatory columns is missing
   if (FALSE %in% (interface$mc %in% names(df))) {
     stop(paste('The following column(s) are missing:', readr::cols[which(readr::cols %in% names(df) == FALSE)]))
   }
-
   message("   \U1F4CA  All mandatory columns found")
+
+
+
+
+
 
 
   # create a lean df (only mandatory columns)
@@ -26,11 +37,9 @@ preflight <- function(df, interface) {
   message("   \U2696   Created a lean df")
 
 
-  # renaming x and y coords columns to x/y (tidyverse: df <- rename(df, x = GazePointXADCSpx))
-  names(df)[names(df) == interface$xy_columns$x] <- 'x'
-  names(df)[names(df) == interface$xy_columns$y] <- 'y'
 
-  message("   \U1F5FA  Renaming coordinate columns to x and y")
+
+
 
 
   # remove spaces, brackets, periods in column names
@@ -54,7 +63,7 @@ preflight <- function(df, interface) {
   message("   \U2694  No intersecting AOIs found")
 
   message("\n   Single Samples Summary (i.e., the difference in time between each sample (row):")
-  smmry <- df$RecordingTimestamp |> diff() |> summary()
+  smmry <- df$timestamp |> diff() |> summary()
   print(smmry)
   message(
     "   Overall Sampling Frequency\n",

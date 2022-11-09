@@ -1,8 +1,8 @@
 # check if the first fixation index started before the current_start and if intra_scope_cut is TRUE
 if (i == min_FixationIndex && which(df$FixationIndex == i)[1] < current_start && intra_scope_cut) {
   # get start and end milliseconds
-  start_ms <- df$RecordingTimestamp[current_start]
-  end_ms <- df$RecordingTimestamp[which(df$FixationIndex == i)][length(which(df$FixationIndex == i))]
+  start_ms <- df$timestamp[current_start]
+  end_ms <- df$timestamp[which(df$FixationIndex == i)][length(which(df$FixationIndex == i))]
 
   # set the difference of start_ms and end_ms to the current GazeEventDuration
   current_GazeEventDuration <- end_ms - start_ms
@@ -45,8 +45,8 @@ if (i == min_FixationIndex && which(df$FixationIndex == i)[1] < current_start &&
     # check if the time criterion is met within this fi and the next fi#
     if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
         (
-          df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
-          df$RecordingTimestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
+          df$timestamp[fi_pairs$fistart[i + 1]] -
+          df$timestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
     ) {
       current_first_look_ending_reason[[hn]] <- "timecriterion"
       first_looks_collection[[hn]]$forced_stop <- TRUE
@@ -60,8 +60,8 @@ if (i == min_FixationIndex && which(df$FixationIndex == i)[1] < current_start &&
 # check if the last fixation index continues after the current_end_pos and if markercut is TRUE
 if (i == max_FixationIndex && which(df$FixationIndex == i)[length(which(df$FixationIndex == i))] > current_end && intra_scope_cut) {
   # get start and end milliseconds
-  start_ms <- df$RecordingTimestamp[which(df$FixationIndex == i)][1]
-  end_ms <- df$RecordingTimestamp[current_end]
+  start_ms <- df$timestamp[which(df$FixationIndex == i)][1]
+  end_ms <- df$timestamp[current_end]
 
   # set the difference of start_ms and end_ms to the current GazeEventDuration
   current_GazeEventDuration <- end_ms - start_ms
@@ -104,8 +104,8 @@ if (i == max_FixationIndex && which(df$FixationIndex == i)[length(which(df$Fixat
     # check if the time criterion is met within this fi and the next fi#
     if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
         (
-          df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
-          df$RecordingTimestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
+          df$timestamp[fi_pairs$fistart[i + 1]] -
+          df$timestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
     ) {
       current_first_look_ending_reason[[hn]] <- "timecriterion"
       first_looks_collection[[hn]]$forced_stop <- TRUE
@@ -160,8 +160,8 @@ if (
   # check if the time criterion is met within this fi and the next fi#
   if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
       (
-        df$RecordingTimestamp[fi_pairs$fistart[i + 1]] -
-        df$RecordingTimestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
+        df$timestamp[fi_pairs$fistart[i + 1]] -
+        df$timestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
   ) {
     current_first_look_ending_reason[[hn]] <- "timecriterion"
     first_looks_collection[[hn]]$forced_stop <- TRUE
