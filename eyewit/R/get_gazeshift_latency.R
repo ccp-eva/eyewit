@@ -60,7 +60,7 @@ get_gazeshift_latency <- function(df, aoisets) {
       rownums_parent <- fi_pairs$fiend[latencies[[curr_colname]][[curr_hitname]]$fi_pairs[[1]]]
       rownums_successor <- fi_pairs$fistart[latencies[[curr_colname]][[curr_hitname]]$fi_pairs[[2]]]
 
-      # get RecordingTimestamp for rownums
+      # get timestamp for rownums
       recording_timestamp_parent <- df$timestamp[rownums_parent]
       recording_timestamp_successor <- df$timestamp[rownums_successor]
 
