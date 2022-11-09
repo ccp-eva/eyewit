@@ -45,8 +45,8 @@ interface <- list(
   mc =
     c(
       "timestamp",
-      "StudioEvent",
-      "StudioEventData",
+      "event",
+      "eventValue",
       "FixationIndex",
       "GazeEventDuration",
       "x",
