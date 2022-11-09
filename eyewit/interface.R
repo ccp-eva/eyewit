@@ -58,9 +58,12 @@ interface <- list(
   # ==================================================
 
   coi =
-    c("GazeEventType",
+    c(
+    	"participant",
+    	"GazeEventType",
       "LocalTimeStamp",
-      "StudioEventIndex"),
+      "StudioEventIndex"
+    ),
 
   # ==================================================
   # Helper list for condition mapping in df_subject

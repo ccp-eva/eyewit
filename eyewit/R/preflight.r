@@ -16,6 +16,7 @@ preflight <- function(df, interface) {
   names(df)[names(df) == vendor_lookup[[vendor]]$x] <- 'x'
   names(df)[names(df) == vendor_lookup[[vendor]]$y] <- 'y'
   names(df)[names(df) == vendor_lookup[[vendor]]$timestamp] <- 'timestamp'
+  names(df)[names(df) == vendor_lookup[[vendor]]$participant] <- 'participant'
   message("   \U1F5FA  Renaming vendor-specific column names to eyewit generic names")
 
 
