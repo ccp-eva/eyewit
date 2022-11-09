@@ -4,12 +4,6 @@ interface <- list(
   raw_dir = "./raw/",
   output_dir = "./preproc-tsv/",
 
-  # Define the initial column name for x/y coordinates you want to use
-  xy_columns = list(
-    x = "GazePointX (ADCSpx)",
-    y = "GazePointY (ADCSpx)"
-  ),
-
   # ==================================================
   # Define inter trial naming patterns
   # (for defining phases, trials, videos, etc)
@@ -50,25 +44,14 @@ interface <- list(
 
   mc =
     c(
-      "RecordingTimestamp",
+      "timestamp",
       "StudioEvent",
       "StudioEventData",
       "FixationIndex",
       "GazeEventDuration",
-      "GazePointX (ADCSpx)",
-      "GazePointY (ADCSpx)"
+      "x",
+      "y"
     ),
-
-  # Column Type definitions for parsing raw data correctly
-  mc_types = list(
-    RecordingTimestamp = readr::col_double(),
-    StudioEvent = readr::col_character(),
-    StudioEventData = readr::col_character(),
-    FixationIndex = readr::col_double(),
-    GazeEventDuration = readr::col_double(),
-    "GazePointX (ADCSpx)" = readr::col_double(),
-    "GazePointY (ADCSpx)" = readr::col_double()
-  ),
 
   # ==================================================
   # Columns of Interests (Add as many as you want)
