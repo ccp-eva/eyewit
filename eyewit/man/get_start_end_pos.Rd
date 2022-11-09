@@ -2,13 +2,13 @@
 % Please edit documentation in R/get_starend_pos.R
 \name{get_start_end_pos}
 \alias{get_start_end_pos}
-\title{Get startend Pos}
+\title{Get Start & End Positions}
 \usage{
 get_start_end_pos(
   df,
   regex_pattern,
-  StudioEvent_start = "MovieStart",
-  StudioEvent_end = "MovieEnd"
+  event_start = "MovieStart",
+  event_end = "MovieEnd"
 )
 }
 \arguments{
@@ -16,16 +16,16 @@ get_start_end_pos(
 
 \item{regex_pattern}{A regular expression.}
 
-\item{StudioEvent_start}{The name of the start marker (e.g. MovieStart).}
+\item{event_start}{The name of the start marker (e.g. MovieStart).}
 
-\item{StudioEvent_end}{The name of the end marker (MovieEnd)}
+\item{event_end}{The name of the end marker (MovieEnd)}
 }
 \value{
 Returns a named list of start and stop positions for a given regexp.
 }
 \description{
-Return a named list of start and stop positions for a given regular expression based on Tobii’s
-StudioEventData column, which contains start and end markers
+Return a named list of start and stop positions for a given regular expression based on
+event column, which contains start and end markers
 }
 \details{
 Note that the return pairs will be NOT BE shifted with +1 for Start Events or -1 for End Events

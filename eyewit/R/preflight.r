@@ -13,10 +13,12 @@ preflight <- function(df, interface) {
   message("====================================================================")
 
   # rename df columns based on key names defined in vendor_lookup
+  names(df)[names(df) == vendor_lookup[[vendor]]$participant] <- 'participant'
+  names(df)[names(df) == vendor_lookup[[vendor]]$timestamp] <- 'timestamp'
+  names(df)[names(df) == vendor_lookup[[vendor]]$event] <- 'event'
+  names(df)[names(df) == vendor_lookup[[vendor]]$eventValue] <- 'eventValue'
   names(df)[names(df) == vendor_lookup[[vendor]]$x] <- 'x'
   names(df)[names(df) == vendor_lookup[[vendor]]$y] <- 'y'
-  names(df)[names(df) == vendor_lookup[[vendor]]$timestamp] <- 'timestamp'
-  names(df)[names(df) == vendor_lookup[[vendor]]$participant] <- 'participant'
   message("   \U1F5FA  Renaming vendor-specific column names to eyewit generic names")
 
 

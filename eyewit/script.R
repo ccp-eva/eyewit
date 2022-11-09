@@ -51,16 +51,16 @@ for (subject in participants) {
   current_test_trials <- get_trial_count(c(startend_test_action, startend_test_outcome))
 
 
-  # Allocate Trials and Fillup StudioEventData Label
+  # Allocate Trials and fill-up eventValue
   df <- allocate_trials(df, c(startend_pretest_action, startend_pretest_outcome), 2)
   df <- allocate_trials(df, c(startend_test_action, startend_test_outcome), 2, reset_to_1 = TRUE)
 
   # track video names
-  names_test_action <- df$StudioEventData[startend_test_action$start] |>
+  names_test_action <- df$eventValue[startend_test_action$start] |>
     unique() |>
     as.character()
 
-  names_test_outcome <- df$StudioEventData[startend_test_outcome$start] |>
+  names_test_outcome <- df$eventValue[startend_test_outcome$start] |>
     unique() |>
     as.character()
 

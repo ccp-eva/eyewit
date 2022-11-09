@@ -4,13 +4,13 @@
 #' @param index_pairs index_pairs
 #' @param chunks_per_trial chunks_per_trial
 #' @param reset_to_1 reset_to_1
-#' @param fill_StudioEventData fill_StudioEventData
+#' @param fill_eventValue fill_eventValue
 #'
 #' @return None
 #' @export
 #'
 
-allocate_trials <- function(df, index_pairs, chunks_per_trial = 1, reset_to_1 = TRUE, fill_StudioEventData = TRUE) {
+allocate_trials <- function(df, index_pairs, chunks_per_trial = 1, reset_to_1 = TRUE, fill_eventValue = TRUE) {
 
   # Check if Trial column exists, if not create it
   if (!"Trial" %in% colnames(df)) {
@@ -60,9 +60,9 @@ allocate_trials <- function(df, index_pairs, chunks_per_trial = 1, reset_to_1 = 
     df$Trial[start_pos:end_pos] <- rep(trial_counter, length(start_pos:end_pos))
 
 
-    # Fill up StudioEventData
-    if (fill_StudioEventData) {
-      df$StudioEventData[start_pos:end_pos] <- df$StudioEventData[start_pos]
+    # Fill up eventValue
+    if (fill_eventValue) {
+      df$eventValue[start_pos:end_pos] <- df$eventValue[start_pos]
     }
   }
 

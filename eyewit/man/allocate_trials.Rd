@@ -9,7 +9,7 @@ allocate_trials(
   index_pairs,
   chunks_per_trial = 1,
   reset_to_1 = TRUE,
-  fill_StudioEventData = TRUE
+  fill_eventValue = TRUE
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ allocate_trials(
 
 \item{reset_to_1}{reset_to_1}
 
-\item{fill_StudioEventData}{fill_StudioEventData}
+\item{fill_eventValue}{fill_eventValue}
 }
 \value{
 None
