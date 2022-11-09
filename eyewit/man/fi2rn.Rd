@@ -25,21 +25,21 @@ function on your own. To access the content, you can call the \strong{variable}:
 }
 \examples{
 \dontrun{
-# Assume you have fixation indexes in a df with a column named FixationIndex
+# Assume you have fixation indexes in a df with a column named fi containing fixation indexes
 
 # returns all $fistart and $fiend row names and store it (this is what happens in preflight)
-fi2rn <- fi2rn(df$FixationIndex)
+fi2rn <- fi2rn(df$fi)
 
 # now call the variable because the function call is expensive
 
 # get the first row number of the first fixation index
-fi2rn(df$FixationIndex)$fistart[1]
+fi2rn(df$fi)$fistart[1]
 
 # get the last row number of the first fixation index
-fi2rn(df$FixationIndex)$fiend[1]
+fi2rn(df$fi)$fiend[1]
 
 # get the last row number of the 42. fixation index
-fi2rn(df$FixationIndex)$fiend[42]
+fi2rn(df$fi)$fiend[42]
 }
 }
 \seealso{

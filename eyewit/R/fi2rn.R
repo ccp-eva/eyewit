@@ -19,21 +19,21 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Assume you have fixation indexes in a df with a column named FixationIndex
+#' # Assume you have fixation indexes in a df with a column named fi containing fixation indexes
 #'
 #' # returns all $fistart and $fiend row names and store it (this is what happens in preflight)
-#' fi2rn <- fi2rn(df$FixationIndex)
+#' fi2rn <- fi2rn(df$fi)
 #'
 #' # now call the variable because the function call is expensive
 #'
 #' # get the first row number of the first fixation index
-#' fi2rn(df$FixationIndex)$fistart[1]
+#' fi2rn(df$fi)$fistart[1]
 #'
 #' # get the last row number of the first fixation index
-#' fi2rn(df$FixationIndex)$fiend[1]
+#' fi2rn(df$fi)$fiend[1]
 #'
 #' # get the last row number of the 42. fixation index
-#' fi2rn(df$FixationIndex)$fiend[42]
+#' fi2rn(df$fi)$fiend[42]
 #' }
 fi2rn <- function(fi_col) {
 
@@ -45,22 +45,22 @@ fi2rn <- function(fi_col) {
     ) & as.numeric(min(fi_col,na.rm = TRUE)) == 1
   )
 
-  fixationindex_start <- c()
-  fixationindex_end <- c()
+  fi_start <- c()
+  fi_end <- c()
 
-  # iterate over all fixationindexes
+  # iterate over all fi
   for (fi in unique(stats::na.omit(fi_col))) {
-    fixationindex_start <- c(fixationindex_start, min(which(fi_col == fi)))
-    fixationindex_end <- c(fixationindex_end, max(which(fi_col == fi)))
+    fi_start <- c(fi_start, min(which(fi_col == fi)))
+    fi_end <- c(fi_end, max(which(fi_col == fi)))
   }
 
   # guarantee same length
-  stopifnot(length(fixationindex_start) == length(fixationindex_end))
+  stopifnot(length(fi_start) == length(fi_end))
 
   return(
     list(
-      fistart = fixationindex_start,
-      fiend = fixationindex_end
+      fistart = fi_start,
+      fiend = fi_end
     )
   )
 

@@ -12,12 +12,23 @@ preflight <- function(df, interface) {
   message("=====================   \U1F9FE  PREFLIGHT REPORT   =====================")
   message("====================================================================")
 
+
+  # check if a FixationIndex is present in raw data (Tobii Studio had it, Tobii ProLab is missing that; yet, eyewit heavily relies on it)
+  # if not execute create_fi
+  if (!"FixationIndex" %in% names(df)) {
+  	cat("FixationIndex is missing")
+  	df <- create_fi(df, interface$type_col, interface$type_index_col)
+  }
+  message("   \U1F5FA  Found/Created FixationIndex")
+
+
   # rename df columns based on key names defined in vendor_lookup
   names(df)[names(df) == vendor_lookup[[vendor]]$participant] <- 'participant'
   names(df)[names(df) == vendor_lookup[[vendor]]$timestamp] <- 'timestamp'
   names(df)[names(df) == vendor_lookup[[vendor]]$event] <- 'event'
   names(df)[names(df) == vendor_lookup[[vendor]]$eventValue] <- 'eventValue'
   names(df)[names(df) == vendor_lookup[[vendor]]$gazeType] <- 'gazeType'
+  names(df)[names(df) == vendor_lookup[[vendor]]$fi] <- 'fi'
   names(df)[names(df) == vendor_lookup[[vendor]]$x] <- 'x'
   names(df)[names(df) == vendor_lookup[[vendor]]$y] <- 'y'
   message("   \U1F5FA  Renaming vendor-specific column names to eyewit generic names")
@@ -79,7 +90,7 @@ preflight <- function(df, interface) {
   message("--------------------------------------------------------------------")
 
   .eyewit_utils <- list(
-    fi2rn = fi2rn(df$FixationIndex)
+    fi2rn = fi2rn(df$fi)
   )
 
   return(df)

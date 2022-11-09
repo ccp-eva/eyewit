@@ -48,7 +48,7 @@ interface <- list(
       "event",
       "eventValue",
       "gazeType",
-      "FixationIndex",
+      "fi",
       "GazeEventDuration",
       "x",
       "y"
@@ -64,6 +64,14 @@ interface <- list(
       "LocalTimeStamp",
       "StudioEventIndex"
     ),
+
+  # ==================================================
+  # Only important for Tobii Pro Lab or raw data missing FixationIndex column
+  # ==================================================
+
+	type_col = "Eye movement type",
+	type_index_col = "Eye movement type index",
+
 
   # ==================================================
   # Helper list for condition mapping in df_subject

@@ -13,8 +13,8 @@
 get_gazeshift_latency <- function(df, aoisets) {
 
   # grab fixation index pairs
-  # ... to get the rownumber for a given FixationIndex, use: fipair$end[FixationIndex]
-  fi_pairs <- fi2rn(df$FixationIndex)
+  # ... to get the rownumber for a given fi, use: fipair$end[fi]
+  fi_pairs <- fi2rn(df$fi)
 
   # init named list
   latencies <- list(init = NULL)
@@ -30,13 +30,13 @@ get_gazeshift_latency <- function(df, aoisets) {
 
 
       fi_parents <- df %>%
-        dplyr::filter(!is.na(FixationIndex)) %>%
+        dplyr::filter(!is.na(fi)) %>%
         dplyr::filter(!!sym(curr_colname) == curr_hitname) %>%
         dplyr::mutate(
-          FixationDiff = c(diff(FixationIndex), NA)
+          FixationDiff = c(diff(fi), NA)
         ) %>%
         dplyr::filter(FixationDiff == 1) %>%
-        dplyr::pull(FixationIndex)
+        dplyr::pull(fi)
 
       # OUTSIDE CHECK
       # If there is an "outside" fixation/saccade between two consecutive fixations, it will skew

@@ -6,7 +6,7 @@
 # do not try to prevent that!
 # see: https://github.com/Kalaschnik/media/possible-overlapping-aoi-with-outside-label.png
 
-if (sum(hit_names %in% hit_names_in_FixationIndex, na.rm = TRUE) > 1) {
+if (sum(hit_names %in% hit_names_in_fi, na.rm = TRUE) > 1) {
 
   # log this index
   bad_fixation_indexes <- c(bad_fixation_indexes, i)

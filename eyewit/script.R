@@ -78,7 +78,7 @@ for (subject in participants) {
     get_aois(df$x, df$y, interface$aoisets$screen), .after = 3)
 
   # helper variable
-  fi_pairs <- fi2rn(df$FixationIndex)
+  fi_pairs <- fi2rn(df$fi)
   # Get inner AOI gaze shift latencies (used in get_looks implicitly for given)
   gazeshifts <- get_gazeshift_latency(df, interface$aoisets)
   # get detailed information about single fixation indexes (trial-scoped)

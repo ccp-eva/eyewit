@@ -160,13 +160,13 @@ get_looks <- function(df,
     current_start <- scope$start[seq]
     current_end <- scope$end[seq]
 
-    # get all FixationIndexes in current trial
-    inter_trial_FixationIndexes <- df$FixationIndex[current_start:current_end]
+    # get all fis in current trial
+    inter_trial_fis <- df$fi[current_start:current_end]
 
 
     # Filter out all NAs within the current trial and check if there are still...
     # ... valid fixations left. If not, skip current trial/scope
-    if (length(stats::na.omit(inter_trial_FixationIndexes)) == 0) {
+    if (length(stats::na.omit(inter_trial_fis)) == 0) {
       # Append 0 to looking_times, looking_frequencies, gaze_shifts, and NA to FirstLook in the current trial and skip to next
       for (hn in hit_names) {
         looking_times[[hn]] <- c(looking_times[[hn]], 0)
@@ -255,21 +255,21 @@ get_looks <- function(df,
     }
 
 
-    # get first and last FixationIndex (remove NAs), which define the boundaries of a single trial
-    min_FixationIndex <- min(inter_trial_FixationIndexes, na.rm = TRUE)
-    max_FixationIndex <- max(inter_trial_FixationIndexes, na.rm = TRUE)
+    # get first and last fi (remove NAs), which define the boundaries of a single trial
+    min_fi <- min(inter_trial_fis, na.rm = TRUE)
+    max_fi <- max(inter_trial_fis, na.rm = TRUE)
 
 
     # operate WITHIN the current fixation pair (i.e., within a trial)
-    for (i in min_FixationIndex:max_FixationIndex) {
+    for (i in min_fi:max_fi) {
 
       # get all hit names within current fixation index
-      hit_names_in_FixationIndex <- df[[column_name]][which(df$FixationIndex == i)]
+      hit_names_in_fi <- df[[column_name]][which(df$fi == i)]
 
       # check if multiple hit names are in current fixation index (implicitly applies to hit_names w/ length > 1 only)
       # see reference for the check below: (https://stackoverflow.com/a/2191824/2258480)
       # This should not happen because we have a preflight check for overlapping AOIs, yet this might should stay in anyway
-      if (sum(hit_names %in% hit_names_in_FixationIndex, na.rm = TRUE) > 1) {
+      if (sum(hit_names %in% hit_names_in_fi, na.rm = TRUE) > 1) {
 
         # log this index
         bad_fixation_indexes <- c(bad_fixation_indexes, i)
@@ -286,9 +286,9 @@ get_looks <- function(df,
 
       # ----- Looking frequency (Looks), Gaze Shifts, Last Hit Name -----
       # Check if there is a defined hit_name within all the hit_names of the current fixation index
-      if (TRUE %in% (hit_names %in% hit_names_in_FixationIndex)) {
+      if (TRUE %in% (hit_names %in% hit_names_in_fi)) {
         # get the current hit_name within the current fixation index
-        hn_in_current_FI <- hit_names[hit_names %in% hit_names_in_FixationIndex]
+        hn_in_current_FI <- hit_names[hit_names %in% hit_names_in_fi]
         # Looking frequency will disregard repeated looks within the same fixation index or if last hit_name has never been set (i.e., ""), which happens when i = 1
         if ((last_hit_name != "") && (last_hit_name != hn_in_current_FI)) {
           current_trial_total_looks[[hn_in_current_FI]] <- current_trial_total_looks[[hn_in_current_FI]] + 1
@@ -309,7 +309,7 @@ get_looks <- function(df,
         last_hit_name <- hn_in_current_FI
 
         # check for FALSE within the fixation (i.e., subject was not looking at active AOIs), and track it
-      } else if (outside_aoi_label %in% hit_names_in_FixationIndex) {
+      } else if (outside_aoi_label %in% hit_names_in_fi) {
         # update the last_hit_name with FALSE as there was subject were not looking at active AOIs
         last_hit_name <- outside_aoi_label
       }
@@ -317,14 +317,14 @@ get_looks <- function(df,
       # iterate over hit names
       for (hn in hit_names) {
 
-        # check if current hit_name (hn) is within hit_names_in_FixationIndex, if not check the next hn
-        if (hn %in% hit_names_in_FixationIndex) {
+        # check if current hit_name (hn) is within hit_names_in_fi, if not check the next hn
+        if (hn %in% hit_names_in_fi) {
 
           # check if the first fixation index started before the current_start and if intra_scope_cut is TRUE
-          if (i == min_FixationIndex && which(df$FixationIndex == i)[1] < current_start && intra_scope_cut) {
+          if (i == min_fi && which(df$fi == i)[1] < current_start && intra_scope_cut) {
             # get start and end milliseconds
             start_ms <- df$timestamp[current_start]
-            end_ms <- df$timestamp[which(df$FixationIndex == i)][length(which(df$FixationIndex == i))]
+            end_ms <- df$timestamp[which(df$fi == i)][length(which(df$fi == i))]
 
             # set the difference of start_ms and end_ms to the current GazeEventDuration
             current_GazeEventDuration <- end_ms - start_ms
@@ -360,7 +360,7 @@ get_looks <- function(df,
               first_looks_collection[[hn]]$last_fi <- i
 
               # check if outside label is between this fi and the next fi
-              if (i < max(df$FixationIndex, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
+              if (i < max(df$fi, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
                 # outside fixation or saccade after last fi
                 current_first_look_ending_reason[[hn]] <- "outside"
                 first_looks_collection[[hn]]$forced_stop <- TRUE
@@ -369,7 +369,7 @@ get_looks <- function(df,
               }
 
               # check if the time criterion is met within this fi and the next fi#
-              if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
+              if (i < max(df$fi, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
                 (
                   df$timestamp[fi_pairs$fistart[i + 1]] -
                     df$timestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
@@ -425,9 +425,9 @@ get_looks <- function(df,
           }
 
           # check if the last fixation index continues after the current_end_pos and if markercut is TRUE
-          if (i == max_FixationIndex && which(df$FixationIndex == i)[length(which(df$FixationIndex == i))] > current_end && intra_scope_cut) {
+          if (i == max_fi && which(df$fi == i)[length(which(df$fi == i))] > current_end && intra_scope_cut) {
             # get start and end milliseconds
-            start_ms <- df$timestamp[which(df$FixationIndex == i)][1]
+            start_ms <- df$timestamp[which(df$fi == i)][1]
             end_ms <- df$timestamp[current_end]
 
             # set the difference of start_ms and end_ms to the current GazeEventDuration
@@ -464,7 +464,7 @@ get_looks <- function(df,
               first_looks_collection[[hn]]$last_fi <- i
 
               # check if outside label is between this fi and the next fi
-              if (i < max(df$FixationIndex, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
+              if (i < max(df$fi, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
                 # outside fixation or saccade after last fi
                 current_first_look_ending_reason[[hn]] <- "outside"
                 first_looks_collection[[hn]]$forced_stop <- TRUE
@@ -473,7 +473,7 @@ get_looks <- function(df,
               }
 
               # check if the time criterion is met within this fi and the next fi#
-              if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
+              if (i < max(df$fi, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
                 (
                   df$timestamp[fi_pairs$fistart[i + 1]] -
                     df$timestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
@@ -525,7 +525,7 @@ get_looks <- function(df,
 
           # continue, if intra_scope_cut is FALSE or the current index is not min/max of the current fixation index
           # Grab the current GazeEventDuration chunk and select the first value
-          current_GazeEventDuration <- df$GazeEventDuration[which(df$FixationIndex == i)][1]
+          current_GazeEventDuration <- df$GazeEventDuration[which(df$fi == i)][1]
 
           # Add it to the total
           current_trial_total_duration[[hn]] <- current_trial_total_duration[[hn]] + current_GazeEventDuration
@@ -560,7 +560,7 @@ get_looks <- function(df,
             first_looks_collection[[hn]]$last_fi <- i
 
             # check if outside label is between this fi and the next fi
-            if (i < max(df$FixationIndex, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
+            if (i < max(df$fi, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
               # outside fixation or saccade after last fi
               current_first_look_ending_reason[[hn]] <- "outside"
               first_looks_collection[[hn]]$forced_stop <- TRUE
@@ -569,7 +569,7 @@ get_looks <- function(df,
             }
 
             # check if the time criterion is met within this fi and the next fi#
-            if (i < max(df$FixationIndex, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
+            if (i < max(df$fi, na.rm = TRUE) && !first_looks_collection[[hn]]$forced_stop && !missing(first_look_emergency_cutoff) &&
               (
                 df$timestamp[fi_pairs$fistart[i + 1]] -
                   df$timestamp[fi_pairs$fiend[i] + 1]) >= first_look_emergency_cutoff
@@ -612,9 +612,9 @@ get_looks <- function(df,
               }
             }
           }
-        } # end of if (hn %in% hit_names_in_FixationIndex)
+        } # end of if (hn %in% hit_names_in_fi)
       } # end of for (hn in hit_names)
-    } # end of for (i in min_FixationIndex:max_FixationIndex)
+    } # end of for (i in min_fi:max_fi)
 
 
     # Append it to the Trial Lists

@@ -19,10 +19,10 @@ get_trimmed_fixation_durations <- function(df, trialrange) {
   leading_durations <- NA
   trailing_durations <- NA
 
-  if (df$FixationIndex[trialrange$start] |> is.na() |> any()) {
+  if (df$fi[trialrange$start] |> is.na() |> any()) {
     # get indexes, fixation indexes, and relative position of leading fixations before trial started
-    leading_fi_positions <- which(!is.na(df$FixationIndex[trialrange$start]))
-    leading_fi <- df$FixationIndex[trialrange$start] |> stats::na.omit() |> as.vector()
+    leading_fi_positions <- which(!is.na(df$fi[trialrange$start]))
+    leading_fi <- df$fi[trialrange$start] |> stats::na.omit() |> as.vector()
     leading_i <- trialrange$start[leading_fi_positions]
 
     # get true starting timestamp
@@ -35,16 +35,16 @@ get_trimmed_fixation_durations <- function(df, trialrange) {
 
 
     # create output vetor
-    leading_durations <- df$FixationIndex[trialrange$start]
+    leading_durations <- df$fi[trialrange$start]
     # overwrite positions which are not NA with the new leading durations (NA means no change)
-    leading_durations[which(!is.na(df$FixationIndex[trialrange$start]))] <- adj_leading_durations
+    leading_durations[which(!is.na(df$fi[trialrange$start]))] <- adj_leading_durations
   }
 
 
   # same for trailing indexes
-  if (df$FixationIndex[trialrange$end] |> is.na() |> any()) {
-    trailing_fi_positions <- which(!is.na(df$FixationIndex[trialrange$end]))
-    trailing_fi <- df$FixationIndex[trialrange$end] |> stats::na.omit() |> as.vector()
+  if (df$fi[trialrange$end] |> is.na() |> any()) {
+    trailing_fi_positions <- which(!is.na(df$fi[trialrange$end]))
+    trailing_fi <- df$fi[trialrange$end] |> stats::na.omit() |> as.vector()
     trailing_i <- trialrange$end[trailing_fi_positions]
 
     adj_end_timestamp <- df$timestamp[trailing_i] # sitting on the marker is good
@@ -56,9 +56,9 @@ get_trimmed_fixation_durations <- function(df, trialrange) {
 
 
     # create output vetor
-    trailing_durations <- df$FixationIndex[trialrange$end]
+    trailing_durations <- df$fi[trialrange$end]
     # overwrite positions which are not NA with the new trailing durations (NA means no change)
-    trailing_durations[which(!is.na(df$FixationIndex[trialrange$end]))] <- adj_trailing_durations
+    trailing_durations[which(!is.na(df$fi[trialrange$end]))] <- adj_trailing_durations
   }
 
   return(

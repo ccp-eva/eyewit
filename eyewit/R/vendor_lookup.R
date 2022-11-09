@@ -7,8 +7,6 @@ vendor_lookup <- list(
 		timestamp = "RecordingTimestamp",							# 11, 28, 45 (equidistant values, sound never contain NA)
 		event = "StudioEvent",												# MovieStart, MovieEnd, NA, ... (Markers)
 		eventValue = "StudioEventData",								# 2_b_d2.mp4 (stimuli being displayed)
-		stimulusName = NULL,
-		mediaName = NULL,
 		gazeType = "GazeEventType",										# Unclassified, Fixation, Saccade, ...
 		fi = "FixationIndex",													# 1, 2, 3, NA, 4, 5 ...
 		gazeDuration = "GazeEventDuration",						# 167, 50, 83, NA
@@ -24,10 +22,8 @@ vendor_lookup <- list(
 		timestamp = "Recording timestamp",						# 79057, 79057, ...
 		event = "Event",															# VideoStimulusStart, VideoStimulusEnd, NA, Keyboard, MouseEvent,
 		eventValue = "Event value",										# ImageStimulusStart -> ball_center, Keyboard -> Space, MouseEvent -> Up, Left
-		stimulusName = "Presented Stimulus name",			# ball_center
-		mediaName = "Presented Media name",						# ball_center.jpg
 		gazeType = "Eye movement type",								# Fixation, Saccade, Unclassified, NA, EyesNotFound
-		fi = "eye movement type index",								# Fixation -> 82, 83, Saccade -> 104, Fixation 84 ...
+		fi = "FixationIndex",													# Got fixed with create_fi
 		gazeDuration = "Gaze event duration",					# 168, 842, ...
 		x = "Gaze point X",														# 800, 742, ... Raw gaze coordinates
 		fix = "Fixation point X",											# 803, 740, ...Horizontal coordinate of the avg gaze point for both eyes

@@ -111,14 +111,14 @@ fi_summary <- function(df,
       for (fi in seq.int(nrow(fi_df))) {
 
         current_hitnames[[fi]] <-
-          df[[current_colname]][which(df$FixationIndex == fi)] |>
+          df[[current_colname]][which(df$fi == fi)] |>
           unique()
 
-        fi_df$FIrtsS[fi] <- df$timestamp[which(df$FixationIndex == fi)] |> min()
-        fi_df$FIrtsE[fi] <- df$timestamp[which(df$FixationIndex == fi)] |> max()
+        fi_df$FIrtsS[fi] <- df$timestamp[which(df$fi == fi)] |> min()
+        fi_df$FIrtsE[fi] <- df$timestamp[which(df$fi == fi)] |> max()
         # for end value use the i + 1 sample from the FIrtsE to get correct durations (compare with
         # ... GazeEventDuration column)
-        fi_df$FIrtsE1[fi] <- df$timestamp[which(df$FixationIndex == fi) |> max() + 1]
+        fi_df$FIrtsE1[fi] <- df$timestamp[which(df$fi == fi) |> max() + 1]
         fi_df$FDur[fi] <- fi_df$FIrtsE1[fi] - fi_df$FIrtsS[fi]
 
 
@@ -133,7 +133,7 @@ fi_summary <- function(df,
         # ... two trials in one fixation index. If that is the case the smaller trial number
         # check if current fi has only NAs in Trials, if so assign NA
         na_trial <-
-          df$Trial[which(df$FixationIndex == fi)] |> # get all trials matchinung the current fi
+          df$Trial[which(df$fi == fi)] |> # get all trials matchinung the current fi
           unique() |> # reduce them to unique values (e.g., NA, 1) or (NA) or (1)
           is.na() |> # check for NA, yields to either (TRUE, FALSE) or (TRUE), (FALSE)
           all() # Check if multiple booleans are all TRUE, this is helpful for the case (TRUE,FALSE)
@@ -142,7 +142,7 @@ fi_summary <- function(df,
           next
         }
 
-        fi_df$Trial[fi] <- df$Trial[which(df$FixationIndex == fi)] |> min(na.rm = TRUE)
+        fi_df$Trial[fi] <- df$Trial[which(df$fi == fi)] |> min(na.rm = TRUE)
       }
 
 
