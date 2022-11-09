@@ -16,7 +16,7 @@ preflight <- function(df, interface) {
   # check if a FixationIndex is present in raw data (Tobii Studio had it, Tobii ProLab is missing that; yet, eyewit heavily relies on it)
   # if not execute create_fi
   if (!"FixationIndex" %in% names(df)) {
-  	cat("FixationIndex is missing")
+  	cat("\tFixationIndex is missing\n")
   	df <- create_fi(df, interface$type_col, interface$type_index_col)
   }
   message("   \U1F5FA  Found/Created FixationIndex")

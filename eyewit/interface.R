@@ -60,9 +60,7 @@ interface <- list(
 
   coi =
     c(
-    	"participant",
-      "LocalTimeStamp",
-      "StudioEventIndex"
+    	# "participant"
     ),
 
   # ==================================================
