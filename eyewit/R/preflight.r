@@ -29,6 +29,7 @@ preflight <- function(df, interface) {
   names(df)[names(df) == vendor_lookup[[vendor]]$eventValue] <- 'eventValue'
   names(df)[names(df) == vendor_lookup[[vendor]]$gazeType] <- 'gazeType'
   names(df)[names(df) == vendor_lookup[[vendor]]$fi] <- 'fi'
+  names(df)[names(df) == vendor_lookup[[vendor]]$gazeDuration] <- 'gazeDuration'
   names(df)[names(df) == vendor_lookup[[vendor]]$x] <- 'x'
   names(df)[names(df) == vendor_lookup[[vendor]]$y] <- 'y'
   message("   \U1F5FA  Renaming vendor-specific column names to eyewit generic names")

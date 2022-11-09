@@ -326,10 +326,10 @@ get_looks <- function(df,
             start_ms <- df$timestamp[current_start]
             end_ms <- df$timestamp[which(df$fi == i)][length(which(df$fi == i))]
 
-            # set the difference of start_ms and end_ms to the current GazeEventDuration
-            current_GazeEventDuration <- end_ms - start_ms
+            # set the difference of start_ms and end_ms to the current gazeDuration
+            current_gazeDuration <- end_ms - start_ms
             # Add it to the total
-            current_trial_total_duration[[hn]] <- current_trial_total_duration[[hn]] + current_GazeEventDuration
+            current_trial_total_duration[[hn]] <- current_trial_total_duration[[hn]] + current_gazeDuration
 
             # set first_look if flag is not set
             if (!found_first_look) {
@@ -356,7 +356,7 @@ get_looks <- function(df,
                     first_looks_collection[[hn]]$last_fi == i - 1
                 )
             ) {
-              current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_GazeEventDuration
+              current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_gazeDuration
               first_looks_collection[[hn]]$last_fi <- i
 
               # check if outside label is between this fi and the next fi
@@ -393,7 +393,7 @@ get_looks <- function(df,
                 lookaway_collection[[hn]]$previous_end_rts <- df$timestamp[fi_pairs$fiend[i] + 1]
 
 
-                current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+                current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_gazeDuration
 
                 lookaway_collection[[hn]]$found_first_hn <- TRUE
                 lookaway_collection[[hn]]$init_fi <- i
@@ -403,7 +403,7 @@ get_looks <- function(df,
                 lookaway_collection[[hn]]$current_start_rts <- df$timestamp[fi_pairs$fistart[i]]
 
                 if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
-                  current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+                  current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_gazeDuration
                   lookaway_collection[[hn]]$previous_end_rts <- df$timestamp[fi_pairs$fiend[i] + 1]
                 } else {
                   current_lookaway_stop_applied[[hn]] <- TRUE
@@ -430,10 +430,10 @@ get_looks <- function(df,
             start_ms <- df$timestamp[which(df$fi == i)][1]
             end_ms <- df$timestamp[current_end]
 
-            # set the difference of start_ms and end_ms to the current GazeEventDuration
-            current_GazeEventDuration <- end_ms - start_ms
+            # set the difference of start_ms and end_ms to the current gazeDuration
+            current_gazeDuration <- end_ms - start_ms
             # Add it to the total
-            current_trial_total_duration[[hn]] <- current_trial_total_duration[[hn]] + current_GazeEventDuration
+            current_trial_total_duration[[hn]] <- current_trial_total_duration[[hn]] + current_gazeDuration
 
             # set first_look if flag is not set
             if (!found_first_look) {
@@ -460,7 +460,7 @@ get_looks <- function(df,
                     first_looks_collection[[hn]]$last_fi == i - 1
                 )
             ) {
-              current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_GazeEventDuration
+              current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_gazeDuration
               first_looks_collection[[hn]]$last_fi <- i
 
               # check if outside label is between this fi and the next fi
@@ -496,7 +496,7 @@ get_looks <- function(df,
                 lookaway_collection[[hn]]$previous_end_rts <- df$timestamp[fi_pairs$fiend[i] + 1]
 
 
-                current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+                current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_gazeDuration
 
                 lookaway_collection[[hn]]$found_first_hn <- TRUE
                 lookaway_collection[[hn]]$init_fi <- i
@@ -506,7 +506,7 @@ get_looks <- function(df,
                 lookaway_collection[[hn]]$current_start_rts <- df$timestamp[fi_pairs$fistart[i]]
 
                 if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
-                  current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+                  current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_gazeDuration
                   lookaway_collection[[hn]]$previous_end_rts <- df$timestamp[fi_pairs$fiend[i] + 1]
                 } else {
                   current_lookaway_stop_applied[[hn]] <- TRUE
@@ -524,11 +524,11 @@ get_looks <- function(df,
           }
 
           # continue, if intra_scope_cut is FALSE or the current index is not min/max of the current fixation index
-          # Grab the current GazeEventDuration chunk and select the first value
-          current_GazeEventDuration <- df$GazeEventDuration[which(df$fi == i)][1]
+          # Grab the current gazeDuration chunk and select the first value
+          current_gazeDuration <- df$gazeDuration[which(df$fi == i)][1]
 
           # Add it to the total
-          current_trial_total_duration[[hn]] <- current_trial_total_duration[[hn]] + current_GazeEventDuration
+          current_trial_total_duration[[hn]] <- current_trial_total_duration[[hn]] + current_gazeDuration
 
           # set first_look if flag is not set
           if (!found_first_look) {
@@ -556,7 +556,7 @@ get_looks <- function(df,
                   first_looks_collection[[hn]]$last_fi == i - 1
               )
           ) {
-            current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_GazeEventDuration
+            current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_gazeDuration
             first_looks_collection[[hn]]$last_fi <- i
 
             # check if outside label is between this fi and the next fi
@@ -595,7 +595,7 @@ get_looks <- function(df,
               lookaway_collection[[hn]]$previous_end_rts <- df$timestamp[fi_pairs$fiend[i] + 1]
 
 
-              current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+              current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_gazeDuration
 
               lookaway_collection[[hn]]$found_first_hn <- TRUE
               lookaway_collection[[hn]]$init_fi <- i
@@ -605,7 +605,7 @@ get_looks <- function(df,
               lookaway_collection[[hn]]$current_start_rts <- df$timestamp[fi_pairs$fistart[i]]
 
               if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
-                current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_GazeEventDuration
+                current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_gazeDuration
                 lookaway_collection[[hn]]$previous_end_rts <- df$timestamp[fi_pairs$fiend[i] + 1]
               } else {
                 current_lookaway_stop_applied[[hn]] <- TRUE

@@ -117,7 +117,7 @@ fi_summary <- function(df,
         fi_df$FIrtsS[fi] <- df$timestamp[which(df$fi == fi)] |> min()
         fi_df$FIrtsE[fi] <- df$timestamp[which(df$fi == fi)] |> max()
         # for end value use the i + 1 sample from the FIrtsE to get correct durations (compare with
-        # ... GazeEventDuration column)
+        # ... gazeDuration column)
         fi_df$FIrtsE1[fi] <- df$timestamp[which(df$fi == fi) |> max() + 1]
         fi_df$FDur[fi] <- fi_df$FIrtsE1[fi] - fi_df$FIrtsS[fi]
 

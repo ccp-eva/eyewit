@@ -49,7 +49,7 @@ interface <- list(
       "eventValue",
       "gazeType",
       "fi",
-      "GazeEventDuration",
+      "gazeDuration",
       "x",
       "y"
     ),
