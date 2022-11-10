@@ -108,7 +108,6 @@ for (subject in participants) {
   df_subject$FamObj <- value_parser_by_key(interface$keys_fam, names_fam)$obj_id
   df_subject$FamObjPos_Fam <- value_parser_by_key(interface$keys_fam, names_fam)$position_obj
   df_subject$TrialRun <- value_parser_by_key(interface$keys_fam, names_fam)$running_trial
-  df_subject$TrialCon <- value_parser_by_key(interface$keys_fam, names_fam)$running_trial
 
   df_subject$TrialCon <- c(
   	rep(1, current_test_trials / 4),
