@@ -23,7 +23,7 @@ for (subject in participants) {
   print(subject)
 
   # remove later
-  # subject <- participants[1]
+  # subject <- participants[37]
 
   # read tsv files
   df_raw <- readr::read_tsv(file.path(interface$raw_dir, subject), col_types = readr::cols())
@@ -32,50 +32,49 @@ for (subject in participants) {
   df <- preflight(df_raw, interface)
 
   # get start and end index pairs for inter_trial chunks
-  startend_pretest_action <- get_start_end_pos(df, interface$inter_trial_chunk_patterns[1])
-  startend_pretest_outcome <- get_start_end_pos(df, interface$inter_trial_chunk_patterns[2])
-  startend_test_action <- get_start_end_pos(df, interface$inter_trial_chunk_patterns[3])
-  startend_test_outcome <- get_start_end_pos(df, interface$inter_trial_chunk_patterns[4])
+  startend_fam <- get_start_end_pos(df, interface$inter_trial_chunk_patterns[1], "VideoStimulusStart", "VideoStimulusEnd")
+  startend_preflook <- get_start_end_pos(df, interface$inter_trial_chunk_patterns[2], "VideoStimulusStart", "VideoStimulusEnd")
 
-  # test if subject has consistent start/end indexes and get check trial count to match 2 & 12
-  if (
-    get_trial_count(c(startend_pretest_action, startend_pretest_outcome)) != 2 &&
-      get_trial_count(c(startend_test_action, startend_test_outcome)) != 12
-  ) {
+  # test if subject has consistent start/end indexes and get check trial count to match 16
+  if (get_trial_count(c(startend_fam, startend_preflook)) != 16) {
     incomplete_subjets <- c(incomplete_subjets, subject)
     stop("Bad Trial count")
   }
 
   # track current trials
-  current_pretest_trials <- get_trial_count(c(startend_pretest_action, startend_pretest_outcome))
-  current_test_trials <- get_trial_count(c(startend_test_action, startend_test_outcome))
+  current_test_trials <- get_trial_count(c(startend_fam, startend_preflook))
 
 
   # Allocate Trials and fill-up eventValue
-  df <- allocate_trials(df, c(startend_pretest_action, startend_pretest_outcome), 2)
-  df <- allocate_trials(df, c(startend_test_action, startend_test_outcome), 2, reset_to_1 = TRUE)
+  df <- allocate_trials(df, c(startend_fam, startend_preflook), 2)
 
   # track video names
-  names_test_action <- df$eventValue[startend_test_action$start] |>
+  names_fam <- df$eventValue[startend_fam$start] |>
     unique() |>
     as.character()
 
-  names_test_outcome <- df$eventValue[startend_test_outcome$start] |>
+  names_preflook <- df$eventValue[startend_preflook$start] |>
     unique() |>
     as.character()
 
   # Insert AOI Columns
-  df <- tibble::add_column(df, "{interface$aoisets$actionphasebody$column_name}" :=
-    get_aois(df$x, df$y, interface$aoisets$actionphasebody, startend_test_action), .before = 1)
+  df <- tibble::add_column(df, "{interface$aoisets$aoifamphase_obj_r_prox$column_name}" :=
+    get_aois(df$x, df$y, interface$aoisets$aoifamphase_obj_r_prox, startend_fam), .before = 1)
 
-  df <- tibble::add_column(df, "{interface$aoisets$actionphaseface$column_name}" :=
-    get_aois(df$x, df$y, interface$aoisets$actionphaseface, startend_test_action), .after = 1)
+  df <- tibble::add_column(df, "{interface$aoisets$aoifamphase_obj_r_nprox$column_name}" :=
+    get_aois(df$x, df$y, interface$aoisets$aoifamphase_obj_r_nprox, startend_fam), .after = 1)
 
-  df <- tibble::add_column(df, "{interface$aoisets$outcomephase$column_name}" :=
-    get_aois(df$x, df$y, interface$aoisets$outcomephase, startend_test_outcome), .after = 2)
+  df <- tibble::add_column(df, "{interface$aoisets$aoifamphase_obj_l_prox$column_name}" :=
+    get_aois(df$x, df$y, interface$aoisets$aoifamphase_obj_l_prox, startend_fam), .after = 2)
+
+  df <- tibble::add_column(df, "{interface$aoisets$aoifamphase_obj_l_nprox$column_name}" :=
+    get_aois(df$x, df$y, interface$aoisets$aoifamphase_obj_l_nprox, startend_fam), .after = 3)
+
+  df <- tibble::add_column(df, "{interface$aoisets$preflook$column_name}" :=
+		get_aois(df$x, df$y, interface$aoisets$preflook, startend_preflook), .after = 4)
 
   df <- tibble::add_column(df, "{interface$aoisets$screen$column_name}" :=
-    get_aois(df$x, df$y, interface$aoisets$screen), .after = 3)
+		get_aois(df$x, df$y, interface$aoisets$screen), .after = 5)
 
   # helper variable
   fi_pairs <- fi2rn(df$fi)
@@ -102,225 +101,191 @@ for (subject in participants) {
   df_subject$Rec <- value_parser_by_key(interface$keys_filename, subject)$rec
 
 
-  df_subject$TestPhase <- value_parser_by_key(interface$keys_videoname, names_test_outcome)$test_phase
-  df_subject$ConSoc <- value_parser_by_key(interface$keys_videoname, names_test_outcome)$con_soc
-  df_subject$ConOut <- value_parser_by_key(interface$keys_videoname, names_test_outcome)$con_object_change
+  df_subject$ConEye <- value_parser_by_key(interface$keys_fam, names_fam)$con_eye
+  df_subject$ConProx <- value_parser_by_key(interface$keys_fam, names_fam)$con_proximity
+  df_subject$Condition <- value_parser_by_key(interface$keys_fam, names_fam)$condition
+  df_subject$ObjActor <- value_parser_by_key(interface$keys_fam, names_fam)$obj_handling_actor
+  df_subject$FamObj <- value_parser_by_key(interface$keys_fam, names_fam)$obj_id
+  df_subject$FamObjPos_Fam <- value_parser_by_key(interface$keys_fam, names_fam)$position_obj
+  df_subject$TrialRun <- value_parser_by_key(interface$keys_fam, names_fam)$running_trial
+  df_subject$TrialCon <- value_parser_by_key(interface$keys_fam, names_fam)$running_trial
 
-  # helper for Condition column
-  soc_out_vec <- vector(mode = "integer", length = current_test_trials)
-  for (ci in 1:current_test_trials) {
-    soc_out_vec[ci] <- interface$condition_soc_out_mapping[[paste0(df_subject$ConSoc[ci], df_subject$ConOut[ci])]]
-  }
-  df_subject$Condition <- soc_out_vec
-
-  df_subject$Dyad <- value_parser_by_key(interface$keys_videoname, names_test_outcome)$dyad
-  df_subject$Object <- value_parser_by_key(interface$keys_videoname, names_test_outcome, trim_right = 4)$object_id
-  df_subject$ObjectPos <- value_parser_by_key(interface$keys_videoname, names_test_outcome, trim_right = 4)$object_position
-  df_subject$ObjectPosAct <- value_parser_by_key(interface$keys_videoname, names_test_action, trim_right = 4)$object_position
-
-  df_subject$TrialRun <- 1:current_test_trials
-  df_subject$TrialCon <- c(rep(1, current_test_trials / 2), rep(2, current_test_trials / 2))
-
-
-  df_subject$OutcomeDuration <-
-    df$timestamp[startend_test_outcome$end] - df$timestamp[startend_test_outcome$start + 1]
-
-  df_subject$TwoSecCheck <- get_looks(
-    df = df,
-    aoi_collection = interface$aoisets$screen,
-    scope = startend_test_outcome,
-    intra_scope_window = c(120, "end"),
-    lookaway_stop = 2000, TRUE)$lookaway_collection$onscreen$lookaway_stop_applied
+  df_subject$TrialCon <- c(
+  	rep(1, current_test_trials / 4),
+  	rep(2, current_test_trials / 4),
+  	rep(3, current_test_trials / 4),
+  	rep(4, current_test_trials / 4)
+  )
 
   # ------------------------------------------------------------------------------------------------
-  # Looking Times - OUTCOME
+  # Looking Times - Preflook
   # ------------------------------------------------------------------------------------------------
 
-  df_subject$TotalLTScreenOut <-
-    get_looks(df, interface$aoisets$screen, startend_test_outcome, c(120, "end"), omit_first_overflow_fi = TRUE)$looking_times
+  df_subject$TotalLTScreenPreflook <-
+    get_looks(df, interface$aoisets$screen, startend_preflook, omit_first_overflow_fi = TRUE)$looking_times
+
+  df_subject$PrefLook_LT_Obj_Left <-
+  	get_looks(df, interface$aoisets$preflook, startend_preflook, omit_first_overflow_fi = TRUE)$looking_times$left
+
+  df_subject$PrefLook_LT_Obj_Right <-
+  	get_looks(df, interface$aoisets$preflook, startend_preflook, omit_first_overflow_fi = TRUE)$looking_times$right
+
+  df_subject$PrefLook_LT_Obj_Total <- df_subject$PrefLook_LT_Obj_Left + df_subject$PrefLook_LT_Obj_Right
 
 
-  df_subject$TotalLTObjectOut <- dplyr::if_else(
-    df_subject$ObjectPos == "OBEN",
-    get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), omit_first_overflow_fi = TRUE)$looking_times$top,
-    get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), omit_first_overflow_fi = TRUE)$looking_times$bottom
-  )
+	df_subject$PrefLook_Obj_Fam <- df_subject$FamObj
+	df_subject$PrefLook_Obj_Fam_Pos <- get_preflook_pos(names_preflook, strsplit(names_fam, "_"))$fam_pos
 
-  df_subject$LTScreenOut <-
-    get_looks(
-      df = df,
-      aoi_collection = interface$aoisets$screen,
-      scope = startend_test_outcome,
-      intra_scope_window = c(120, "end"),
-      lookaway_stop = 2000,
-      omit_first_overflow_fi = TRUE)$lookaway_collection$onscreen$durations
+	df_subject$PrefLook_Obj_Nov_Pos <- dplyr::if_else(
+		df_subject$PrefLook_Obj_Fam_Pos == "left", "right", "left"
+	)
 
-  df_subject$LTObjectOut <- dplyr::if_else(
-    df_subject$ObjectPos == "OBEN",
-    get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), 2000, TRUE)$lookaway_collection$top$durations,
-    get_looks(df, interface$aoisets$outcomephase, startend_test_outcome, c(120, "end"), 2000, TRUE)$lookaway_collection$bottom$durations
-  )
+	df_subject$PrefLook_LT_Obj_Fam <- dplyr::if_else(
+		df_subject$PrefLook_Obj_Fam_Pos == "left", df_subject$PrefLook_LT_Obj_Left, df_subject$PrefLook_LT_Obj_Right
+	)
 
-  df_subject$FirstLookDurationObjectOutTop <-
-    get_looks(
-      df = df,
-      aoi_collection = interface$aoisets$outcomephase,
-      scope = startend_test_outcome,
-      intra_scope_window = c(120, "end"),
-      omit_first_overflow_fi = TRUE,
-      first_look_emergency_cutoff =
-        round(
-          median(gazeshifts$AOIOutcomePhase$top$latencies) +
-          3 * sd(gazeshifts$AOIOutcomePhase$top$latencies)
-        )
-      )$first_looks_collection$top$durations
+	df_subject$PrefLook_LT_Obj_Nov <- dplyr::if_else(
+		df_subject$PrefLook_Obj_Nov_Pos == "left", df_subject$PrefLook_LT_Obj_Left, df_subject$PrefLook_LT_Obj_Right
+	)
 
-  df_subject$FirstLookDurationObjectOutBottom <-
-    get_looks(
-      df = df,
-      aoi_collection = interface$aoisets$outcomephase,
-      scope = startend_test_outcome,
-      intra_scope_window = c(120, "end"),
-      omit_first_overflow_fi = TRUE,
-      first_look_emergency_cutoff =
-        round(
-          median(gazeshifts$AOIOutcomePhase$bottom$latencies) +
-            3 * sd(gazeshifts$AOIOutcomePhase$bottom$latencies)
-        )
-    )$first_looks_collection$bottom$durations
-
-  df_subject$FirstLookDurationObjectOut <- dplyr::if_else(
-    df_subject$ObjectPos == "OBEN",
-    df_subject$FirstLookDurationObjectOutTop,
-    df_subject$FirstLookDurationObjectOutBottom
-  )
-
-  df_subject$FirstLookDurationObjectOutTopReason <-
-    get_looks(
-      df = df,
-      aoi_collection = interface$aoisets$outcomephase,
-      scope = startend_test_outcome,
-      intra_scope_window = c(120, "end"),
-      omit_first_overflow_fi = TRUE,
-      first_look_emergency_cutoff =
-        round(
-          median(gazeshifts$AOIOutcomePhase$top$latencies) +
-            3 * sd(gazeshifts$AOIOutcomePhase$top$latencies)
-        )
-    )$first_looks_collection$top$ending_reason
-
-  df_subject$FirstLookDurationObjectOutBottomReason <-
-    get_looks(
-      df = df,
-      aoi_collection = interface$aoisets$outcomephase,
-      scope = startend_test_outcome,
-      intra_scope_window = c(120, "end"),
-      omit_first_overflow_fi = TRUE,
-      first_look_emergency_cutoff =
-        round(
-          median(gazeshifts$AOIOutcomePhase$top$latencies) +
-            3 * sd(gazeshifts$AOIOutcomePhase$top$latencies)
-        )
-    )$first_looks_collection$bottom$ending_reason
-
-  df_subject$FirstLookDurationObjectOutReason <- dplyr::if_else(
-    df_subject$ObjectPos == "OBEN",
-    df_subject$FirstLookDurationObjectOutTopReason,
-    df_subject$FirstLookDurationObjectOutBottomReason
-  )
-
-  df_subject$FirstLookDurationScreen <-
-    get_looks(
-      df = df,
-      aoi_collection = interface$aoisets$screen,
-      scope = startend_test_outcome,
-      intra_scope_window = c(120, "end"),
-      omit_first_overflow_fi = TRUE,
-      first_look_emergency_cutoff =
-        round(
-          median(gazeshifts$AOIScreen$onscreen$latencies) +
-            3 * sd(gazeshifts$AOIScreen$onscreen$latencies)
-        )
-    )$first_looks_collection$onscreen$durations
+	df_subject$PrefLook_PropScore <- df_subject$PrefLook_LT_Obj_Nov / df_subject$PrefLook_LT_Obj_Total
 
   # ------------------------------------------------------------------------------------------------
-  # Looking Times - ACTION
+  # Looking Times - Familiarization
   # ------------------------------------------------------------------------------------------------
 
-  df_subject$TotalLTScreenAct <-
-    get_looks(df, interface$aoisets$screen, startend_test_action, c(3201, 18200), omit_first_overflow_fi = TRUE)$looking_times
+  df_subject$TotalLTScreenFam <-
+    get_looks(df, interface$aoisets$screen, startend_fam, omit_first_overflow_fi = TRUE)$looking_times
 
-  df_subject$TotalLTObjectAct <- dplyr::if_else(
-    df_subject$ObjectPos == "OBEN",
-    get_looks(df, interface$aoisets$actionphasebody, startend_test_action, c(3201, 18200), omit_first_overflow_fi = TRUE)$looking_times$top,
-    get_looks(df, interface$aoisets$actionphasebody, startend_test_action, c(3201, 18200), omit_first_overflow_fi = TRUE)$looking_times$bottom
-  )
 
-  df_subject$TotalLTActorLeftAct <-
-    get_looks(df, interface$aoisets$actionphasebody, startend_test_action, c(3201, 18200), omit_first_overflow_fi = TRUE)$looking_times$left
+	df_subject$TotalLTFaceLeftFam <- NA
+	df_subject$TotalLTFaceRightFam <- NA
 
-  df_subject$TotalLTActorRightAct <-
-    get_looks(df, interface$aoisets$actionphasebody, startend_test_action, c(3201, 18200), omit_first_overflow_fi = TRUE)$looking_times$right
+	# Fill-up TotalLTFaceLeftFam & TotalLTFaceRighFam based on right/left and prox/nprox
+	for (trial in seq.int(current_test_trials)) {
 
-  df_subject$TotalLTActorSumAct <- df_subject$TotalLTActorLeftAct + df_subject$TotalLTActorRightAct
+		if (df_subject$ConProx[trial] == "nprox" && df_subject$FamObjPos_Fam[trial] == "right") {
+			df_subject$TotalLTFaceLeftFam[trial] <-
+				get_looks(df, interface$aoisets$aoifamphase_obj_r_nprox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_left[trial]
+		}
 
-  df_subject$TotalLTFaceLeftAct <-
-    get_looks(df, interface$aoisets$actionphaseface, startend_test_action, c(3201, 18200), omit_first_overflow_fi = TRUE)$looking_times$left
+		if (df_subject$ConProx[trial] == "nprox" && df_subject$FamObjPos_Fam[trial] == "left") {
+			df_subject$TotalLTFaceLeftFam[trial] <-
+				get_looks(df, interface$aoisets$aoifamphase_obj_l_nprox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_left[trial]
+		}
 
-  df_subject$TotalLTFaceRightAct <-
-    get_looks(df, interface$aoisets$actionphaseface, startend_test_action, c(3201, 18200), omit_first_overflow_fi = TRUE)$looking_times$right
+		if (df_subject$ConProx[trial] == "prox" && df_subject$FamObjPos_Fam[trial] == "right") {
+			df_subject$TotalLTFaceLeftFam[trial] <-
+				get_looks(df, interface$aoisets$aoifamphase_obj_r_prox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_left[trial]
+		}
 
-  df_subject$TotalLTFaceSumAct <- df_subject$TotalLTFaceLeftAct + df_subject$TotalLTFaceRightAct
+		if (df_subject$ConProx[trial] == "prox" && df_subject$FamObjPos_Fam[trial] == "left") {
+			df_subject$TotalLTFaceLeftFam[trial] <-
+				get_looks(df, interface$aoisets$aoifamphase_obj_l_prox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_left[trial]
+		}
+
+		if (df_subject$ConProx[trial] == "nprox" && df_subject$FamObjPos_Fam[trial] == "right") {
+			df_subject$TotalLTFaceRightFam[trial] <-
+				get_looks(df, interface$aoisets$aoifamphase_obj_r_nprox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_right[trial]
+		}
+
+		if (df_subject$ConProx[trial] == "nprox" && df_subject$FamObjPos_Fam[trial] == "left") {
+			df_subject$TotalLTFaceRightFam[trial] <-
+				get_looks(df, interface$aoisets$aoifamphase_obj_l_nprox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_right[trial]
+		}
+
+		if (df_subject$ConProx[trial] == "prox" && df_subject$FamObjPos_Fam[trial] == "right") {
+			df_subject$TotalLTFaceRightFam[trial] <-
+				get_looks(df, interface$aoisets$aoifamphase_obj_r_prox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_right[trial]
+		}
+
+		if (df_subject$ConProx[trial] == "prox" && df_subject$FamObjPos_Fam[trial] == "left") {
+			df_subject$TotalLTFaceRightFam[trial] <-
+				get_looks(df, interface$aoisets$aoifamphase_obj_l_prox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_right[trial]
+		}
+	}
+
+	# Object Looking Times in Fam
+	df_subject$TotalLTObjFamLeft <-
+		get_looks(df, interface$aoisets$aoifamphase_obj_l_prox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$object_left
+
+	df_subject$TotalLTObjFamRight <-
+		get_looks(df, interface$aoisets$aoifamphase_obj_r_prox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$object_right
+
+	df_subject$TotalLTObjFam <- if_else(
+		df_subject$FamObjPos_Fam == "left", df_subject$TotalLTObjFamLeft, df_subject$TotalLTObjFamRight
+	)
 
   # ------------------------------------------------------------------------------------------------
   # Looking Times - INCLUSION ACTION
   # ------------------------------------------------------------------------------------------------
 
-  df_subject$LTScreenAct_5to6 <-
-    get_looks(df, interface$aoisets$screen, startend_test_action, c(5201, 6200), omit_first_overflow_fi = TRUE)$looking_times
+  df_subject$LTScreenFam_0to1 <-
+  	get_looks(df, interface$aoisets$screen, startend_fam, c(0, 1000), omit_first_overflow_fi = TRUE)$looking_times
 
-  df_subject$LTScreenAct_7to8 <-
-    get_looks(df, interface$aoisets$screen, startend_test_action, c(7201, 8200), omit_first_overflow_fi = TRUE)$looking_times
+  df_subject$LTScreenFam_1to2 <-
+  	get_looks(df, interface$aoisets$screen, startend_fam, c(1001, 2000), omit_first_overflow_fi = TRUE)$looking_times
 
-  df_subject$LTScreenAct_9to10 <-
-    get_looks(df, interface$aoisets$screen, startend_test_action, c(9201, 10200), omit_first_overflow_fi = TRUE)$looking_times
+  df_subject$LTScreenFam_2to3 <-
+  	get_looks(df, interface$aoisets$screen, startend_fam, c(2001, 3000), omit_first_overflow_fi = TRUE)$looking_times
 
-  df_subject$LTScreenAct_11to12 <-
-    get_looks(df, interface$aoisets$screen, startend_test_action, c(11201, 12200), omit_first_overflow_fi = TRUE)$looking_times
+  df_subject$LTScreenFam_3to4 <-
+  	get_looks(df, interface$aoisets$screen, startend_fam, c(3001, 4000), omit_first_overflow_fi = TRUE)$looking_times
 
-  df_subject$LTScreenAct_13to14 <-
-    get_looks(df, interface$aoisets$screen, startend_test_action, c(13201, 14200), omit_first_overflow_fi = TRUE)$looking_times
+  df_subject$LTScreenFam_4to5 <-
+  	get_looks(df, interface$aoisets$screen, startend_fam, c(4001, 5000), omit_first_overflow_fi = TRUE)$looking_times
 
-  df_subject$LTScreenAct_15to16 <-
-    get_looks(df, interface$aoisets$screen, startend_test_action, c(15201, 16200), omit_first_overflow_fi = TRUE)$looking_times
+  df_subject$LTScreenFam_5to6 <-
+  	get_looks(df, interface$aoisets$screen, startend_fam, c(5001, 6000), omit_first_overflow_fi = TRUE)$looking_times
 
-  df_subject$InterPhaseCheckerSoc <-
-    dplyr::if_else(
-      df_subject$LTScreenAct_5to6 > 0 |
-      df_subject$LTScreenAct_9to10 > 0 |
-      df_subject$LTScreenAct_13to14 > 0,
-      TRUE, FALSE
-    )
+  df_subject$LTScreenFam_6to7 <-
+  	get_looks(df, interface$aoisets$screen, startend_fam, c(6001, 7000), omit_first_overflow_fi = TRUE)$looking_times
 
-  df_subject$InterPhaseCheckerGazing <-
-    dplyr::if_else(
-      df_subject$LTScreenAct_7to8 > 0 |
-        df_subject$LTScreenAct_11to12 > 0 |
-        df_subject$LTScreenAct_15to16 > 0,
-      TRUE, FALSE
-    )
+  df_subject$LTScreenFam_7to8 <-
+  	get_looks(df, interface$aoisets$screen, startend_fam, c(7001, 8000), omit_first_overflow_fi = TRUE)$looking_times
 
-  df_subject$InterPhaseCheckerValid <- df_subject$InterPhaseCheckerSoc & df_subject$InterPhaseCheckerGazing
+  df_subject$LTScreenFam_8to9 <-
+  	get_looks(df, interface$aoisets$screen, startend_fam, c(8001, 9000), omit_first_overflow_fi = TRUE)$looking_times
+
+  df_subject$LTScreenFam_9to10 <-
+  	get_looks(df, interface$aoisets$screen, startend_fam, c(9001, 10000), omit_first_overflow_fi = TRUE)$looking_times
+
+  df_subject$LTScreenFam_10to11 <-
+  	get_looks(df, interface$aoisets$screen, startend_fam, c(10001, 11000), omit_first_overflow_fi = TRUE)$looking_times
+
+
+
+
+
+
+
+#   df_subject$InterPhaseCheckerSoc <-
+#     dplyr::if_else(
+#       df_subject$LTScreenAct_5to6 > 0 |
+#       df_subject$LTScreenAct_9to10 > 0 |
+#       df_subject$LTScreenAct_13to14 > 0,
+#       TRUE, FALSE
+#     )
+#
+#   df_subject$InterPhaseCheckerGazing <-
+#     dplyr::if_else(
+#       df_subject$LTScreenAct_7to8 > 0 |
+#         df_subject$LTScreenAct_11to12 > 0 |
+#         df_subject$LTScreenAct_15to16 > 0,
+#       TRUE, FALSE
+#     )
+#
+#   df_subject$InterPhaseCheckerValid <- df_subject$InterPhaseCheckerSoc & df_subject$InterPhaseCheckerGazing
 
   # write tables for individual participants
   # replace with readr functions ones this is clear: https://github.com/tidyverse/readr/issues/1388
-  write.table(df_subject, paste0(interface$output_dir, subject), sep = '\t', row.names = FALSE)
+  # write.table(df_subject, paste0(interface$output_dir, subject), sep = '\t', row.names = FALSE)
 }
 
 # Read in tsv files from pre-processing folder
-tsv_files <- list.files(interface$output_dir, full.names = TRUE)
+# tsv_files <- list.files(interface$output_dir, full.names = TRUE)
 
-# Creating data frame
-overall.data <- tsv_files %>%
-  map(read_tsv) %>%    # read in all the files individually, using the function read_tsv() from the readr package
-  reduce(rbind)        # reduce with rbind into one dataframe
+# # Creating data frame
+# overall.data <- tsv_files %>%
+#   map(read_tsv) %>%    # read in all the files individually, using the function read_tsv() from the readr package
+#   reduce(rbind)        # reduce with rbind into one dataframe

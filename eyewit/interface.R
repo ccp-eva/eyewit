@@ -9,10 +9,8 @@ interface <- list(
   # (for defining phases, trials, videos, etc)
   # ==================================================
   inter_trial_chunk_patterns = c(
-    ".*a_THIRD-PRETEST.*",
-    ".*b_THIRD-PRETEST.*",
-    ".*a_THIRD-TEST.*",
-    ".*b_THIRD-TEST.*"
+    ".*_f_.*",
+    ".*_p_.*"
   ),
 
   # ========================================================
@@ -20,20 +18,31 @@ interface <- list(
   # ========================================================
 
   # FILENAME OF THE RECORDING / RAW DATA
-  #                "MEMOThird_01_M_293_Rec01_Exp3.tsv"
+  #                "REJOINT_01_M_293_Rec01_Exp3.tsv"
   keys_filename = c("study_name", "id", "sex", "age_days", "rec", "experiment"),
+
   # FILENAME OF THE VIDEOS
-  # 2_b_THIRD-PRETEST_D1_NCOM_NO_OBEN_OBJ-18
-  # 10_a_THIRD-TEST_D1_COM_LOCATION_OBEN_OBJ-5.wmv
-  keys_videoname = c(
-    "running_trial",
-    "phase",
-    "test_phase",
-    "dyad",
-    "con_soc",
-    "con_object_change",
-    "object_position",
-    "object_id"
+  # 1_f_4_eye_nprox_B_right_1a.mp4
+  keys_fam = c(
+    "running_trial", # 1 - 16
+    "phase", # a = familiarization; b = preflook
+    "condition", # 1 - 4
+    "con_eye", # eye or neye
+    "con_proximity", # prox or nprox
+    "obj_handling_actor", # A or B
+    "position_obj", # equals to the postion of the object-handling actor
+    "obj_id"
+  ),
+
+  # 1_p_4_eye_nprox_1a_1b.mp4
+  keys_preflook = c(
+  	"running_trial", # 1 - 16
+  	"phase", # a = familiarization; b = preflook
+  	"condition", # 1 - 4
+  	"con_eye", # eye or neye
+  	"con_proximity", # prox or nprox
+  	"obj_id_left",
+  	"obj_id_right"
   ),
 
 
@@ -72,131 +81,165 @@ interface <- list(
 
 
   # ==================================================
-  # Helper list for condition mapping in df_subject
-  # ==================================================
-  condition_soc_out_mapping = list(
-    COMNO = 1,
-    COMIDENTITY = 2,
-    COMLOCATION = 3,
-    NCOMNO = 4,
-    NCOMIDENTITY = 5,
-    NCOMLOCATION = 6
-  ),
-
-  # ==================================================
   # Define AOI sets
   # ==================================================
 
   aoisets = list(
-    actionphasebody = list(
-      column_name = "AOIActionPhaseBody",
+    aoifamphase_obj_r_prox = list(
+      column_name = "aoifamphase_obj_r_prox",
+      no_evaluation_label = "NO EVAL",
+      missing_coordinate_label = "noXY",
+      outside_aoi_label = "outside",
+      aoilist = list(
+        aoi1 = list(
+          hit_name = "face_left",
+          x_topleft = 922,
+          y_topleft = 65,
+          x_bottomright = 1278,
+          y_bottomright = 485
+        ),
+        aoi2 = list(
+          hit_name = "face_right",
+          x_topleft = 1362,
+          y_topleft = 65,
+          x_bottomright = 1718,
+          y_bottomright = 485
+        ),
+        aoi3 = list(
+          hit_name = "object_right",
+          x_topleft = 1415,
+          y_topleft = 745,
+          x_bottomright = 1655,
+          y_bottomright = 985
+        )
+      )
+    ),
+
+    aoifamphase_obj_r_nprox = list(
+    	column_name = "aoifamphase_obj_r_nprox",
+    	no_evaluation_label = "NO EVAL",
+    	missing_coordinate_label = "noXY",
+    	outside_aoi_label = "outside",
+    	aoilist = list(
+    		aoi1 = list(
+    			hit_name = "face_left",
+    			x_topleft = 242,
+    			y_topleft = 65,
+    			x_bottomright = 598,
+    			y_bottomright = 485
+    		),
+    		aoi2 = list(
+    			hit_name = "face_right",
+    			x_topleft = 1362,
+    			y_topleft = 65,
+    			x_bottomright = 1718,
+    			y_bottomright = 485
+    		),
+    		aoi3 = list(
+    			hit_name = "object_right",
+    			x_topleft = 1415,
+    			y_topleft = 745,
+    			x_bottomright = 1655,
+    			y_bottomright = 985
+    		)
+    	)
+    ),
+
+    aoifamphase_obj_l_prox = list(
+    	column_name = "aoifamphase_obj_l_prox",
+    	no_evaluation_label = "NO EVAL",
+    	missing_coordinate_label = "noXY",
+    	outside_aoi_label = "outside",
+    	aoilist = list(
+    		aoi1 = list(
+    			hit_name = "face_left",
+    			x_topleft = 242,
+    			y_topleft = 65,
+    			x_bottomright = 598,
+    			y_bottomright = 485
+    		),
+    		aoi2 = list(
+    			hit_name = "face_right",
+    			x_topleft = 682,
+    			y_topleft = 65,
+    			x_bottomright = 858,
+    			y_bottomright = 485
+    		),
+    		aoi3 = list(
+    			hit_name = "object_left",
+    			x_topleft = 265,
+    			y_topleft = 745,
+    			x_bottomright = 505,
+    			y_bottomright = 985
+    		)
+    	)
+    ),
+
+    aoifamphase_obj_l_nprox = list(
+    	column_name = "aoifamphase_obj_l_nprox",
+    	no_evaluation_label = "NO EVAL",
+    	missing_coordinate_label = "noXY",
+    	outside_aoi_label = "outside",
+    	aoilist = list(
+    		aoi1 = list(
+    			hit_name = "face_left",
+    			x_topleft = 242,
+    			y_topleft = 65,
+    			x_bottomright = 598,
+    			y_bottomright = 485
+    		),
+    		aoi2 = list(
+    			hit_name = "face_right",
+    			x_topleft = 1362,
+    			y_topleft = 65,
+    			x_bottomright = 1718,
+    			y_bottomright = 485
+    		),
+    		aoi3 = list(
+    			hit_name = "object_left",
+    			x_topleft = 265,
+    			y_topleft = 745,
+    			x_bottomright = 505,
+    			y_bottomright = 985
+    		)
+    	)
+    ),
+
+    preflook = list(
+      column_name = "aoiPrefLook",
       no_evaluation_label = "NO EVAL",
       missing_coordinate_label = "noXY",
       outside_aoi_label = "outside",
       aoilist = list(
         aoi1 = list(
           hit_name = "left",
-          x_topleft = 60,
-          y_topleft = 290,
-          x_bottomright = 690,
-          y_bottomright = 1130
+          x_topleft = 225,
+          y_topleft = 380,
+          x_bottomright = 545,
+          y_bottomright = 700
         ),
         aoi2 = list(
           hit_name = "right",
-          x_topleft = 1225,
-          y_topleft = 290,
-          x_bottomright = 1855,
-          y_bottomright = 1130
-        ),
-        aoi3 = list(
-          hit_name = "top",
-          x_topleft = 790,
-          y_topleft = 10,
-          x_bottomright = 1130,
-          y_bottomright = 350
-        ),
-        aoi4 = list(
-          hit_name = "bottom",
-          x_topleft = 790,
-          y_topleft = 730,
-          x_bottomright = 1130,
-          y_bottomright = 1070
-        )
-      )
-    ),
-
-    actionphaseface = list(
-      column_name = "AOIActionPhaseFace",
-      no_evaluation_label = "NO EVAL",
-      missing_coordinate_label = "noXY",
-      outside_aoi_label = "outside",
-      aoilist = list(
-        aoi1 = list(
-          hit_name = "left",
-          x_topleft = 170,
-          y_topleft = 290,
-          x_bottomright = 650,
-          y_bottomright = 770
-        ),
-        aoi2 = list(
-          hit_name = "right",
-          x_topleft = 1310,
-          y_topleft = 290,
-          x_bottomright = 1790,
-          y_bottomright = 770
-        ),
-        aoi3 = list(
-          hit_name = "top",
-          x_topleft = 790,
-          y_topleft = 10,
-          x_bottomright = 1130,
-          y_bottomright = 350
-        ),
-        aoi4 = list(
-          hit_name = "bottom",
-          x_topleft = 790,
-          y_topleft = 730,
-          x_bottomright = 1130,
-          y_bottomright = 1070
-        )
-      )
-    ),
-
-    outcomephase = list(
-      column_name = "AOIOutcomePhase",
-      no_evaluation_label = "NO EVAL",
-      missing_coordinate_label = "noXY",
-      outside_aoi_label = "outside",
-      aoilist = list(
-        aoi1 = list(
-          hit_name = "top",
-          x_topleft = 790,
-          y_topleft = 10,
-          x_bottomright = 1130,
-          y_bottomright = 350
-        ),
-        aoi2 = list(
-          hit_name = "bottom",
-          x_topleft = 790,
-          y_topleft = 730,
-          x_bottomright = 1130,
-          y_bottomright = 1070
+          x_topleft = 1375,
+          y_topleft = 380,
+          x_bottomright = 1695,
+          y_bottomright = 700
         )
       )
     ),
 
     screen = list(
-      column_name = "AOIScreen",
+      column_name = "aoiScreen",
       no_evaluation_label = "NO EVAL",
       missing_coordinate_label = "noXY",
       outside_aoi_label = "outside",
       aoilist = list(
         aoi1 = list(
           hit_name = "onscreen",
-          x_topleft = -40,
-          y_topleft = -40,
-          x_bottomright = 1960,
-          y_bottomright = 1120
+          x_topleft = 0 - 40,
+          y_topleft = 0 - 40,
+          x_bottomright = 1920 + 40,
+          y_bottomright = 1080 + 40
         )
       )
     )

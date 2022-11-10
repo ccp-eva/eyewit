@@ -42,7 +42,11 @@ preflight <- function(df, interface) {
   message("   \U1F4CA  All mandatory columns found")
 
 
-
+  # check if timestamps are in microseconds (i.e., distance from one sample to another is great 1000)
+  # ... divide timestamps by 1000
+  if (df$timestamp |> diff() |> stats::median() > 2000) {
+    df$timestamp <- floor(df$timestamp / 1000)
+  }
 
 
 

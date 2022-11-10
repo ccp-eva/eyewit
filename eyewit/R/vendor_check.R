@@ -8,7 +8,7 @@
 vendor_check <- function(df) {
 	p_color <- crayon::make_style("white")
 	p_weight <- crayon::make_style("bold")
-	p_bg <- crayon::make_style(rgb(0, 0.42, 0.40), bg = TRUE)
+	p_bg <- crayon::make_style(grDevices::rgb(0, 0.42, 0.40), bg = TRUE)
 	p_h1 <- crayon::combine_styles(p_color, p_weight, p_bg)
 	p_text <- crayon::combine_styles(p_color, p_bg)
 	cat(p_h1("\tVendor/Software: "))
