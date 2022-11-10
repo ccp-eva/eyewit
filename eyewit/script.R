@@ -212,7 +212,7 @@ for (subject in participants) {
 	df_subject$TotalLTObjFamRight <-
 		get_looks(df, interface$aoisets$aoifamphase_obj_r_prox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$object_right
 
-	df_subject$TotalLTObjFam <- if_else(
+	df_subject$TotalLTObjFam <- dplyr::if_else(
 		df_subject$FamObjPos_Fam == "left", df_subject$TotalLTObjFamLeft, df_subject$TotalLTObjFamRight
 	)
 
