@@ -14,25 +14,24 @@ preflight <- function(df, interface) {
 
 
   # check if a FixationIndex is present in raw data (Tobii Studio had it, Tobii ProLab is missing that; yet, eyewit heavily relies on it)
-  # if not execute create_fi
+  # if not execute create_fi to create an fi column
   if (!"FixationIndex" %in% names(df)) {
   	cat("\tFixationIndex is missing\n")
   	df <- create_fi(df, interface$type_col, interface$type_index_col)
   }
   message("   \U1F5FA  Found/Created FixationIndex")
 
-
   # rename df columns based on key names defined in vendor_lookup
-  names(df)[names(df) == vendor_lookup[[vendor]]$participant] <- 'participant'
-  names(df)[names(df) == vendor_lookup[[vendor]]$timestamp] <- 'timestamp'
-  names(df)[names(df) == vendor_lookup[[vendor]]$event] <- 'event'
-  names(df)[names(df) == vendor_lookup[[vendor]]$eventValue] <- 'eventValue'
-  names(df)[names(df) == vendor_lookup[[vendor]]$gazeType] <- 'gazeType'
-  names(df)[names(df) == vendor_lookup[[vendor]]$fi] <- 'fi'
-  names(df)[names(df) == vendor_lookup[[vendor]]$gazeDuration] <- 'gazeDuration'
-  names(df)[names(df) == vendor_lookup[[vendor]]$x] <- 'x'
-  names(df)[names(df) == vendor_lookup[[vendor]]$y] <- 'y'
+  names(df)[names(df) == names(vendor_lookup[[vendor]]$participant)] <- 'participant'
+  names(df)[names(df) == names(vendor_lookup[[vendor]]$timestamp)] <- 'timestamp'
+  names(df)[names(df) == names(vendor_lookup[[vendor]]$event)] <- 'event'
+  names(df)[names(df) == names(vendor_lookup[[vendor]]$eventValue)] <- 'eventValue'
+  names(df)[names(df) == names(vendor_lookup[[vendor]]$gazeType)] <- 'gazeType'
+  names(df)[names(df) == names(vendor_lookup[[vendor]]$gazeDuration)] <- 'gazeDuration'
+  names(df)[names(df) == names(vendor_lookup[[vendor]]$x)] <- 'x'
+  names(df)[names(df) == names(vendor_lookup[[vendor]]$y)] <- 'y'
   message("   \U1F5FA  Renaming vendor-specific column names to eyewit generic names")
+
 
 
   # check if a mandatory columns is missing

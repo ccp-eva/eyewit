@@ -12,7 +12,8 @@ participants <- list.files(interface$raw_dir)
 
 # take a random sample from raw folder to determine vendor labels, and only read headers
 sample <- readr::read_tsv(file.path(interface$raw_dir, sample(participants, 1)), col_types = readr::cols(), n_max = 0)
-(vendor <- vendor_check(sample))
+vendor <- vendor_check(sample)$vendor
+types <- vendor_check(sample)$types
 
 # incomplete subjects (i.e., not having 2 pretest & 12 test trials)
 incomplete_subjets <- c()
@@ -23,10 +24,10 @@ for (subject in participants) {
   print(subject)
 
   # remove later
-  # subject <- participants[37]
+  # subject <- participants[4]
 
   # read tsv files
-  df_raw <- readr::read_tsv(file.path(interface$raw_dir, subject), col_types = readr::cols())
+  df_raw <- readr::read_tsv(file.path(interface$raw_dir, subject), col_types = types)
 
   # run preflight checks & diagnostics, returns a lean df
   df <- preflight(df_raw, interface)

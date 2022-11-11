@@ -22,7 +22,7 @@ create_fi <- function(df, type_col, type_index_col) {
 		return(df)
 	}
 
-	df$FixationIndex <- ifelse(df[[type_col]] == "Fixation", df[[type_index_col]], NA)
+	df$fi <- ifelse(df[[type_col]] == "Fixation", df[[type_index_col]], NA)
 
 	return(df)
 }

@@ -1,7 +1,7 @@
 interface <- list(
 
   # Set subject raw data directory
-  raw_dir = "./raw/",
+  raw_dir = "./raw/9 months/",
   output_dir = "./preproc-tsv/",
 
   # ==================================================
