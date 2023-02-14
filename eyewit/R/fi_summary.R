@@ -13,7 +13,7 @@
 #' [fi2rn], if you only need to know the row range for a given fixation index.
 #'
 #' ## df, aoisets
-#' Returns a tibble respecting all AOI definitions (or justa list depending on your input)
+#' Returns a tibble respecting all AOI definitions (or just a list depending on your input)
 #
 #' ```
 #' tribble(
