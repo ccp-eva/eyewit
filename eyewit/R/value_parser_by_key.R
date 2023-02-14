@@ -1,4 +1,4 @@
-#' Title
+#' Title # todo
 #'
 #' @param keys keys
 #' @param delimited_string delimited_string
@@ -6,7 +6,7 @@
 #' @param drop_nth_delimiter drop_nth_delimiter
 #' @param trim_right trim_right
 #'
-#' @return None
+#' @return None # todo
 #' @export
 #'
 #' @examples
