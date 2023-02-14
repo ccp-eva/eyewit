@@ -16,10 +16,10 @@ preflight <- function(df, interface) {
   # check if a FixationIndex is present in raw data (Tobii Studio had it, Tobii ProLab is missing that; yet, eyewit heavily relies on it)
   # if not execute create_fi to create an fi column
   if (!"FixationIndex" %in% names(df)) {
-  	cat("\tFixationIndex is missing\n")
+    message("   \U1F6A7  FixationIndex is missing, will create one...")
   	df <- create_fi(df, interface$type_col, interface$type_index_col)
   }
-  message("   \U1F5FA  Found/Created FixationIndex")
+  message("   \U1F441  Found/Created FixationIndex")
 
   # rename df columns based on key names defined in vendor_lookup
   names(df)[names(df) == names(vendor_lookup[[vendor]]$participant)] <- 'participant'
@@ -53,7 +53,7 @@ preflight <- function(df, interface) {
   # create a lean df (only mandatory columns)
   df <- df[, c(interface$mc, interface$coi)]
 
-  message("   \U2696   Created a lean df")
+  message("   \U1F331  Created a lean df")
 
 
 
@@ -79,9 +79,9 @@ preflight <- function(df, interface) {
   # check if aoi sets have no overlapping coordinates in a single set
   is_aoilist_intersecting(interface$aoisets)
 
-  message("   \U2694  No intersecting AOIs found")
+  message("   \U1F587  No intersecting AOIs found")
 
-  message("\n   Single Samples Summary (i.e., the difference in time between each sample (row):")
+  message("\n   Single Samples Summary (diff in ms between samples)")
   smmry <- df$timestamp |> diff() |> summary()
   print(smmry)
   message(
@@ -93,7 +93,7 @@ preflight <- function(df, interface) {
 
   message("--------------------------------------------------------------------")
 
-  .eyewit_utils <- list(
+  .eyewit_utils <<- list(
     fi2rn = fi2rn(df$fi)
   )
 
