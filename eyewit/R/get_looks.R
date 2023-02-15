@@ -209,10 +209,10 @@ get_looks <- function(df,
     }
 
     # init storage containers for looking frequencies
-    current_trial_total_looks <- stats::setNames(vector("list", length(hit_names)), hit_names)
+    current_trial_looking_frequency <- stats::setNames(vector("list", length(hit_names)), hit_names)
     for (hn in hit_names) {
       # set to current trial duration to 0
-      current_trial_total_looks[[hn]] <- 0
+      current_trial_looking_frequency[[hn]] <- 0
     }
 
 
@@ -291,7 +291,7 @@ get_looks <- function(df,
         hn_in_current_FI <- hit_names[hit_names %in% hit_names_in_fi]
         # Looking frequency will disregard repeated looks within the same fixation index or if last hit_name has never been set (i.e., ""), which happens when i = 1
         if ((last_hit_name != "") && (last_hit_name != hn_in_current_FI)) {
-          current_trial_total_looks[[hn_in_current_FI]] <- current_trial_total_looks[[hn_in_current_FI]] + 1
+          current_trial_looking_frequency[[hn_in_current_FI]] <- current_trial_looking_frequency[[hn_in_current_FI]] + 1
 
           # Gaze Shifts
           # False case: Origin was not in any defined AOI, but somehwere else (i.e., last hit name = FALSE), then
@@ -620,7 +620,7 @@ get_looks <- function(df,
     # Append it to the Trial Lists
     for (hn in hit_names) {
       looking_times[[hn]] <- c(looking_times[[hn]], current_trial_total_duration[[hn]])
-      looking_frequencies[[hn]] <- c(looking_frequencies[[hn]], current_trial_total_looks[[hn]])
+      looking_frequencies[[hn]] <- c(looking_frequencies[[hn]], current_trial_looking_frequency[[hn]])
       first_looks_collection[[hn]]$durations <- c(first_looks_collection[[hn]]$durations, current_first_look_duration[[hn]])
       first_looks_collection[[hn]]$ending_reason <- c(first_looks_collection[[hn]]$ending_reason, current_first_look_ending_reason[[hn]])
 
