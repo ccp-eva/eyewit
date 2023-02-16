@@ -245,7 +245,7 @@ get_looks <- function(df,
     }
 
 
-    # set first_look durations for current trial
+    # set lookaway for current trial
     current_lookaway_duration <- stats::setNames(vector("list", length(hit_names)), hit_names)
     current_lookaway_stop_applied <- stats::setNames(vector("list", length(hit_names)), hit_names)
     for (hn in hit_names) {
