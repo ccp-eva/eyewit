@@ -131,8 +131,8 @@ get_looks <- function(df,
     first_looks_collection[[hn]]$ending_reason <- c()
     first_looks_collection[[hn]]$found_first <- FALSE
     first_looks_collection[[hn]]$forced_stop <- FALSE
-    first_looks_collection[[hn]]$init_fi <- NA
-    first_looks_collection[[hn]]$last_fi <- NA
+    first_looks_collection[[hn]]$init_fi <- c()
+    first_looks_collection[[hn]]$last_fi <- c()
     first_looks_collection[[hn]]$first_look_initial_timestamp <- NA
   }
 
@@ -197,6 +197,8 @@ get_looks <- function(df,
       for (hn in hit_names) {
         first_looks_collection[[hn]]$durations <- c(first_looks_collection[[hn]]$durations, NA)
         first_looks_collection[[hn]]$ending_reason <- c(first_looks_collection[[hn]]$ending_reason, NA)
+        first_looks_collection[[hn]]$init_fi <- c(first_looks_collection[[hn]]$init_fi, NA)
+        first_looks_collection[[hn]]$last_fi <- c(first_looks_collection[[hn]]$last_fi, NA)
       }
 
       for (hn in hit_names) {
@@ -252,10 +254,14 @@ get_looks <- function(df,
     # set first_look durations for current trial
     current_first_look_duration <- stats::setNames(vector("list", length(hit_names)), hit_names)
     current_first_look_ending_reason <- stats::setNames(vector("list", length(hit_names)), hit_names)
+    current_first_look_init_fi <- stats::setNames(vector("list", length(hit_names)), hit_names)
+    current_first_look_last_fi <- stats::setNames(vector("list", length(hit_names)), hit_names)
     for (hn in hit_names) {
       # set to current trial duration to 0
       current_first_look_duration[[hn]] <- 0
       current_first_look_ending_reason[[hn]] <- ""
+      current_first_look_init_fi[[hn]] <- 0
+      current_first_look_last_fi[[hn]] <- 0
       first_looks_collection[[hn]]$found_first <- FALSE
       first_looks_collection[[hn]]$forced_stop <- FALSE
     }
@@ -348,6 +354,7 @@ get_looks <- function(df,
 
         # check if current hit_name (hn) is within hit_names_in_fi, if not check the next hn
         if (hn %in% hit_names_in_fi) {
+
           # check if the first fixation index started before the current_start and if intra_scope_cut is TRUE
           if (i == min_fi && which(df$fi == i)[1] < current_start && intra_scope_cut) {
             # get start and end milliseconds
@@ -370,8 +377,8 @@ get_looks <- function(df,
             # enter found first only once it detects the hn
             if (!first_looks_collection[[hn]]$found_first) {
               first_looks_collection[[hn]]$found_first <- TRUE
-              first_looks_collection[[hn]]$init_fi <- i
-              first_looks_collection[[hn]]$last_fi <- i
+              current_first_look_init_fi[[hn]] <- i
+              current_first_look_last_fi[[hn]] <- i
               first_looks_collection[[hn]]$first_look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
             }
 
@@ -379,13 +386,14 @@ get_looks <- function(df,
               first_looks_collection[[hn]]$found_first && !first_looks_collection[[hn]]$forced_stop &&
                 (
                   # check if initial i
-                  first_looks_collection[[hn]]$init_fi == i ||
+                  current_first_look_init_fi[[hn]] == i ||
                     # or check if consecutive fixation
-                    first_looks_collection[[hn]]$last_fi == i - 1
+                  current_first_look_last_fi[[hn]] == i - 1
                 )
             ) {
               current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_gazeDuration
-              first_looks_collection[[hn]]$last_fi <- i
+              # update current_first_looks_last_fi to next fi
+              current_first_look_last_fi[[hn]] <- i
 
               # check if outside label is between this fi and the next fi
               if (i < max(df$fi, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
@@ -515,22 +523,23 @@ get_looks <- function(df,
             # enter found first only once it detects the hn
             if (!first_looks_collection[[hn]]$found_first) {
               first_looks_collection[[hn]]$found_first <- TRUE
-              first_looks_collection[[hn]]$init_fi <- i
-              first_looks_collection[[hn]]$last_fi <- i
+              current_first_look_init_fi[[hn]] <- i
+              current_first_look_last_fi[[hn]] <- i
               first_looks_collection[[hn]]$first_look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
             }
 
             if (
               first_looks_collection[[hn]]$found_first && !first_looks_collection[[hn]]$forced_stop &&
-                (
-                  # check if initial i
-                  first_looks_collection[[hn]]$init_fi == i ||
-                    # or check if consecutive fixation
-                    first_looks_collection[[hn]]$last_fi == i - 1
-                )
+              (
+                # check if initial i
+                current_first_look_init_fi[[hn]] == i ||
+                # or check if consecutive fixation
+                current_first_look_last_fi[[hn]] == i - 1
+              )
             ) {
               current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_gazeDuration
-              first_looks_collection[[hn]]$last_fi <- i
+              # update current_first_looks_last_fi to next fi
+              current_first_look_last_fi[[hn]] <- i
 
               # check if outside label is between this fi and the next fi
               if (i < max(df$fi, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
@@ -650,22 +659,23 @@ get_looks <- function(df,
           # enter found first only once it detects the hn
           if (!first_looks_collection[[hn]]$found_first) {
             first_looks_collection[[hn]]$found_first <- TRUE
-            first_looks_collection[[hn]]$init_fi <- i
-            first_looks_collection[[hn]]$last_fi <- i
+            current_first_look_init_fi[[hn]] <- i
+            current_first_look_last_fi[[hn]] <- i
             first_looks_collection[[hn]]$first_look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
           }
 
           if (
             first_looks_collection[[hn]]$found_first && !first_looks_collection[[hn]]$forced_stop &&
-              (
-                # check if initial i
-                first_looks_collection[[hn]]$init_fi == i ||
-                  # or check if consecutive fixation
-                  first_looks_collection[[hn]]$last_fi == i - 1
-              )
+            (
+              # check if initial i
+              current_first_look_init_fi[[hn]] == i ||
+              # or check if consecutive fixation
+              current_first_look_last_fi[[hn]] == i - 1
+            )
           ) {
             current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_gazeDuration
-            first_looks_collection[[hn]]$last_fi <- i
+            # update current_first_looks_last_fi to next fi
+            current_first_look_last_fi[[hn]] <- i
 
             # check if outside label is between this fi and the next fi
             if (i < max(df$fi, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
@@ -765,6 +775,8 @@ get_looks <- function(df,
       looking_frequencies[[hn]] <- c(looking_frequencies[[hn]], current_trial_looking_frequency[[hn]])
       first_looks_collection[[hn]]$durations <- c(first_looks_collection[[hn]]$durations, current_first_look_duration[[hn]])
       first_looks_collection[[hn]]$ending_reason <- c(first_looks_collection[[hn]]$ending_reason, current_first_look_ending_reason[[hn]])
+      first_looks_collection[[hn]]$init_fi <- c(first_looks_collection[[hn]]$init_fi, current_first_look_init_fi[[hn]])
+      first_looks_collection[[hn]]$last_fi <- c(first_looks_collection[[hn]]$last_fi, current_first_look_last_fi[[hn]])
 
       looks_collection[[hn]]$durations <- c(looks_collection[[hn]]$durations, current_looks_duration_total[[hn]])
       looks_collection[[hn]]$ending_reason <- c(looks_collection[[hn]]$ending_reason, current_looks_ending_reason[[hn]])
