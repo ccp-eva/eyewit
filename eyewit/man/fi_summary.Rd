@@ -34,7 +34,7 @@ If you only provide a df, this function is identical to \link{fi2rn}. It is thus
 
 \subsection{df, aoisets}{
 
-Returns a tibble respecting all AOI definitions (or justa list depending on your input)
+Returns a tibble respecting all AOI definitions (or just a list depending on your input)
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{tribble(
   ~FI, ~FIrnS, ~FIrnE, ~AOIColA,             ~AOIColN,
