@@ -2,7 +2,7 @@
 % Please edit documentation in R/value_parser_by_key.R
 \name{value_parser_by_key}
 \alias{value_parser_by_key}
-\title{Title}
+\title{Title # todo}
 \usage{
 value_parser_by_key(
   keys,
@@ -24,10 +24,10 @@ value_parser_by_key(
 \item{trim_right}{trim_right}
 }
 \value{
-None
+None # todo
 }
 \description{
-Title
+Title # todo
 }
 \examples{
 ## usage:
