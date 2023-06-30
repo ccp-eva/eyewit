@@ -1,8 +1,9 @@
-# load eyewit
+# load eyewit (for package dev load it: devtools::load_all("."))
 # library(eyewit)
 
 # install CRAN packages
-lapply(c("tidyverse", "styler", "lintr"), require, character.only = TRUE)
+install.packages("tidyverse")
+library(tidyverse)
 
 # import user interface
 source("interface.R")
@@ -24,7 +25,7 @@ for (subject in participants) {
   print(subject)
 
   # remove later
-  # subject <- participants[4]
+  # subject <- participants[1]
 
   # read tsv files
   df_raw <- readr::read_tsv(file.path(interface$raw_dir, subject), col_types = types)
@@ -150,136 +151,277 @@ for (subject in participants) {
 
 	df_subject$PrefLook_PropScore <- df_subject$PrefLook_LT_Obj_Nov / df_subject$PrefLook_LT_Obj_Total
 
-  # ------------------------------------------------------------------------------------------------
-  # Looking Times - Familiarization
-  # ------------------------------------------------------------------------------------------------
+	################################
+	######## OTHER MEASURES ########
+	################################
 
-  df_subject$TotalLTScreenFam <-
-    get_looks(df, interface$aoisets$screen, startend_fam, omit_first_overflow_fi = TRUE)$looking_times
+	##### MEASURES BASED ON FIRST LOOK (FL) MEASURE
 
+  df_subject$PrefLook_FL_Left <- get_looks(
+  	df,
+  	interface$aoisets$preflook,
+  	startend_preflook,
+  	omit_first_overflow_fi = TRUE,
+  	first_look_emergency_cutoff =
+  		round(
+  			median(gazeshifts$aoiPrefLook$left$latencies) +
+  				3 * sd(gazeshifts$aoiPrefLook$left$latencies)
+  		)
+  )$first_looks_collection$left$durations
 
-	df_subject$TotalLTFaceLeftFam <- NA
-	df_subject$TotalLTFaceRightFam <- NA
+	# FYI You can retrieve the ending_reasons (either outside)
+	# df_subject$PrefLook_FL_Left <- get_looks(
+	# 	df,
+	# 	interface$aoisets$preflook,
+	# 	startend_preflook,
+	# 	omit_first_overflow_fi = TRUE,
+	# 	first_look_emergency_cutoff =
+	# 		round(
+	# 			median(gazeshifts$aoiPrefLook$left$latencies) +
+	# 				3 * sd(gazeshifts$aoiPrefLook$left$latencies)
+	# 		)
+	# )$first_looks_collection$ending_reasong
 
-	# Fill-up TotalLTFaceLeftFam & TotalLTFaceRighFam based on right/left and prox/nprox
-	for (trial in seq.int(current_test_trials)) {
+	df_subject$PrefLook_FL_Right <- get_looks(
+		df,
+		interface$aoisets$preflook,
+		startend_preflook,
+		omit_first_overflow_fi = TRUE,
+		first_look_emergency_cutoff =
+			round(
+				median(gazeshifts$aoiPrefLook$right$latencies) +
+					3 * sd(gazeshifts$aoiPrefLook$right$latencies)
+			)
+	)$first_looks_collection$right$durations
 
-		if (df_subject$ConProx[trial] == "nprox" && df_subject$FamObjPos_Fam[trial] == "right") {
-			df_subject$TotalLTFaceLeftFam[trial] <-
-				get_looks(df, interface$aoisets$aoifamphase_obj_r_nprox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_left[trial]
-		}
-
-		if (df_subject$ConProx[trial] == "nprox" && df_subject$FamObjPos_Fam[trial] == "left") {
-			df_subject$TotalLTFaceLeftFam[trial] <-
-				get_looks(df, interface$aoisets$aoifamphase_obj_l_nprox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_left[trial]
-		}
-
-		if (df_subject$ConProx[trial] == "prox" && df_subject$FamObjPos_Fam[trial] == "right") {
-			df_subject$TotalLTFaceLeftFam[trial] <-
-				get_looks(df, interface$aoisets$aoifamphase_obj_r_prox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_left[trial]
-		}
-
-		if (df_subject$ConProx[trial] == "prox" && df_subject$FamObjPos_Fam[trial] == "left") {
-			df_subject$TotalLTFaceLeftFam[trial] <-
-				get_looks(df, interface$aoisets$aoifamphase_obj_l_prox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_left[trial]
-		}
-
-		if (df_subject$ConProx[trial] == "nprox" && df_subject$FamObjPos_Fam[trial] == "right") {
-			df_subject$TotalLTFaceRightFam[trial] <-
-				get_looks(df, interface$aoisets$aoifamphase_obj_r_nprox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_right[trial]
-		}
-
-		if (df_subject$ConProx[trial] == "nprox" && df_subject$FamObjPos_Fam[trial] == "left") {
-			df_subject$TotalLTFaceRightFam[trial] <-
-				get_looks(df, interface$aoisets$aoifamphase_obj_l_nprox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_right[trial]
-		}
-
-		if (df_subject$ConProx[trial] == "prox" && df_subject$FamObjPos_Fam[trial] == "right") {
-			df_subject$TotalLTFaceRightFam[trial] <-
-				get_looks(df, interface$aoisets$aoifamphase_obj_r_prox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_right[trial]
-		}
-
-		if (df_subject$ConProx[trial] == "prox" && df_subject$FamObjPos_Fam[trial] == "left") {
-			df_subject$TotalLTFaceRightFam[trial] <-
-				get_looks(df, interface$aoisets$aoifamphase_obj_l_prox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$face_right[trial]
-		}
-	}
-
-	# Object Looking Times in Fam
-	df_subject$TotalLTObjFamLeft <-
-		get_looks(df, interface$aoisets$aoifamphase_obj_l_prox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$object_left
-
-	df_subject$TotalLTObjFamRight <-
-		get_looks(df, interface$aoisets$aoifamphase_obj_r_prox, startend_fam, omit_first_overflow_fi = TRUE)$looking_times$object_right
-
-	df_subject$TotalLTObjFam <- dplyr::if_else(
-		df_subject$FamObjPos_Fam == "left", df_subject$TotalLTObjFamLeft, df_subject$TotalLTObjFamRight
+	df_subject$PrefLook_FL_Obj_Nov <- dplyr::if_else(
+		df_subject$PrefLook_Obj_Nov_Pos == "left", df_subject$PrefLook_FL_Left, df_subject$PrefLook_FL_Right
 	)
 
-  # ------------------------------------------------------------------------------------------------
-  # Looking Times - INCLUSION ACTION
-  # ------------------------------------------------------------------------------------------------
+	df_subject$PrefLook_FL_Obj_Fam <- dplyr::if_else(
+		df_subject$PrefLook_Obj_Fam_Pos == "left", df_subject$PrefLook_FL_Left, df_subject$PrefLook_FL_Right
+	)
 
-  df_subject$LTScreenFam_0to1 <-
-  	get_looks(df, interface$aoisets$screen, startend_fam, c(0, 1000), omit_first_overflow_fi = TRUE)$looking_times
+	df_subject$PrefLook_FL_Screen <- get_looks(
+		df,
+		interface$aoisets$screen,
+		startend_preflook,
+		omit_first_overflow_fi = TRUE,
+		first_look_emergency_cutoff =
+			round(
+				median(gazeshifts$aoiScreen$onscreen$latencies) +
+					3 * sd(gazeshifts$aoiScreen$onscreen$latencies)
+			)
+	)$first_looks_collection$onscreen$durations
 
-  df_subject$LTScreenFam_1to2 <-
-  	get_looks(df, interface$aoisets$screen, startend_fam, c(1001, 2000), omit_first_overflow_fi = TRUE)$looking_times
+	df_subject$PrefLook_FL_Screen_Omit <- get_looks(
+		df,
+		interface$aoisets$screen,
+		startend_preflook,
+		omit_first_overflow_fi = FALSE,
+		first_look_emergency_cutoff =
+			round(
+				median(gazeshifts$aoiScreen$onscreen$latencies) +
+					3 * sd(gazeshifts$aoiScreen$onscreen$latencies)
+			)
+	)$first_looks_collection$onscreen$durations
 
-  df_subject$LTScreenFam_2to3 <-
-  	get_looks(df, interface$aoisets$screen, startend_fam, c(2001, 3000), omit_first_overflow_fi = TRUE)$looking_times
+	# todo diff from both columns will be the actual gap and use startocutoff.
 
-  df_subject$LTScreenFam_3to4 <-
-  	get_looks(df, interface$aoisets$screen, startend_fam, c(3001, 4000), omit_first_overflow_fi = TRUE)$looking_times
+	# init
+	df_subject$PrefLook_LT_Obj_Left_FL <- NA
+	# iterate over all screen durations rowwise within df_subject
+	for (i_screen_lt in seq.int(df_subject$PrefLook_FL_Screen)) {
+	  print(paste0("Index: ", i_screen_lt, " Screen Duration: ", df_subject$PrefLook_FL_Screen[i_screen_lt]))
+	  df_subject$PrefLook_LT_Obj_Left_FL[i_screen_lt] <- get_looks(
+	    df,
+	    interface$aoisets$preflook,
+	    startend_preflook,
+	    intra_scope_window = c(
+	      "start", # todo use the first fixation and then apply the screen time for end
+	      ifelse(
+	        is.na(df_subject$PrefLook_FL_Screen[i_screen_lt]),
+	        "end",
+	        df_subject$PrefLook_FL_Screen[i_screen_lt]
+	      )
+	    ),
+	    omit_first_overflow_fi = TRUE
+	  )$looking_times$left[i_screen_lt] # ... only get the i'th item from get_looks
+	}
 
-  df_subject$LTScreenFam_4to5 <-
-  	get_looks(df, interface$aoisets$screen, startend_fam, c(4001, 5000), omit_first_overflow_fi = TRUE)$looking_times
+	# same for right
+	df_subject$PrefLook_LT_Obj_Right_FL <- NA
+	for (i_screen_lt in seq.int(df_subject$PrefLook_FL_Screen)) {
+		print(paste0("Index: ", i_screen_lt, " Screen Duration: ", df_subject$PrefLook_FL_Screen[i_screen_lt]))
+		df_subject$PrefLook_LT_Obj_Right_FL[i_screen_lt] <- get_looks(
+			df,
+			interface$aoisets$preflook,
+			startend_preflook,
+			intra_scope_window = c(
+				"start",
+				ifelse(
+					is.na(df_subject$PrefLook_FL_Screen[i_screen_lt]),
+					"end",
+					df_subject$PrefLook_FL_Screen[i_screen_lt]
+				)
+			),
+			omit_first_overflow_fi = TRUE
+		)$looking_times$right[i_screen_lt] # ... only get the i'th item from get_looks
+	}
 
-  df_subject$LTScreenFam_5to6 <-
-  	get_looks(df, interface$aoisets$screen, startend_fam, c(5001, 6000), omit_first_overflow_fi = TRUE)$looking_times
+	df_subject$PrefLook_LT_Obj_Nov_FL <- dplyr::if_else(
+		df_subject$PrefLook_Obj_Nov_Pos == "left", df_subject$PrefLook_LT_Obj_Left_FL, df_subject$PrefLook_LT_Obj_Right_FL
+	)
 
-  df_subject$LTScreenFam_6to7 <-
-  	get_looks(df, interface$aoisets$screen, startend_fam, c(6001, 7000), omit_first_overflow_fi = TRUE)$looking_times
+	df_subject$PrefLook_LT_Obj_Fam_FL <- dplyr::if_else(
+		df_subject$PrefLook_Obj_Fam_Pos == "left", df_subject$PrefLook_LT_Obj_Left_FL, df_subject$PrefLook_LT_Obj_Right_FL
+	)
 
-  df_subject$LTScreenFam_7to8 <-
-  	get_looks(df, interface$aoisets$screen, startend_fam, c(7001, 8000), omit_first_overflow_fi = TRUE)$looking_times
+	df_subject$PrefLook_PropSore_FL <- df_subject$PrefLook_LT_Obj_Nov_FL / (df_subject$PrefLook_LT_Obj_Nov_FL + df_subject$PrefLook_LT_Obj_Fam_FL)
 
-  df_subject$LTScreenFam_8to9 <-
-  	get_looks(df, interface$aoisets$screen, startend_fam, c(8001, 9000), omit_first_overflow_fi = TRUE)$looking_times
+	# =========================================
+	# PrefLook_FL_Screen_starttocutoff
+	# returns either a time difference in ms, 0, or NA
+	# 0 means a screen fixation was present when the trial started
+	# NA means there was no fixation at all in this trial
+	# any numbers means the gap in ms until the first screen fixation
+	# (this should actually be a separate function, lol)
+	# init with 0
+	df_subject$PrefLook_FL_Screen_starttocutoff <- 0
+	for (pfsi in seq.int(df_subject$PrefLook_FL_Screen_starttocutoff)) {
 
-  df_subject$LTScreenFam_9to10 <-
-  	get_looks(df, interface$aoisets$screen, startend_fam, c(9001, 10000), omit_first_overflow_fi = TRUE)$looking_times
+		# boolean that checks if there is a screen fixation at the first sample for each trial
+		isAoiScreenFixAtFirstSample <- (df[startend_preflook$start[pfsi] + 1,"gazeType"] == "Fixation")[1] && (df[startend_preflook$start[pfsi] + 1,"aoiScreen"] == "onscreen")[1]
 
-  df_subject$LTScreenFam_10to11 <-
-  	get_looks(df, interface$aoisets$screen, startend_fam, c(10001, 11000), omit_first_overflow_fi = TRUE)$looking_times
+		# init diff container with zeros
+		time_diff <- 0
+		starting_timestamp <- df[startend_preflook$start[pfsi],"timestamp"] |> as.integer()
+		# init ending timestamp of first fixation
+		ending_timestamp <- NA
+		# if there is no initial fixation get the time in ms when the first fixation at screen appears
+		if (!isAoiScreenFixAtFirstSample) {
+
+			# filter for fixations being onscreen
+			temp <- df |>
+				dplyr::slice(startend_preflook$start[pfsi]:startend_preflook$end[pfsi]) |>
+				dplyr::filter(gazeType == "Fixation") |>
+				dplyr::filter(aoiScreen == "onscreen")
+
+
+			# check if there is any fixation in this trial at all, if not assign NA
+			if (nrow(temp) != 0) {
+				ending_timestamp <- temp$timestamp[1]
+				time_diff <- ending_timestamp - starting_timestamp
+			}
+			if (nrow(temp) == 0) {
+				time_diff <- NA
+			}
+		}
+
+		df_subject$PrefLook_FL_Screen_starttocutoff[pfsi] <- time_diff
+	}
 
 
 
+	##### MEASURES BASED ON 2 SEC LOOK-AWAY MEASURE
+
+	df_subject$PrefLook_2sec_Obj_Left <-
+		get_looks(
+			df = df,
+			aoi_collection = interface$aoisets$preflook,
+			scope = startend_preflook,
+			lookaway_stop = 2000,
+			omit_first_overflow_fi = TRUE)$lookaway_collection$left$durations
+
+	df_subject$PrefLook_2sec_Obj_Right <-
+		get_looks(
+			df = df,
+			aoi_collection = interface$aoisets$preflook,
+			scope = startend_preflook,
+			lookaway_stop = 2000,
+			omit_first_overflow_fi = TRUE)$lookaway_collection$right$durations
+
+	df_subject$PrefLook_2sec_Obj_Nov <- dplyr::if_else(
+		df_subject$PrefLook_Obj_Nov_Pos == "left", df_subject$PrefLook_2sec_Obj_Left, df_subject$PrefLook_2sec_Obj_Right
+	)
+
+	df_subject$PrefLook_2sec_Obj_Fam <- dplyr::if_else(
+		df_subject$PrefLook_Obj_Fam_Pos == "left", df_subject$PrefLook_2sec_Obj_Left, df_subject$PrefLook_2sec_Obj_Right
+	)
+
+	df_subject$PrefLook_2sec_Screen <-
+		get_looks(
+			df = df,
+			aoi_collection = interface$aoisets$screen,
+			scope = startend_preflook,
+			lookaway_stop = 2000,
+			omit_first_overflow_fi = TRUE)$lookaway_collection$onscreen$durations
+
+	df_subject$PrefLook_LT_Obj_Left_2sec <- NA
+	# iterate over all screen durations rowwise within df_subject
+	for (i_screen_lt in seq.int(df_subject$PrefLook_2sec_Screen)) {
+		print(paste0("Index: ", i_screen_lt, " Screen Duration: ", df_subject$PrefLook_2sec_Screen[i_screen_lt]))
+		df_subject$PrefLook_LT_Obj_Left_2sec[i_screen_lt] <- get_looks(
+			df,
+			interface$aoisets$preflook,
+			startend_preflook,
+			intra_scope_window = c(
+				"start", #todo fix with gap size
+				ifelse(
+					is.na(df_subject$PrefLook_2sec_Screen[i_screen_lt]),
+					"end",
+					df_subject$PrefLook_2sec_Screen[i_screen_lt]
+				)
+			),
+			omit_first_overflow_fi = TRUE
+		)$looking_times$left[i_screen_lt] # ... only get the i'th item from get_looks
+	}
+
+	df_subject$PrefLook_LT_Obj_Right_2sec <- NA
+	# iterate over all screen durations rowwise within df_subject
+	for (i_screen_lt in seq.int(df_subject$PrefLook_2sec_Screen)) {
+		print(paste0("Index: ", i_screen_lt, " Screen Duration: ", df_subject$PrefLook_2sec_Screen[i_screen_lt]))
+		df_subject$PrefLook_LT_Obj_Right_2sec[i_screen_lt] <- get_looks(
+			df,
+			interface$aoisets$preflook,
+			startend_preflook,
+			intra_scope_window = c(
+				"start", #todo fix with gap size
+				ifelse(
+					is.na(df_subject$PrefLook_2sec_Screen[i_screen_lt]),
+					"end",
+					df_subject$PrefLook_2sec_Screen[i_screen_lt]
+				)
+			),
+			omit_first_overflow_fi = TRUE
+		)$looking_times$right[i_screen_lt] # ... only get the i'th item from get_looks
+	}
+
+	df_subject$PrefLook_LT_Obj_Fam_2sec <- dplyr::if_else(
+		df_subject$PrefLook_Obj_Fam_Pos == "left", df_subject$PrefLook_LT_Obj_Left_2sec, df_subject$PrefLook_LT_Obj_Right_2sec
+	)
+
+	df_subject$PrefLook_LT_Obj_Nov_2sec <- dplyr::if_else(
+		df_subject$PrefLook_Obj_Nov_Pos == "left", df_subject$PrefLook_LT_Obj_Left_2sec, df_subject$PrefLook_LT_Obj_Right_2sec
+	)
+
+	df_subject$PrefLook_PropScore_2sec <- df_subject$PrefLook_LT_Obj_Nov_2sec / (df_subject$PrefLook_LT_Obj_Nov_2sec + df_subject$PrefLook_LT_Obj_Fam_2sec)
 
 
 
+	# ================================================================================================
+	# TIME-COURSE PLOT
+	# ------------------------------------------------------------------------------------------------
+	df_time <- timebinning(df, df_subject, startend_preflook, 300)
+	# Sort like in the word file:
+	df_time <- df_time |> dplyr::arrange(TrialCon, Condition, BinNumber)
+	# Remove bin 21
+	df_time <- df_time |> dplyr::filter(BinNumber != 21)
 
-#   df_subject$InterPhaseCheckerSoc <-
-#     dplyr::if_else(
-#       df_subject$LTScreenAct_5to6 > 0 |
-#       df_subject$LTScreenAct_9to10 > 0 |
-#       df_subject$LTScreenAct_13to14 > 0,
-#       TRUE, FALSE
-#     )
-#
-#   df_subject$InterPhaseCheckerGazing <-
-#     dplyr::if_else(
-#       df_subject$LTScreenAct_7to8 > 0 |
-#         df_subject$LTScreenAct_11to12 > 0 |
-#         df_subject$LTScreenAct_15to16 > 0,
-#       TRUE, FALSE
-#     )
-#
-#   df_subject$InterPhaseCheckerValid <- df_subject$InterPhaseCheckerSoc & df_subject$InterPhaseCheckerGazing
 
   # write tables for individual participants
-  # replace with readr functions ones this is clear: https://github.com/tidyverse/readr/issues/1388
   # write.table(df_subject, paste0(interface$output_dir, subject), sep = '\t', row.names = FALSE)
+  # write.table(df_time, paste0(interface$output_dir, time), sep = '\t', row.names = FALSE)
 }
 
 # Read in tsv files from pre-processing folder
