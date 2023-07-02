@@ -340,7 +340,7 @@ get_looks <- function(df,
             if (!found_first_look) {
               first_look <- hn
               found_first_look <- TRUE
-              first_look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
+              first_look_initial_timestamp <- start_ms
             }
 
             # first_look_collection part
@@ -349,7 +349,7 @@ get_looks <- function(df,
               first_looks_collection[[hn]]$found_first <- TRUE
               current_first_look_init_fi[[hn]] <- i
               current_first_look_last_fi[[hn]] <- i
-              first_looks_collection[[hn]]$first_look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
+              first_looks_collection[[hn]]$first_look_initial_timestamp <- start_ms
             }
 
             if (
@@ -402,7 +402,7 @@ get_looks <- function(df,
             ##################### LOOKAWAY
             if (!missing(lookaway_stop) && !current_lookaway_stop_applied[[hn]]) {
               if (!lookaway_collection[[hn]]$found_first_hn) {
-                lookaway_collection[[hn]]$current_start_rts <- df$timestamp[fi_pairs$fistart[i]]
+                lookaway_collection[[hn]]$current_start_rts <- start_ms
                 lookaway_collection[[hn]]$previous_end_rts <- df$timestamp[fi_pairs$fiend[i] + 1]
 
 
@@ -413,7 +413,7 @@ get_looks <- function(df,
               }
 
               if (i != lookaway_collection[[hn]]$init_fi) {
-                lookaway_collection[[hn]]$current_start_rts <- df$timestamp[fi_pairs$fistart[i]]
+                lookaway_collection[[hn]]$current_start_rts <- start_ms
 
                 if (lookaway_collection[[hn]]$current_start_rts - lookaway_collection[[hn]]$previous_end_rts < lookaway_stop) {
                   current_lookaway_duration[[hn]] <- current_lookaway_duration[[hn]] + current_gazeDuration
