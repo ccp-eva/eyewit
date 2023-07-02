@@ -136,19 +136,6 @@ get_looks <- function(df,
     first_looks_collection[[hn]]$first_look_initial_timestamp <- NA
   }
 
-  # looks_collection
-  looks_collection <- list()
-  for (hn in hit_names) {
-    looks_collection[[hn]]$durations <- c()
-    # this can either be "lookaway" because an "outside" aoi was detected or the consecutive fixation was in another aoi
-    looks_collection[[hn]]$ending_reason <- c()
-    looks_collection[[hn]]$found_first <- FALSE
-    looks_collection[[hn]]$forced_stop <- FALSE
-    looks_collection[[hn]]$init_fi <- NA
-    looks_collection[[hn]]$last_fi <- NA
-    looks_collection[[hn]]$look_initial_timestamp <- NA
-  }
-
   lookaway_collection <- list()
   # define structure
   for (hn in hit_names) {
@@ -199,11 +186,6 @@ get_looks <- function(df,
         first_looks_collection[[hn]]$ending_reason <- c(first_looks_collection[[hn]]$ending_reason, NA)
         first_looks_collection[[hn]]$init_fi <- c(first_looks_collection[[hn]]$init_fi, NA)
         first_looks_collection[[hn]]$last_fi <- c(first_looks_collection[[hn]]$last_fi, NA)
-      }
-
-      for (hn in hit_names) {
-        looks_collection[[hn]]$durations <- c(looks_collection[[hn]]$durations, NA)
-        looks_collection[[hn]]$ending_reason <- c(looks_collection[[hn]]$ending_reason, NA)
       }
 
       for (hn in hit_names) {
@@ -274,18 +256,6 @@ get_looks <- function(df,
       current_lookaway_duration[[hn]] <- 0
       lookaway_collection[[hn]]$found_first_hn <- FALSE
       current_lookaway_stop_applied[[hn]] <- FALSE
-    }
-
-    # set looks for current trial
-    current_looks_duration <- stats::setNames(vector("list", length(hit_names)), hit_names)
-    current_looks_duration_total <- stats::setNames(vector("list", length(hit_names)), hit_names)
-    current_looks_ending_reason <- stats::setNames(vector("list", length(hit_names)), hit_names)
-    for (hn in hit_names) {
-      current_looks_duration[[hn]] <- 0
-      current_looks_duration_total[[hn]] <- 0
-      current_looks_ending_reason[[hn]] <- ""
-      looks_collection[[hn]]$found_first <- FALSE
-      looks_collection[[hn]]$forced_stop <- FALSE
     }
 
 
@@ -422,41 +392,7 @@ get_looks <- function(df,
 
 
 
-            ######### LOOKS
-            # enter found first only once it detects the hn
-            if (!looks_collection[[hn]]$found_first) {
-              looks_collection[[hn]]$found_first <- TRUE
-              looks_collection[[hn]]$init_fi <- i
-              looks_collection[[hn]]$last_fi <- i
-              looks_collection[[hn]]$look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
-            }
 
-            if (
-              looks_collection[[hn]]$found_first && !looks_collection[[hn]]$forced_stop &&
-              (looks_collection[[hn]]$init_fi == i || looks_collection[[hn]]$last_fi == i - 1)
-            ) {
-              current_looks_duration[[hn]] <- current_looks_duration[[hn]] + current_gazeDuration
-              looks_collection[[hn]]$last_fi <- i
-
-              # check if outside label is between this fi and the next fi
-              if (i < max(df$fi, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
-                # outside fixation or saccade after last fi
-                current_looks_ending_reason[[hn]] <- "outside"
-                looks_collection[[hn]]$forced_stop <- TRUE
-                # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
-                current_looks_duration[[hn]] <- df$timestamp[fi_pairs$fiend[i] + 1] - looks_collection[[hn]]$look_initial_timestamp
-              }
-            }
-
-            # reset look hunk and sum up total
-            if (current_looks_ending_reason[[hn]] == "outside" && looks_collection[[hn]]$forced_stop) {
-              current_looks_ending_reason[[hn]] <- ""
-              looks_collection[[hn]]$forced_stop <- FALSE
-              looks_collection[[hn]]$found_first <- FALSE
-              current_looks_duration_total[[hn]] <- current_looks_duration_total[[hn]] + current_looks_duration[[hn]]
-              # reset current_looks_duration for next hunk
-              current_looks_duration[[hn]] <- 0
-            }
 
 
 
@@ -567,41 +503,6 @@ get_looks <- function(df,
 
 
 
-            ######### LOOKS
-            # enter found first only once it detects the hn
-            if (!looks_collection[[hn]]$found_first) {
-              looks_collection[[hn]]$found_first <- TRUE
-              looks_collection[[hn]]$init_fi <- i
-              looks_collection[[hn]]$last_fi <- i
-              looks_collection[[hn]]$look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
-            }
-
-            if (
-              looks_collection[[hn]]$found_first && !looks_collection[[hn]]$forced_stop &&
-              (looks_collection[[hn]]$init_fi == i || looks_collection[[hn]]$last_fi == i - 1)
-            ) {
-              current_looks_duration[[hn]] <- current_looks_duration[[hn]] + current_gazeDuration
-              looks_collection[[hn]]$last_fi <- i
-
-              # check if outside label is between this fi and the next fi
-              if (i < max(df$fi, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
-                # outside fixation or saccade after last fi
-                current_looks_ending_reason[[hn]] <- "outside"
-                looks_collection[[hn]]$forced_stop <- TRUE
-                # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
-                current_looks_duration[[hn]] <- df$timestamp[fi_pairs$fiend[i] + 1] - looks_collection[[hn]]$look_initial_timestamp
-              }
-            }
-
-            # reset look hunk and sum up total
-            if (current_looks_ending_reason[[hn]] == "outside" && looks_collection[[hn]]$forced_stop) {
-              current_looks_ending_reason[[hn]] <- ""
-              looks_collection[[hn]]$forced_stop <- FALSE
-              looks_collection[[hn]]$found_first <- FALSE
-              current_looks_duration_total[[hn]] <- current_looks_duration_total[[hn]] + current_looks_duration[[hn]]
-              # reset current_looks_duration for next hunk
-              current_looks_duration[[hn]] <- 0
-            }
 
 
 
@@ -702,43 +603,6 @@ get_looks <- function(df,
 
 
 
-          ######### LOOKS
-          # enter found first only once it detects the hn
-          if (!looks_collection[[hn]]$found_first) {
-            looks_collection[[hn]]$found_first <- TRUE
-            looks_collection[[hn]]$init_fi <- i
-            looks_collection[[hn]]$last_fi <- i
-            looks_collection[[hn]]$look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
-          }
-
-          if (
-            looks_collection[[hn]]$found_first && !looks_collection[[hn]]$forced_stop &&
-            (looks_collection[[hn]]$init_fi == i || looks_collection[[hn]]$last_fi == i - 1)
-          ) {
-            current_looks_duration[[hn]] <- current_looks_duration[[hn]] + current_gazeDuration
-            looks_collection[[hn]]$last_fi <- i
-
-            # check if outside label is between this fi and the next fi
-            if (i < max(df$fi, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
-              # outside fixation or saccade after last fi
-              current_looks_ending_reason[[hn]] <- "outside"
-              looks_collection[[hn]]$forced_stop <- TRUE
-              # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
-              current_looks_duration[[hn]] <- df$timestamp[fi_pairs$fiend[i] + 1] - looks_collection[[hn]]$look_initial_timestamp
-            }
-          }
-
-          # reset look hunk and sum up total
-          if (current_looks_ending_reason[[hn]] == "outside" && looks_collection[[hn]]$forced_stop) {
-            current_looks_ending_reason[[hn]] <- ""
-            looks_collection[[hn]]$forced_stop <- FALSE
-            looks_collection[[hn]]$found_first <- FALSE
-            current_looks_duration_total[[hn]] <- current_looks_duration_total[[hn]] + current_looks_duration[[hn]]
-            # reset current_looks_duration for next hunk
-            current_looks_duration[[hn]] <- 0
-          }
-
-
 
           ##################### LOOKAWAY
           if (!missing(lookaway_stop) && !current_lookaway_stop_applied[[hn]]) {
@@ -778,9 +642,6 @@ get_looks <- function(df,
       first_looks_collection[[hn]]$init_fi <- c(first_looks_collection[[hn]]$init_fi, current_first_look_init_fi[[hn]])
       first_looks_collection[[hn]]$last_fi <- c(first_looks_collection[[hn]]$last_fi, current_first_look_last_fi[[hn]])
 
-      looks_collection[[hn]]$durations <- c(looks_collection[[hn]]$durations, current_looks_duration_total[[hn]])
-      looks_collection[[hn]]$ending_reason <- c(looks_collection[[hn]]$ending_reason, current_looks_ending_reason[[hn]])
-
       lookaway_collection[[hn]]$durations <- c(lookaway_collection[[hn]]$durations, current_lookaway_duration[[hn]])
       lookaway_collection[[hn]]$lookaway_stop_applied <- c(lookaway_collection[[hn]]$lookaway_stop_applied, current_lookaway_stop_applied[[hn]])
     }
@@ -814,7 +675,6 @@ get_looks <- function(df,
     list(
       looking_times = looking_times,
       first_looks = first_looks,
-      looks_collection = looks_collection,
       first_looks_collection = first_looks_collection,
       bad_fixation_indexes = bad_fixation_indexes,
       looking_frequencies = looking_frequencies,
