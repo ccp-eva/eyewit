@@ -228,10 +228,9 @@ for (subject in participants) {
 
 	# =========================================
 	# Gap2FLScreen
-	# returns either a time difference in ms, 0, or NA:
-	# - 0 means a screen fixation was present when the trial started
+	# returns either a time difference in ms or NA:
 	# - NA means there was no fixation at all in this trial
-	# - any numbers means the gap in ms until the first screen fixation
+	# - any numbers means the gap in ms until the initiation of the first screen fixation
 	# (this should actually be a separate function, lol)
 
 	# init with 0
@@ -241,12 +240,17 @@ for (subject in participants) {
 		# boolean that checks if there is a screen fixation at the first sample for each trial
 		isAoiScreenFixAtFirstSample <- (df[startend_preflook$start[pfsi] + 1,"gazeType"] == "Fixation")[1] && (df[startend_preflook$start[pfsi] + 1,"aoiScreen"] == "onscreen")[1]
 
+		# There are 2 cases,
+		# (1) isAoiScreenFixAtFirstSample is FALSE that means there is no fixation when the trial starts
+		# (2) isAoiScreenFixAtFirstSample is TRUE there is a fixation when the trial starts, which need to be shifted the next fixation (similar to the omit within get_looks)
+
 		# init diff container with zeros
 		time_diff <- 0
 		starting_timestamp <- df[startend_preflook$start[pfsi],"timestamp"] |> as.integer()
 		# init ending timestamp of first fixation
 		ending_timestamp <- NA
 		# if there is no initial fixation get the time in ms when the first fixation at screen appears
+		# This is case (1)
 		if (!isAoiScreenFixAtFirstSample) {
 
 			# filter for fixations being onscreen
@@ -266,12 +270,38 @@ for (subject in participants) {
 			}
 		}
 
+		# if true, jump the next fixation (i.e., omit the first ongoing fixation)
+		# This is case (2)
+		if (isAoiScreenFixAtFirstSample) {
+
+			first_fi_to_skip <- df$fi[startend_preflook$start[pfsi]]
+			next_fi_to_use <- first_fi_to_skip + 1
+			next_fi_to_use_rn <- which(df$fi == next_fi_to_use)[1]
+
+			current_trial_start_time <- df$timestamp[startend_preflook$start[pfsi]]
+			current_next_fi_start_time <- df$timestamp[next_fi_to_use_rn]
+
+			time_diff <- current_next_fi_start_time - current_trial_start_time
+		}
+
 		df_subject$Gap2FLScreen[pfsi] <- time_diff
 	}
 
-	df_subject$PrefLook_FL_Screen_starttocutoff <- df_subject$PrefLook_FL_Screen_NoOmit + df_subject$Gap2FLScreen
+	############################################################
+
+	# Orignal Idea (NoOmit might be problematic!):
+	df_subject$PrefLook_FL_Screen_starttocutoff <- df_subject$PrefLook_FL_Screen_Omit + df_subject$Gap2FLScreen
+
+	############################################################
+	# TODO #####################################################
+	############################################################
+	# think about using Omit vs NoOmit
+	df_subject$PrefLook_FL_Screen_starttocutoff <- ifelse(df_subject$Gap2FLScreen == 0, df_subject$PrefLook_FL_Screen_NoOmit, df_subject$PrefLook_FL_Screen_Omit + df_subject$Gap2FLScreen)
+
+	############################################################
 
 	# init
+	# iterate over all screen durations rowwise within df_subject
 	df_subject$PrefLook_LT_Obj_Left_FL <- NA
 	# iterate over all screen durations rowwise within df_subject
 	for (i_screen_lt in seq.int(df_subject$PrefLook_FL_Screen_Omit)) {
@@ -281,18 +311,14 @@ for (subject in participants) {
 			interface$aoisets$preflook,
 			startend_preflook,
 			intra_scope_window = c(
+				"start",
 				ifelse(
-					is.na(df_subject$PrefLook_FL_Screen_Omit[i_screen_lt]), # todo Clarify: should omit be used?
-					"start",
-					df_subject$Gap2FLScreen[i_screen_lt]
-				),
-				ifelse(
-					is.na(df_subject$PrefLook_FL_Screen_Omit[i_screen_lt]),
+					is.na(df_subject$Gap2FLScreen[i_screen_lt]),
 					"end",
-					df_subject$Gap2FLScreen[i_screen_lt] + df_subject$PrefLook_FL_Screen_Omit[i_screen_lt]
+					df_subject$PrefLook_FL_Screen_starttocutoff[i_screen_lt]
 				)
 			),
-			omit_first_overflow_fi = FALSE # must be false!
+			omit_first_overflow_fi = TRUE # must be false!
 		)$looking_times$left[i_screen_lt] # ... only get the i'th item from get_looks
 	}
 
@@ -305,18 +331,14 @@ for (subject in participants) {
 			interface$aoisets$preflook,
 			startend_preflook,
 			intra_scope_window = c(
+				"start",
 				ifelse(
-					is.na(df_subject$PrefLook_FL_Screen_Omit[i_screen_lt]),
-					"start",
-					df_subject$Gap2FLScreen[i_screen_lt]
-				),
-				ifelse(
-					is.na(df_subject$PrefLook_FL_Screen_Omit[i_screen_lt]),
+					is.na(df_subject$Gap2FLScreen[i_screen_lt]),
 					"end",
-					df_subject$Gap2FLScreen[i_screen_lt] + df_subject$PrefLook_FL_Screen_Omit[i_screen_lt]
+					df_subject$PrefLook_FL_Screen_starttocutoff[i_screen_lt]
 				)
 			),
-			omit_first_overflow_fi = FALSE
+			omit_first_overflow_fi = TRUE # must be false!
 		)$looking_times$right[i_screen_lt] # ... only get the i'th item from get_looks
 	}
 
@@ -360,7 +382,7 @@ for (subject in participants) {
 		df_subject$PrefLook_Obj_Fam_Pos == "left", df_subject$PrefLook_2sec_Obj_Left, df_subject$PrefLook_2sec_Obj_Right
 	)
 
-	df_subject$PrefLook_2sec_Screen <- # todo Clarify: should there be also an omit and noomit version?
+	df_subject$PrefLook_2sec_Screen <-
 		get_looks(
 			df = df,
 			aoi_collection = interface$aoisets$screen,
@@ -368,51 +390,79 @@ for (subject in participants) {
 			lookaway_stop = 2000,
 			omit_first_overflow_fi = TRUE)$lookaway_collection$onscreen$durations
 
+	df_subject$PrefLook_2sec_Screen_starttocutoff <- ifelse(is.na(df_subject$PrefLook_2sec_Screen), NA, 10000)
+
+	######## SYNTAX FOR fi_summary ########
+	# fi_summary(df, AOI_COLLECTION, SCOPE/STARTEND/PHASE(i.e. preflook))
+	########################################
+
+	dataScreen <- fi_summary(df, interface$aoisets$screen, startend_preflook)
+	dataPrefLook <- fi_summary(df, interface$aoisets$preflook, startend_preflook)
+	# data <- fi_summary(df, interface$aoisets$preflook, startend_preflook) # example to use with screen aoi set
+	# data <- fi_summary(df, interface$aoisets$preflook) # get summary for ALL fixation indexes regardless of phase
+
+	# Filter for Gaps greater 2000 ms
+	dataScreen <- dataScreen |> filter(FGapDurTrlEnd > 2000)
+	dataPrefLook <- dataPrefLook |> filter(FGapDurTrlEnd > 2000)
+
+	# only keep data from the first row for each trial (making trials unique)
+	dataScreen <- dataScreen[!duplicated(dataScreen[ , "Trial"]),]
+	dataPrefLook <- dataPrefLook[!duplicated(dataPrefLook[ , "Trial"]),]
+
+	# remove rows that contain NA in Trial column (since there was no fixation at all)
+	dataScreen <- dataScreen |> filter(!is.na(Trial))
+	dataPrefLook <- dataPrefLook |> filter(!is.na(Trial))
+
+	# data, may contain "NO EVAL" (future bugfix)
+	# remove rows that contain "NO EVAL", as we only look for the preflook phase
+	dataPrefLookNoEvalTrials <- dataPrefLook$Trial[which(dataPrefLook$aoiPrefLook == "NO EVAL")]
+	dataScreen <- dataScreen |> filter(Trial != dataPrefLookNoEvalTrials)
+
+	dataScreen$PrefLook_2sec_Screen_starttocutoff <- dataScreen$FIrtsE1 - df$timestamp[startend_preflook$start[dataScreen$Trial]]
+
+	df_subject$PrefLook_2sec_Screen_starttocutoff[dataScreen$Trial] <- dataScreen$PrefLook_2sec_Screen_starttocutoff
+
+
+
+	# init
+	# iterate over all screen durations rowwise within df_subject
 	df_subject$PrefLook_LT_Obj_Left_2sec <- NA
 	# iterate over all screen durations rowwise within df_subject
-	for (i_screen_lt in seq.int(df_subject$PrefLook_FL_Screen_Omit)) {
+	for (i_screen_lt in seq.int(df_subject$PrefLook_2sec_Screen)) {
 		print(paste0("Index: ", i_screen_lt, " Screen Duration: ", df_subject$PrefLook_2sec_Screen[i_screen_lt]))
 		df_subject$PrefLook_LT_Obj_Left_2sec[i_screen_lt] <- get_looks(
 			df,
 			interface$aoisets$preflook,
 			startend_preflook,
 			intra_scope_window = c(
+				"start",
 				ifelse(
-					is.na(df_subject$PrefLook_2sec_Screen[i_screen_lt]),
-					"start",
-					df_subject$Gap2FLScreen[i_screen_lt]
-				),
-				ifelse(
-					is.na(df_subject$PrefLook_2sec_Screen[i_screen_lt]),
+					is.na(df_subject$Gap2FLScreen[i_screen_lt]),
 					"end",
-					df_subject$Gap2FLScreen[i_screen_lt] + df_subject$PrefLook_2sec_Screen[i_screen_lt]
+					df_subject$PrefLook_2sec_Screen_starttocutoff[i_screen_lt]
 				)
 			),
-			omit_first_overflow_fi = FALSE
+			omit_first_overflow_fi = TRUE # must be false!
 		)$looking_times$left[i_screen_lt] # ... only get the i'th item from get_looks
 	}
 
 	df_subject$PrefLook_LT_Obj_Right_2sec <- NA
 	# iterate over all screen durations rowwise within df_subject
-	for (i_screen_lt in seq.int(df_subject$PrefLook_FL_Screen_Omit)) {
+	for (i_screen_lt in seq.int(df_subject$PrefLook_2sec_Screen)) {
 		print(paste0("Index: ", i_screen_lt, " Screen Duration: ", df_subject$PrefLook_2sec_Screen[i_screen_lt]))
 		df_subject$PrefLook_LT_Obj_Right_2sec[i_screen_lt] <- get_looks(
 			df,
 			interface$aoisets$preflook,
 			startend_preflook,
 			intra_scope_window = c(
+				"start",
 				ifelse(
-					is.na(df_subject$PrefLook_2sec_Screen[i_screen_lt]),
-					"start",
-					df_subject$Gap2FLScreen[i_screen_lt]
-				),
-				ifelse(
-					is.na(df_subject$PrefLook_2sec_Screen[i_screen_lt]),
+					is.na(df_subject$Gap2FLScreen[i_screen_lt]),
 					"end",
-					df_subject$Gap2FLScreen[i_screen_lt] + df_subject$PrefLook_2sec_Screen[i_screen_lt]
+					df_subject$PrefLook_2sec_Screen_starttocutoff[i_screen_lt]
 				)
 			),
-			omit_first_overflow_fi = FALSE
+			omit_first_overflow_fi = TRUE # must be false!
 		)$looking_times$right[i_screen_lt] # ... only get the i'th item from get_looks
 	}
 
@@ -434,8 +484,9 @@ for (subject in participants) {
 	df_time <- timebinning(df, df_subject, startend_preflook, 500)
 	# Sort like in the word file:
 	df_time <- df_time |> dplyr::arrange(TrialCon, Condition, BinNumber)
-	# Remove bin 21
-	df_time <- df_time |> dplyr::filter(BinNumber != 21)
+	# Remove last bin
+	last_time_bin <- df_time$BinNumber |> max()
+	df_time <- df_time |> dplyr::filter(BinNumber != last_time_bin)
 
 
   # write tables for individual participants
