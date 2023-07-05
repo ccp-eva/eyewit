@@ -318,7 +318,7 @@ for (subject in participants) {
 					df_subject$PrefLook_FL_Screen_starttocutoff[i_screen_lt]
 				)
 			),
-			omit_first_overflow_fi = TRUE # must be false!
+			omit_first_overflow_fi = TRUE
 		)$looking_times$left[i_screen_lt] # ... only get the i'th item from get_looks
 	}
 
@@ -338,7 +338,7 @@ for (subject in participants) {
 					df_subject$PrefLook_FL_Screen_starttocutoff[i_screen_lt]
 				)
 			),
-			omit_first_overflow_fi = TRUE # must be false!
+			omit_first_overflow_fi = TRUE
 		)$looking_times$right[i_screen_lt] # ... only get the i'th item from get_looks
 	}
 
@@ -443,7 +443,7 @@ for (subject in participants) {
 					df_subject$PrefLook_2sec_Screen_starttocutoff[i_screen_lt]
 				)
 			),
-			omit_first_overflow_fi = TRUE # must be false!
+			omit_first_overflow_fi = TRUE
 		)$looking_times$left[i_screen_lt] # ... only get the i'th item from get_looks
 	}
 
@@ -463,7 +463,7 @@ for (subject in participants) {
 					df_subject$PrefLook_2sec_Screen_starttocutoff[i_screen_lt]
 				)
 			),
-			omit_first_overflow_fi = TRUE # must be false!
+			omit_first_overflow_fi = TRUE
 		)$looking_times$right[i_screen_lt] # ... only get the i'th item from get_looks
 	}
 
