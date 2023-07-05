@@ -296,7 +296,7 @@ for (subject in participants) {
 	# TODO #####################################################
 	############################################################
 	# think about using Omit vs NoOmit
-	df_subject$PrefLook_FL_Screen_starttocutoff <- ifelse(df_subject$Gap2FLScreen == 0, df_subject$PrefLook_FL_Screen_NoOmit, df_subject$PrefLook_FL_Screen_Omit + df_subject$Gap2FLScreen)
+	# df_subject$PrefLook_FL_Screen_starttocutoff <- ifelse(df_subject$Gap2FLScreen == 0, df_subject$PrefLook_FL_Screen_NoOmit, df_subject$PrefLook_FL_Screen_Omit + df_subject$Gap2FLScreen)
 
 	############################################################
 
