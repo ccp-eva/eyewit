@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_trimmed_fixation_durations.R
 \name{get_trimmed_fixation_durations}
 \alias{get_trimmed_fixation_durations}
-\title{Get Trimmed Fixations Durations}
+\title{Get Trimmed Fixation Durations}
 \usage{
 get_trimmed_fixation_durations(df, trialrange)
 }
@@ -17,8 +17,7 @@ Returns a named list containing durations in ms for the fixation which overflow 
 \description{
 Given a df and trialranges, the functions trims
 leading and trailing overflowing fixations
-to get an accuarte duration
-gets the adjusted fixiation durations for trials where a fixation started before the trial and
+to get an accurate duration. Gets the adjusted fixation durations for trials where a fixation started before the trial and
 trials where the fixation lasted after the ending of a trial. The function will trim the
 leading and trailing overflow fixations and will return the duration based on the provided trialrange.
 }
