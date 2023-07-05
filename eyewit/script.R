@@ -414,10 +414,11 @@ for (subject in participants) {
 	dataPrefLook <- dataPrefLook |> filter(!is.na(Trial))
 
 	# data, may contain "NO EVAL" (future bugfix)
-	# remove rows that contain "NO EVAL", as we only look for the preflook phase
+	# remove rows, if any, that contain "NO EVAL", as we only look for the preflook phase
 	dataPrefLookNoEvalTrials <- dataPrefLook$Trial[which(dataPrefLook$aoiPrefLook == "NO EVAL")]
-	dataScreen <- dataScreen |> filter(Trial != dataPrefLookNoEvalTrials)
-
+	if (length(dataPrefLookNoEvalTrials != 0)) {
+		dataScreen <- dataScreen |> filter(Trial != dataPrefLookNoEvalTrials)
+	}
 	dataScreen$PrefLook_2sec_Screen_starttocutoff <- dataScreen$FIrtsE1 - df$timestamp[startend_preflook$start[dataScreen$Trial]]
 
 	df_subject$PrefLook_2sec_Screen_starttocutoff[dataScreen$Trial] <- dataScreen$PrefLook_2sec_Screen_starttocutoff
