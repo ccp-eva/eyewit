@@ -331,6 +331,11 @@ get_looks <- function(df,
             start_ms <- df$timestamp[current_start]
             end_ms <- df$timestamp[which(df$fi == i)][length(which(df$fi == i))]
 
+            # this is important for the timebinning function. This is for small time bins that hit only one fixation
+            if (min_fi == max_fi && !missing(intra_scope_window) && (end_ms - start_ms > intra_scope_window[2] - intra_scope_window[1])) {
+              end_ms <- df$timestamp[current_end]
+            }
+
             # set the difference of start_ms and end_ms to the current gazeDuration
             current_gazeDuration <- end_ms - start_ms
             # Add it to the total
