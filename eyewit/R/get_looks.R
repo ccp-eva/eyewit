@@ -469,6 +469,13 @@ get_looks <- function(df,
               first_looks_collection[[hn]]$first_look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
             }
 
+            # if this is the last fixation and since this if-block tracks if we are in an overflowing fixation
+            # we can set the ending reason to trialend and and make a forced_stop for the first_looks_collection
+            current_first_look_ending_reason[[hn]] <- "trialend"
+            first_looks_collection[[hn]]$forced_stop <- TRUE
+            # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
+            current_first_look_duration[[hn]] <- end_ms - first_looks_collection[[hn]]$first_look_initial_timestamp
+
             if (
               first_looks_collection[[hn]]$found_first && !first_looks_collection[[hn]]$forced_stop &&
               (
