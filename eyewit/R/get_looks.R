@@ -267,8 +267,6 @@ get_looks <- function(df,
     # operate WITHIN the current fixation pair (i.e., within a trial)
     for (i in min_fi:max_fi) {
 
-
-
       # get all hit names within current fixation index
       hit_names_in_fi <- df[[column_name]][which(df$fi == i)]
 
@@ -469,13 +467,6 @@ get_looks <- function(df,
               first_looks_collection[[hn]]$first_look_initial_timestamp <- df$timestamp[fi_pairs$fistart[i]]
             }
 
-            # if this is the last fixation and since this if-block tracks if we are in an overflowing fixation
-            # we can set the ending reason to trialend and and make a forced_stop for the first_looks_collection
-            current_first_look_ending_reason[[hn]] <- "trialend"
-            first_looks_collection[[hn]]$forced_stop <- TRUE
-            # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
-            current_first_look_duration[[hn]] <- end_ms - first_looks_collection[[hn]]$first_look_initial_timestamp
-
             if (
               first_looks_collection[[hn]]$found_first && !first_looks_collection[[hn]]$forced_stop &&
               (
@@ -488,6 +479,16 @@ get_looks <- function(df,
               current_first_look_duration[[hn]] <- current_first_look_duration[[hn]] + current_gazeDuration
               # update current_first_looks_last_fi to next fi
               current_first_look_last_fi[[hn]] <- i
+
+              # if this is the last fixation and since this if-block tracks if we are in an overflowing fixation
+              # we can set the ending reason to trialend and and make a forced_stop for the first_looks_collection
+              current_first_look_ending_reason[[hn]] <- "trialend"
+              first_looks_collection[[hn]]$forced_stop <- TRUE
+              # overwrite current_first_look_duration[[hn]] to include saccades and error data and not only fixations
+              current_first_look_duration[[hn]] <- end_ms - first_looks_collection[[hn]]$first_look_initial_timestamp
+              # moreover we can break this iteration, since the trial ended and outside and timecritertion is possible anymore
+              break
+
 
               # check if outside label is between this fi and the next fi
               if (i < max(df$fi, na.rm = TRUE) && is_hitname_in_range(df[[column_name]], outside_aoi_label, i, i + 1)) {
