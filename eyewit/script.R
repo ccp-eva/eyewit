@@ -390,38 +390,67 @@ for (subject in participants) {
 			lookaway_stop = 2000,
 			omit_first_overflow_fi = TRUE)$lookaway_collection$onscreen$durations
 
-	df_subject$PrefLook_2sec_Screen_starttocutoff <- ifelse(is.na(df_subject$PrefLook_2sec_Screen), NA, 10000)
 
-	######## SYNTAX FOR fi_summary ########
-	# fi_summary(df, AOI_COLLECTION, SCOPE/STARTEND/PHASE(i.e. preflook))
-	########################################
 
-	dataScreen <- fi_summary(df, interface$aoisets$screen, startend_preflook)
-	dataPrefLook <- fi_summary(df, interface$aoisets$preflook, startend_preflook)
-	# data <- fi_summary(df, interface$aoisets$preflook, startend_preflook) # example to use with screen aoi set
-	# data <- fi_summary(df, interface$aoisets$preflook) # get summary for ALL fixation indexes regardless of phase
+	####################################################
+	######## PrefLook_2sec_Screen_starttocutoff ########
+	####################################################
 
-	# Filter for Gaps greater 2000 ms
-	dataScreen <- dataScreen |> filter(FGapDurTrlEnd > 2000)
-	dataPrefLook <- dataPrefLook |> filter(FGapDurTrlEnd > 2000)
+	# init with NA
+	df_subject$PrefLook_2sec_Screen_starttocutoff <- NA
+	for (pfsi in seq.int(df_subject$PrefLook_2sec_Screen_starttocutoff)) {
 
-	# only keep data from the first row for each trial (making trials unique)
-	dataScreen <- dataScreen[!duplicated(dataScreen[ , "Trial"]),]
-	dataPrefLook <- dataPrefLook[!duplicated(dataPrefLook[ , "Trial"]),]
+		# get current start index
+		current_video_start_index <- startend_preflook$start[pfsi] + 1
 
-	# remove rows that contain NA in Trial column (since there was no fixation at all)
-	dataScreen <- dataScreen |> filter(!is.na(Trial))
-	dataPrefLook <- dataPrefLook |> filter(!is.na(Trial))
+		starting_timestamp <- df[startend_preflook$start[pfsi] + 1,"timestamp"] |> as.integer()
+		# init ending timestamp of first fixation
+		ending_timestamp <- NA
 
-	# data, may contain "NO EVAL" (future bugfix)
-	# remove rows, if any, that contain "NO EVAL", as we only look for the preflook phase
-	dataPrefLookNoEvalTrials <- dataPrefLook$Trial[which(dataPrefLook$aoiPrefLook == "NO EVAL")]
-	if (length(dataPrefLookNoEvalTrials != 0)) {
-		dataScreen <- dataScreen |> dplyr::filter(!Trial %in% dataPrefLookNoEvalTrials)
+		# filter for fixations being onscreen
+		temp <- df |>
+			dplyr::slice(startend_preflook$start[pfsi]:startend_preflook$end[pfsi]) |>
+			dplyr::filter(gazeType == "Fixation") |>
+			dplyr::filter(aoiScreen == "onscreen")
+
+		# only proceed if there is data (i.e., there is at least one fixation onscreen)
+		if (!nrow(temp) == 0) {
+			# all fixation indexes that are onscreen for current trial
+			all_fij <- unique(temp$fi)
+			time_between_fixations <- c()
+			for (fij in seq.int(all_fij)) {
+
+				current_fij = all_fij[fij]
+
+				# check time diff between last fi and video end of current trial is over 2000
+				if (current_fij == max(all_fij)) {
+					last_fi_timestamp_start <- temp$timestamp[which(temp$fi == current_fij) |> max()]
+					trial_end_timestamp <- df$timestamp[startend_preflook$end[pfsi]]
+					time_between_fixations <- c(time_between_fixations, trial_end_timestamp - last_fi_timestamp_start)
+					break
+				}
+
+				next_fij = all_fij[fij + 1]
+				time_between_fixations <- c(time_between_fixations, temp$timestamp[which(temp$fi == next_fij) |> min()] - temp$timestamp[which(temp$fi == current_fij) |> max()])
+			}
+
+			# check if current trial has time gaps between fixations over 2000
+			fiAbove2k <- NA
+			# init
+			diff <- df$timestamp[startend_preflook$end[pfsi]] - df$timestamp[startend_preflook$start[pfsi] + 1]
+			# is there any value above 2000?
+			if (max(time_between_fixations) > 2000) {
+				# There ARE values above 2000 ...
+				# ... but we only want the very first one
+				fiAbove2k <- all_fij[which(time_between_fixations > 2000) |> min()]
+				# get the timestamp
+				ending_timestamp <- df$timestamp[(which(df$fi == fiAbove2k) |> max()) + 1]
+				diff <- ending_timestamp - starting_timestamp
+			}
+			# store current trial in df_subject
+			df_subject$PrefLook_2sec_Screen_starttocutoff[pfsi] <- diff
+		}
 	}
-	dataScreen$PrefLook_2sec_Screen_starttocutoff <- dataScreen$FIrtsE1 - df$timestamp[startend_preflook$start[dataScreen$Trial]]
-
-	df_subject$PrefLook_2sec_Screen_starttocutoff[dataScreen$Trial] <- dataScreen$PrefLook_2sec_Screen_starttocutoff
 
 
 
@@ -438,7 +467,7 @@ for (subject in participants) {
 			intra_scope_window = c(
 				"start",
 				ifelse(
-					is.na(df_subject$Gap2FLScreen[i_screen_lt]),
+					is.na(df_subject$PrefLook_2sec_Screen_starttocutoff[i_screen_lt]),
 					"end",
 					df_subject$PrefLook_2sec_Screen_starttocutoff[i_screen_lt]
 				)
@@ -458,7 +487,7 @@ for (subject in participants) {
 			intra_scope_window = c(
 				"start",
 				ifelse(
-					is.na(df_subject$Gap2FLScreen[i_screen_lt]),
+					is.na(df_subject$PrefLook_2sec_Screen_starttocutoff[i_screen_lt]),
 					"end",
 					df_subject$PrefLook_2sec_Screen_starttocutoff[i_screen_lt]
 				)
